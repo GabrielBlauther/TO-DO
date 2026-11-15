@@ -1,4 +1,4 @@
--- Schema anterior ao planejamento, preservado para testar migra??es.
+-- Esquema anterior ao planejamento, preservado para testar migrações.
 CREATE TABLE IF NOT EXISTS categories (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL UNIQUE,

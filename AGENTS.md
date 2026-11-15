@@ -38,7 +38,13 @@ Os resultados abaixo foram relatados na etapa de validação e confirmados por G
 - API: criação, consulta, edição, mudança de status, exclusão e comentários passaram.
 - Frontend: entrega de arquivos e proxy verificados; interações visuais no navegador ainda não verificadas.
 - Banco de teste criado isoladamente; banco original e auxiliares preservados, com hashes iguais.
-- Não existem scripts de testes automatizados ou lint configurados.
+- Naquela validação inicial não existiam scripts de testes automatizados ou lint. A etapa de planejamento acrescentou `bun run test`; lint continua sem configuração.
 - README atualizado no commit `3fa15e5` da branch `chore/validar-execucao`. O Git remoto consultado nesta incorporação confirmou o merge pelo PR #2, commit `538bb10` da `origin/main`; a base já havia entrado pelo PR #1, commit `3348ddc`.
 
 Não repita instalação e testes apenas para incorporar documentação. Para novas alterações de código, faça verificações proporcionais e registre a versão avaliada. Build e testes de API não comprovam usabilidade, acessibilidade ou sucesso de interação pela interface. Consulte novamente o Git remoto antes de depender de integrações futuras.
+
+## Primeira etapa acadêmica implementada
+- Modelo e migração: `docs/modelo-dados.md`. Disciplinas são opcionais e independentes das categorias; atividades possuem várias sessões. Prazo continua pertencendo à atividade.
+- Períodos: Todas, Hoje, Este mês, Este semestre, Personalizado e Sem planejamento, por data planejada das sessões; atividades e contadores sem duplicação. Semestre civil jan–jun/jul–dez, não calendário oficial da UCS.
+- Resultados desta etapa, roteiro e limitações: `docs/validacao-planejamento.md`. Há testes Bun de migração/API/regras e verificação no Chrome, inclusive teclado e tela estreita. Não confundir isso com avaliação com participantes ou conformidade completa de acessibilidade.
+- Calendário visual, Foco, timer, sugestões e troca de atividades continuam planejados. As duas HTAs completas ainda não estão implementadas.

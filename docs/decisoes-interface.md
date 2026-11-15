@@ -40,3 +40,8 @@ Os esboços interativos foram apresentados no chat. Este documento registra os f
 - Mensagens claras e sem jargão técnico; erros com orientação para recuperação.
 
 Consultar fontes originais para fundamentar o relatório. Recomendações didáticas não são prova de conformidade com uma norma; verificar versões e critérios oficiais se declarar conformidade.
+
+## Estado na primeira etapa acadêmica
+O Kanban foi preservado, com um único seletor de período, rótulos distintos de prazo e planejamento, cadastro simples de disciplina e gerenciamento manual de várias sessões nos detalhes. Avisos após o prazo exigem confirmação explícita; conflitos impedem a gravação e permitem corrigir ou cancelar. Formulários mantêm valores quando a gravação falha.
+
+Os modais alterados passaram a usar diálogo nativo com nome acessível, contenção de Tab/Shift+Tab, Escape para cancelar, retorno de foco e sem descarte por clique no fundo. Foram acrescentados rótulos persistentes e foco visível. Houve verificação funcional no Chrome, teclado e viewport de 390 px, além de inspeção de capturas; isso não certifica conformidade normativa, contraste completo ou uso com leitor de tela. O guia acima e as decisões específicas de Foco continuam pendentes.

@@ -16,7 +16,7 @@ O projeto é desenvolvido no contexto do **Trabalho III — Design de Interaçã
 
 A proposta aplica Design Centrado no Usuário para conectar necessidades dos estudantes a requisitos, alternativas de interface e um protótipo navegável. O foco está na qualidade da interação, na clareza das informações e no controle do usuário sobre suas decisões.
 
-> **Em desenvolvimento:** o repositório parte de um gerenciador de tarefas existente. O planejamento acadêmico, o calendário e o modo Foco fazem parte da evolução prevista e ainda não estão implementados na versão inicial.
+> **Em desenvolvimento:** o repositório parte de um gerenciador de tarefas existente. Disciplinas, sessões de estudo e filtros de planejamento estão implementados. Calendário visual e modo Foco continuam planejados.
 
 ## Funcionalidades da base
 
@@ -26,12 +26,16 @@ A proposta aplica Design Centrado no Usuário para conectar necessidades dos est
 - Comentários por tarefa.
 - Indicadores de tarefas vencidas e contadores por situação.
 - Confirmação antes da exclusão.
+- Disciplina opcional por atividade, sem substituir as categorias existentes.
+- Várias sessões de estudo por atividade, com data, horário opcional e duração em minutos.
+- Filtros Todas, Hoje, Este mês, Este semestre, Personalizado e Sem planejamento.
+- Validação de conflitos de horário e confirmação de estudo após o prazo.
 
 ## Evolução planejada
 
-- [ ] Vincular atividades às disciplinas da faculdade.
-- [ ] Separar a data planejada de estudo do prazo da atividade.
-- [ ] Consultar períodos diários, mensais, semestrais e personalizados por um filtro na mesma tela.
+- [x] Vincular atividades às disciplinas da faculdade.
+- [x] Separar a data planejada de estudo do prazo da atividade.
+- [x] Consultar períodos diários, mensais, semestrais e personalizados por um filtro na mesma tela.
 - [ ] Integrar as atividades a um calendário.
 - [ ] Criar o modo Foco com timer Pomodoro e controles de pausa e encerramento.
 - [ ] Sugerir uma atividade com base no planejamento e nos prazos, explicando o motivo.
@@ -117,7 +121,13 @@ Para verificar os tipos TypeScript e gerar o build de produção, execute dentro
 bun run --bun build
 ```
 
-O resultado fica em `frontend/dist`, que não é versionado. Não há scripts de testes automatizados ou lint configurados nesta base.
+O resultado fica em `frontend/dist`, que não é versionado. Na raiz, execute `bun run test` para os testes automatizados de migração, API e regras de planejamento. Não há lint configurado.
+
+O banco existente recebe uma migração aditiva ao iniciar a API; tarefas, comentários, categorias, prioridades e prazos são preservados. Tarefas antigas ficam sem disciplina e sem sessões até serem planejadas. Para usar outro banco, defina `DATABASE_PATH` antes de iniciar o backend; `PORT` também é opcional (padrão 3001).
+
+O período considera a **data planejada das sessões**, não o prazo. Atividades sem sessões aparecem em **Todas** e **Sem planejamento**. Cada atividade aparece uma vez, e os contadores refletem o filtro. **Este semestre** usa janeiro–junho ou julho–dezembro do ano atual, convenção do protótipo e não calendário oficial da UCS. Intervalos personalizados incluem os dois limites.
+
+Veja o [modelo de dados](docs/modelo-dados.md) e o [roteiro de validação e uso](docs/validacao-planejamento.md).
 
 Endereços padrão:
 

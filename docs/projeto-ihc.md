@@ -49,7 +49,7 @@ São hipóteses a revisar; não atribuir falas ou dados de entrevistas a estas p
 | HU07 | Como aluno, quero entender erros e resultados para saber se minhas ações funcionaram. | Mensagens claras; falha não simula sucesso; escolhas preservadas para correção ou tentativa. |
 
 ## Regras de interação
-- O filtro considera a data planejada; o prazo permanece visível. Atividades sem data precisam continuar acessíveis, por exemplo por uma opção Todas/Sem data (detalhe a definir).
+- O filtro considera a data planejada das sessões; o prazo permanece visível. Atividades sem sessões continuam acessíveis por Todas e Sem planejamento.
 - Uma sessão ocupa um intervalo, não o dia inteiro. Estudar duas disciplinas no mesmo dia é permitido.
 - Se a atividade atual for trocada: manter o planejamento e apenas estudar outra agora; substituir reagendando a anterior; ou substituir deixando a anterior pendente sem data.
 - Se não houver sessão original, adicionar a nova sessão sem perguntar por substituição.
@@ -59,7 +59,9 @@ São hipóteses a revisar; não atribuir falas ou dados de entrevistas a estas p
 - Sem atividades, oferecer cadastro antes de iniciar.
 
 ## Detalhes técnicos ainda a definir
-Modelo para atividades e sessões (uma atividade pode precisar de vários ciclos); início/fim do semestre; desempates das sugestões; duração e horário das sessões; regra de busca de horários livres; comportamento de timer em segundo plano e após recarregar. Documentar uma solução simples antes de implementar, sem apresentar hipóteses como decisões antigas.
+O modelo mínimo e as regras já adotadas estão em [modelo-dados.md](modelo-dados.md): várias sessões por atividade, duração em minutos independente de Pomodoro, horário opcional, conflitos por sobreposição e semestre civil janeiro–junho/julho–dezembro. Essa convenção não é o calendário oficial da UCS.
+
+Continuam pendentes desempates das sugestões, busca automática de horários livres, sessões reais de foco e comportamento do timer em segundo plano/recarregamento. Essas funcionalidades não foram implementadas nesta primeira etapa; não apresentar hipóteses como decisões antigas. Consulte [a validação da etapa](validacao-planejamento.md) para o estado real.
 
 ## Exigências do enunciado
 - Cenário, problema, objetivos e pelo menos 3 personas distintas.

@@ -19,16 +19,17 @@ Resultados da etapa anterior, confirmados por Gabriel neste chat; não repetidos
 - API: criação, consulta, edição, mudança de status, exclusão e comentários passaram com dados de teste.
 - Frontend: entrega de arquivos e proxy verificados por HTTP. Não houve verificação de cliques ou interação visual no navegador.
 - Criação automática de banco e dados de exemplo verificada em banco isolado; banco original e auxiliares preservados, com hashes iguais.
-- Não existem scripts de testes automatizados ou lint configurados.
+- Naquela etapa não existiam scripts de testes automatizados ou lint. A primeira etapa acadêmica acrescentou `bun run test`; lint continua sem configuração.
 - Instruções verificadas registradas no README pelo commit `3fa15e5`; o código da base permanece o de `fd5070f`.
 
-Essas verificações técnicas não são entrevistas, avaliações de usabilidade ou comprovação de acessibilidade. Permanecem pendentes a verificação visual dos fluxos existentes, navegação por teclado, responsividade e tratamento de falhas pela interface.
+Essas verificações iniciais não são entrevistas, avaliações de usabilidade ou comprovação de acessibilidade. A primeira etapa acadêmica acrescentou verificação funcional no Chrome, teclado, tela estreita e falha de gravação, detalhada em [validacao-planejamento.md](validacao-planejamento.md); continuam pendentes avaliação com participantes e uma revisão completa de acessibilidade.
 
 ## Funcionalidades existentes e propostas
-Inspeção do código atual, sem nova execução da aplicação nesta etapa:
+Estado atualizado pela primeira etapa acadêmica na branch `feat/planejamento-academico`, criada após confirmar o merge do contexto pelo PR #3 (`19b591b`):
 
 - Existem: quadro Kanban, cadastro/edição/consulta/exclusão de tarefas, mudança de status, categorias, prioridades, prazo (`due_date`), comentários, contadores e confirmação de exclusão. `backend/database.ts` cria SQLite e dados de exemplo; estes dados fictícios não são evidências de tarefas acadêmicas concluídas.
-- Não existem ainda: disciplinas, data planejada separada do prazo, filtro de período, calendário, modelo de sessões, sugestão de estudo, Pomodoro e reorganização transacional do planejamento.
+- Implementados nesta etapa: disciplinas opcionais independentes de categorias; múltiplas sessões com data, horário opcional e duração; prazo separado; seis opções de período em um seletor, sem duplicar atividades ou contadores; Sem planejamento; conflitos por sobreposição; aviso e confirmação após prazo; migração aditiva repetível e testes Bun. Modelo em [modelo-dados.md](modelo-dados.md).
+- Não existem ainda: calendário visual, sugestão de estudo, Pomodoro, execução real de sessões de foco e substituição/reorganização transacional entre atividades.
 - Escopo, personas hipotéticas, histórias, duas HTAs e alternativas já têm versão inicial. Não confundir documentação proposta com funcionalidades prontas.
 
 ## Natureza dos requisitos e decisões
@@ -37,7 +38,7 @@ Inspeção do código atual, sem nova execução da aplicação nesta etapa:
 | Obrigatório no Trabalho III | Contexto, problema, objetivos e ao menos 3 personas; estrutura de informação; histórias OU casos de uso; 2 tarefas críticas intermediárias com HTAs e planos; plataforma e restrições; 2 alternativas visuais para ao menos uma tarefa e justificativa; protótipo cobrindo as duas tarefas com transições, feedback e erros; guia de estilo; ao menos 3 decisões fundamentadas e medidas de acessibilidade; relatório, protótipo/alternativas acessíveis e slides com demonstração. Fonte: enunciado, pp. 1–2. Entrega e apresentação: 03/12/2026. |
 | Decisões de produto confirmadas | Organização de estudos; web com adaptação a telas menores; arquitetura existente; tela principal com filtro temporal; calendário; janela única de Foco com campos condicionais; sugestão explicada e escolha manual; revisão antes de reorganizar. Fontes: projeto, HTAs e decisões de interface. Não são funcionalidades já entregues nem exigências específicas do professor. |
 | Hipóteses | Problema/necessidades e personas Lucas, Marina e Renata; benefícios esperados da janela única. Não há entrevistas, avaliações com participantes ou superioridade empírica das alternativas documentadas. |
-| Definições técnicas pendentes | Modelo de atividades/sessões, migrações, semestre, datas/horários, conflitos, sugestões e persistência do timer. Definir antes da implementação que depender dessas regras. |
+| Definições técnicas | Modelo mínimo, migração, semestre civil, datas/horários e conflitos definidos nesta etapa em `modelo-dados.md`. Sugestões, busca automática de horário e persistência do timer continuam pendentes. |
 
 O enunciado não exige backend ou persistência real, nem determina uma quantidade de participantes. Os números de participantes discutidos nas aulas são orientações metodológicas, não uma exigência adicional do Trabalho III. Os pesos são 20% problema/usuários, 25% requisitos/tarefas, 15% exploração/justificativas e 40% protótipo/acessibilidade.
 
@@ -45,16 +46,16 @@ O enunciado não exige backend ou persistência real, nem determina uma quantida
 - O bloqueio por falta de runtime e a ausência de merge da base eram registros antigos; foram substituídos acima por resultados relatados e estado remoto conferido.
 - As duas alternativas estão descritas, mas seus wireframes/imagens ainda não estão preservados no pacote. Descrições textuais não substituem os estudos visuais exigidos.
 - Completar o guia de estilo com valores concretos e contraste medido; a paleta ainda não foi escolhida. Recomendações das aulas não comprovam conformidade normativa.
-- Definir como acessar atividades sem data sem violar a tela única, quais são os limites do semestre e como tratar datas e fuso horário.
-- Definir a relação entre atividade, sessão planejada e ciclo de foco, inclusive se iniciar sem sessão original cria um novo planejamento; estabelecer duração, sobreposição e busca de horários livres, desempates de sugestões e timer em segundo plano/recarregamento.
-- A confirmação de exclusão e os modais atuais não comprovam as regras futuras de cancelamento e acessibilidade. A inspeção do código mostra fechamento por clique fora da janela; evitar perda acidental de edição é um requisito a trabalhar e verificar depois.
+- Acesso sem sessões, semestre, duração e conflitos foram definidos e implementados nesta etapa. Datas civis não são convertidas para exibição via UTC; o planejamento usa o calendário local do navegador, sem sincronização entre fusos.
+- Ainda definir a relação com ciclos reais de foco, inclusive se iniciar sem sessão original cria planejamento; busca automática de horários livres, desempates de sugestões e timer em segundo plano/recarregamento.
+- O descarte por clique fora foi corrigido nos modais alterados. Ainda verificar leitor de tela, contraste completo e outros navegadores/dispositivos. Os testes funcionais atuais não comprovam a usabilidade das futuras HTAs.
 - Não foi identificada contradição entre as decisões documentadas e as exigências do enunciado que impeça incorporar este contexto. As lacunas acima devem ser resolvidas antes das funcionalidades correspondentes.
 
 ## Sequência
 1. Integrar este contexto e verificar o estado do Git; documentar lacunas reais.
-2. Completar a verificação visual dos fluxos existentes no navegador. Aproveitar a validação técnica já relatada, sem reinstalar ou repetir testes apenas por esta incorporação documental.
-3. Definir e documentar o modelo mínimo de atividades/sessões e uma migração compatível com o banco existente; depois preparar disciplinas, data planejada/prazo e filtros, mantendo dados existentes.
-4. Integrar calendário e modelo simples de sessões de estudo.
+2. Verificação inicial de fluxos existentes no Chrome realizada nesta etapa, com teclado e tela estreita; manter roteiro de regressão e ampliar acessibilidade depois.
+3. Modelo mínimo, migração, disciplinas, sessões e filtros implementados nesta etapa; revisar o PR antes de integrar à main.
+4. Próxima etapa funcional: calendário visual usando as sessões existentes, sem duplicar o modelo de planejamento.
 5. Implementar janela única de Foco, sugestão explicada, timer e decisões de conclusão.
 6. Implementar troca, reagendamento, revisão, cancelamento e falhas consistentes.
 7. Revisar acessibilidade, registrar decisões e completar guia de estilo.
