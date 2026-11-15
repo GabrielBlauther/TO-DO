@@ -48,7 +48,7 @@ export function createHandler(db: Database) {
         if (typeof data.title !== 'string' || !data.title.trim()) throw new HttpError('Informe o título da atividade.');
         if (typeof data.description !== 'string') throw new HttpError('Descrição inválida.');
         if (!['todo','in_progress','done'].includes(data.status)) throw new HttpError('Situação inválida.');
-        data.due_date = data.due_date || null;
+        if (data.due_date === '') data.due_date = null;
         if (data.due_date !== null && !validDate(data.due_date)) throw new HttpError('Informe um prazo válido.');
         reference('priorities', data.priority_id); reference('categories', data.category_id);
         if (data.subject_id !== null) reference('subjects', data.subject_id);
@@ -78,8 +78,8 @@ export function createHandler(db: Database) {
       const listMatch = path.match(/^\/api\/tasks\/(\d+)\/sessions$/), sessionMatch = path.match(/^\/api\/tasks\/(\d+)\/sessions\/(\d+)$/);
       if (listMatch || sessionMatch) {
         const id = Number((listMatch || sessionMatch)![1]), parent = task(id), sid = sessionMatch ? Number(sessionMatch[2]) : null;
-        const existing = sid ? db.query('SELECT * FROM study_sessions WHERE id=? AND task_id=?').get(sid, id) as Session | null : null;
-        if (sid && !existing) throw new HttpError('Sessão não encontrada nesta atividade.', 404);
+        const existing = sid !== null ? db.query('SELECT * FROM study_sessions WHERE id=? AND task_id=?').get(sid, id) as Session | null : null;
+        if (sid !== null && !existing) throw new HttpError('Sessão não encontrada nesta atividade.', 404);
         if (listMatch && method === 'GET') return json(parent.sessions);
         if ((listMatch && method === 'POST') || (sessionMatch && method === 'PUT')) {
           const data = { ...existing, ...body }, time = data.start_time === '' || data.start_time === undefined ? null : data.start_time;

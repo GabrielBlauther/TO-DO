@@ -75,6 +75,7 @@ test('disciplina opcional, cadastro, duplicação e referências inválidas', as
   const task = await addTask({ subject_id: subject.id }); expect(task.subject_name).toBe('Cálculo');
   expect((await request(`/tasks/${task.id}`,'PUT',{ subject_id: null, due_date: null })).data.subject_id).toBeNull();
   expect((await request('/tasks','POST',{ title: 'x', subject_id: 999 })).status).toBe(400);
+  expect((await request('/tasks','POST',{ title: 'x', due_date: 0 })).status).toBe(400);
 });
 test('atividade com várias sessões aparece uma vez, filtrando planejamento e não prazo', async () => {
   const task = await addTask({ due_date: '2026-12-31' });
@@ -126,6 +127,7 @@ test('estudo após prazo exige confirmação, reagendamento e remoção preserva
 test('vínculos entre sessões e atividades, status, comentários e exclusão em cascata', async () => {
   const a = await addTask(), b = await addTask(); const s = (await addSession(a.id)).data.sessions[0];
   expect((await request(`/tasks/${b.id}/sessions/${s.id}`,'DELETE')).status).toBe(404);
+  expect((await request(`/tasks/${a.id}/sessions/0`,'PUT',{planned_date:'2026-06-30',duration_minutes:50})).status).toBe(404);
   expect((await request(`/tasks/${a.id}/status`,'PATCH',{status:'done'})).data.status).toBe('done');
   await request(`/tasks/${a.id}/comments`,'POST',{text:'Teste'});
   expect((await request(`/tasks/${a.id}/comments`)).data).toHaveLength(1);
