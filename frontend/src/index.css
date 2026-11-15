@@ -18,7 +18,7 @@ body {
 
 /* Header */
 .header {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #4338ca 0%, #6b21a8 100%);
   padding: 1.5rem 2rem;
   color: white;
   display: flex;
@@ -41,7 +41,7 @@ body {
 
 .btn-new-task {
   background: white;
-  color: #667eea;
+  color: #4338ca;
   border: none;
   padding: 0.6rem 1.2rem;
   border-radius: 8px;
@@ -194,7 +194,7 @@ body {
 .task-card-actions .btn-status {
   background: #ecfdf5;
   border-color: #a7f3d0;
-  color: #059669;
+  color: #047857;
 }
 
 .task-card-actions .btn-status:hover {
@@ -302,7 +302,7 @@ body {
 }
 
 .btn-primary {
-  background: #667eea;
+  background: #4338ca;
   color: white;
 }
 
@@ -312,12 +312,12 @@ body {
 }
 
 .btn-danger {
-  background: #ef4444;
+  background: #b91c1c;
   color: white;
 }
 
 .btn-success {
-  background: #10b981;
+  background: #047857;
   color: white;
 }
 
@@ -434,7 +434,7 @@ body {
 
 .comment-form button {
   padding: 0.6rem 1rem;
-  background: #667eea;
+  background: #4338ca;
   color: white;
   border: none;
   border-radius: 8px;
@@ -463,7 +463,7 @@ body {
 }
 
 .comment-item small {
-  color: #888;
+  color: #4b5563;
   font-size: 0.72rem;
   white-space: nowrap;
   margin-left: 0.5rem;
@@ -620,3 +620,17 @@ fieldset { border: 0; min-width: 0; }
   .calendar-date > span::before { content: 'Dia '; }
   .calendar-navigation .btn { min-height: 44px; }
 }
+
+/* Interaction review: identifiable actions, feedback focus and useful grouping. */
+.detail-footer { border-top: 1px solid #d1d5db; margin-top: 1.5rem; padding-top: 1rem; }
+.selected-session { outline: 2px solid #4338ca; }
+.selected-session > strong { display: block; margin-bottom: 0.5rem; }
+[role="alert"]:focus, #focus-step:focus { outline: 3px solid #363795; outline-offset: 3px; }
+.task-card-actions { flex-wrap: wrap; }
+.task-card-actions button { font-size: 0.85rem; padding: 0.5rem; min-height: 40px; }
+.comment-item > .warning-message { flex-basis: 100%; }
+.warning-message h2 { font-size: 1rem; }
+.warning-message li { margin: 0.5rem 0; overflow-wrap: anywhere; }
+.form-group input:disabled, .form-group select:disabled, .form-group textarea:disabled { color: #374151; opacity: 1; }
+button:disabled { cursor: default; }
+@media (max-width: 600px) { .focus-form .form-actions .btn-primary { flex-basis: 100%; } }

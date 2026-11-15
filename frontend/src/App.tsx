@@ -9,6 +9,7 @@ import ConfirmDialog from './components/ConfirmDialog';
 import SubjectModal from './components/SubjectModal';
 import StudyCalendar from './components/StudyCalendar';
 import FocusControl from './components/FocusControl';
+import RecoveryNotice from './components/RecoveryNotice';
 import { initialMonth } from './calendar';
 
 export default function App() {
@@ -22,13 +23,14 @@ export default function App() {
   const [calendarMonth,setCalendarMonth]=useState(localToday().slice(0,7));
   const [planningDate,setPlanningDate]=useState<string|undefined>();
   const [sessionId,setSessionId]=useState<number|undefined>();
+  const [loaded,setLoaded]=useState(false);
   function openDetails(id:number, date?:string, session?:number) {
     setPlanningDate(date);setSessionId(session);setSelectedId(id);
   }
   async function load() {
-    setLoading(true);setError('');
-    try{const [t,c,p,s]=await Promise.all([api.getTasks(),api.getCategories(),api.getPriorities(),api.getSubjects()]);setTasks(t);setCategories(c);setPriorities(p);setSubjects(s);}
-    catch(err){setError((err as Error).message);}finally{setLoading(false);}
+    setLoading(true);setError('');setMessage('');
+    try{const [t,c,p,s]=await Promise.all([api.getTasks(),api.getCategories(),api.getPriorities(),api.getSubjects()]);setTasks(t);setCategories(c);setPriorities(p);setSubjects(s);setLoaded(true);return true;}
+    catch(err){setError((err as Error).message);return false;}finally{setLoading(false);}
   }
   useEffect(()=>{void load();},[]);
   const update=(task:Task)=>setTasks(old=>old.some(t=>t.id===task.id) ? old.map(t=>t.id===task.id ? task : t) : [...old,task]);
@@ -43,10 +45,10 @@ export default function App() {
   async function submit(data:TaskFormData){const task=editing ? await api.updateTask(editing.id,data) : await api.createTask(data);update(task);setShowForm(false);setMessage('Atividade salva.');}
   return <>
     <header className="header"><h1>📝 Gestão de Tarefas</h1><div className="header-stats" aria-live="polite">
-      <span>Concluídas: {done}</span><span>Pendentes: {visible.length-done}</span><span>Total: {visible.length}</span></div>
-      <div className="header-actions"><button className="btn-new-task" onClick={()=>setSubjectOpen(true)}>+ Disciplina</button>
-        <FocusControl tasks={tasks} disabled={loading} onUpdated={update} onRefresh={async()=>setTasks(await api.getTasks())} onCreate={()=>{setEditing(null);setShowForm(true);}} />
-        <button className="btn-new-task" onClick={()=>{setEditing(null);setShowForm(true);}}>+ Nova atividade</button></div></header>
+      <span>Concluídas: {loaded&&!filterError?done:'—'}</span><span>Pendentes: {loaded&&!filterError?visible.length-done:'—'}</span><span>Total: {loaded&&!filterError?visible.length:'—'}</span></div>
+      <div className="header-actions"><button className="btn-new-task" disabled={!loaded} onClick={()=>setSubjectOpen(true)}>+ Disciplina</button>
+        <FocusControl tasks={tasks} disabled={loading||!loaded} onUpdated={update} onRefresh={async()=>setTasks(await api.getTasks())} onCreate={()=>{setEditing(null);setShowForm(true);}} />
+        <button className="btn-new-task" disabled={!loaded} onClick={()=>{setEditing(null);setShowForm(true);}}>+ Nova atividade</button></div></header>
     <section className="period-filter" aria-label="Filtro de planejamento"><div className="form-group"><label htmlFor="period">Período de estudo</label>
       <select id="period" value={period} onChange={e=>setPeriod(e.target.value as Period)}>
         <option value="all">Todas</option><option value="today">Hoje</option><option value="month">Este mês</option><option value="semester">Este semestre</option><option value="custom">Personalizado</option><option value="unplanned">Sem planejamento</option></select></div>
@@ -57,24 +59,25 @@ export default function App() {
       {filterError && <p className="error-message" role="alert">{filterError}</p>}
       <div className="form-group"><label htmlFor="view-mode">Visualização</label><select id="view-mode" value={view} onChange={e=>setView(e.target.value as 'board'|'calendar')}>
         <option value="board">Quadro</option><option value="calendar">Calendário</option></select></div></section>
-    {error && <div role="alert" className="error-message page-message">{error} <button className="btn btn-secondary" onClick={()=>void load()}>Tentar novamente</button></div>}
+    <RecoveryNotice onRecovered={async()=>{const refreshed=await load();setMessage(refreshed?'Resultado verificado. Os dados foram recarregados.':'Pedido confirmado. A consulta dos dados falhou; use Recarregar dados para conferir o estado atual.');}} />
+    {error && <div role="alert" className="error-message page-message">{error} <button className="btn btn-secondary" onClick={()=>void load()}>Recarregar dados</button></div>}
     {message && <p className="success-message page-message" role="status">{message}</p>}
-    {loading ? <p className="loading">Carregando atividades…</p> : <>
+    {loading ? <p className="loading" role="status">Carregando atividades…</p> : loaded && <>
       {!filterError && visible.length===0 && <p role="status" className="page-message">Nenhuma atividade neste período. Escolha Todas para consultar as demais.</p>}
       {view==='calendar' ? !filterError && <main><StudyCalendar tasks={tasks} visible={visible} range={range} month={calendarMonth} unplanned={period==='unplanned'}
         onMonthChange={setCalendarMonth} onOpen={(id,sid)=>openDetails(id,undefined,sid)} onPlan={(id,date)=>openDetails(id,date)} /></main>
       : <main className="kanban-board">{columns.map(col=><section className={`kanban-column ${col.className}`} key={col.key} aria-label={col.title}>
         <div className="column-header"><h2>{col.title}</h2><span className="column-count">{visible.filter(t=>t.status===col.key).length}</span></div>
         {visible.filter(t=>t.status===col.key).map(t=><TaskCard key={t.id} task={t} onView={()=>openDetails(t.id)} onEdit={()=>{setEditing(t);setShowForm(true);}} onDelete={()=>setDeleteId(t.id)}
-          statusLabel={t.status==='todo'?'Iniciar':t.status==='in_progress'?'Concluir':'Reabrir'} onStatusChange={()=>{
-            if(statusBusy)return;setStatusBusy(true);setError('');api.updateTaskStatus(t.id,t.status==='todo'?'in_progress':t.status==='in_progress'?'done':'todo').then(update).catch(err=>setError(err.message)).finally(()=>setStatusBusy(false));
+          busy={statusBusy} statusLabel={t.status==='todo'?'Marcar em progresso':t.status==='in_progress'?'Marcar concluída':'Reabrir atividade'} onStatusChange={()=>{
+            if(statusBusy)return;setStatusBusy(true);setError('');setMessage('');api.updateTaskStatus(t.id,t.status==='todo'?'in_progress':t.status==='in_progress'?'done':'todo').then(task=>{update(task);setMessage(`Situação de “${task.title}” atualizada.`);}).catch(err=>setError(err.message)).finally(()=>setStatusBusy(false));
           }} />)}
         {visible.filter(t=>t.status===col.key).length===0 && <p className="empty-column">Nenhuma atividade</p>}</section>)}</main>}
     </>}
-    {showForm && <TaskFormModal task={editing} categories={categories} priorities={priorities} subjects={subjects} onSubmit={submit} onClose={()=>setShowForm(false)} />}
+    {showForm && <TaskFormModal task={editing} categories={categories} priorities={priorities} subjects={subjects} onSubjectCreated={s=>setSubjects(old=>[...old,s])} onSubmit={submit} onClose={()=>setShowForm(false)} />}
     {subjectOpen && <SubjectModal onClose={()=>setSubjectOpen(false)} onCreated={s=>{setSubjects(old=>[...old,s].sort((a,b)=>a.name.localeCompare(b.name)));setMessage('Disciplina cadastrada.');}} />}
     {selected && <TaskDetailModal key={selected.id} task={selected} initialDate={planningDate} initialSessionId={sessionId} onClose={()=>setSelectedId(null)} onDelete={()=>setDeleteId(selected.id)} onUpdated={update} />}
-    {deleteId!==null && <ConfirmDialog message="Excluir esta atividade e seus comentários e sessões? Esta ação não pode ser desfeita." onCancel={()=>setDeleteId(null)} onConfirm={async()=>{
+    {deleteId!==null && <ConfirmDialog message={`Excluir “${tasks.find(t=>t.id===deleteId)?.title}”, seus comentários e ${tasks.find(t=>t.id===deleteId)?.sessions.length || 0} estudo(s) planejado(s)? Esta ação não pode ser desfeita.`} onCancel={()=>setDeleteId(null)} onConfirm={async()=>{
       await api.deleteTask(deleteId);setTasks(old=>old.filter(t=>t.id!==deleteId));if(selectedId===deleteId)setSelectedId(null);setDeleteId(null);setMessage('Atividade excluída.');
     }} />}
   </>;
