@@ -77,7 +77,7 @@ export default function FocusControl({tasks,disabled,onCreate,onUpdated,onRefres
         setDraft({taskId:suggestion?String(suggestion.task.id):'',sourceId:sources.length>1?'':suggestion?.session?String(suggestion.session.id):'none',
           action:'',minutes:25,current:plan,previous:{...plan,duration_minutes:suggestion?.session?.duration_minutes || 25},confirmed:false});
       }
-      setNextMinutes(active?.minutes || 25);
+      if(!chooseNext)setNextMinutes(active?.minutes || 25);
     }catch(err){setError((err as Error).message);}
     setOpen(true);
   }
@@ -152,7 +152,7 @@ export default function FocusControl({tasks,disabled,onCreate,onUpdated,onRefres
     }
   }
   function clearStudy() {
-    try {writePending(localStorage,null);writeTimer(localStorage,null);setTimer(null);setPending(null);setDraft(null);setCompleteUncertain(false);setOpen(false);setError('');}
+    try {writePending(localStorage,null);writeTimer(localStorage,null);setTimer(null);setPending(null);setDraft(null);setChooseNext(false);setCompleteUncertain(false);setOpen(false);setError('');}
     catch(err){setError(`Não foi possível encerrar o estado local: ${(err as Error).message}`);}
   }
   const phaseStatus=timer ? `${timer.phase==='study'?'Estudo':'Pausa curta'}: ${timer.status==='running'?'em andamento':timer.status==='paused'?'pausado':timer.endedEarly?'encerrado antecipadamente':'tempo concluído'}.` : '';
