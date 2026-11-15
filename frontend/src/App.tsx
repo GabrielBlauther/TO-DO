@@ -1,193 +1,63 @@
-import { useState, useEffect, useCallback } from 'react';
-import { Task, Category, Priority, TaskStatus } from './types';
+import { useState, useEffect } from 'react';
+import { Task, Category, Priority, Subject, TaskStatus, TaskFormData } from './types';
+import { Period, periodRange, localToday, formatDate } from '../../shared/planning';
 import * as api from './api';
 import TaskCard from './components/TaskCard';
 import TaskFormModal from './components/TaskFormModal';
 import TaskDetailModal from './components/TaskDetailModal';
 import ConfirmDialog from './components/ConfirmDialog';
+import SubjectModal from './components/SubjectModal';
 
-function App() {
-  const [tasks, setTasks] = useState<Task[]>([]);
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [priorities, setPriorities] = useState<Priority[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  // Modal states
-  const [showFormModal, setShowFormModal] = useState(false);
-  const [editingTask, setEditingTask] = useState<Task | null>(null);
-  const [showDetailModal, setShowDetailModal] = useState(false);
-  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
-  const [showConfirmDelete, setShowConfirmDelete] = useState(false);
-  const [taskToDelete, setTaskToDelete] = useState<number | null>(null);
-
-  const loadData = useCallback(async () => {
-    try {
-      const [tasksData, catsData, priosData] = await Promise.all([
-        api.getTasks(),
-        api.getCategories(),
-        api.getPriorities(),
-      ]);
-      setTasks(tasksData);
-      setCategories(catsData);
-      setPriorities(priosData);
-    } catch (err) {
-      console.error('Failed to load data:', err);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    loadData();
-  }, [loadData]);
-
-  const handleCreateTask = () => {
-    setEditingTask(null);
-    setShowFormModal(true);
-  };
-
-  const handleEditTask = (task: Task) => {
-    setEditingTask(task);
-    setShowFormModal(true);
-  };
-
-  const handleViewTask = (task: Task) => {
-    setSelectedTask(task);
-    setShowDetailModal(true);
-  };
-
-  const handleDeleteRequest = (taskId: number) => {
-    setTaskToDelete(taskId);
-    setShowConfirmDelete(true);
-  };
-
-  const handleConfirmDelete = async () => {
-    if (taskToDelete === null) return;
-    await api.deleteTask(taskToDelete);
-    setShowConfirmDelete(false);
-    setTaskToDelete(null);
-    if (showDetailModal && selectedTask?.id === taskToDelete) {
-      setShowDetailModal(false);
-      setSelectedTask(null);
-    }
-    loadData();
-  };
-
-  const handleStatusChange = async (taskId: number, newStatus: TaskStatus) => {
-    await api.updateTaskStatus(taskId, newStatus);
-    loadData();
-  };
-
-  const handleFormSubmit = async (data: any) => {
-    if (editingTask) {
-      await api.updateTask(editingTask.id, data);
-    } else {
-      await api.createTask(data);
-    }
-    setShowFormModal(false);
-    loadData();
-  };
-
-  const getNextStatus = (current: TaskStatus): TaskStatus => {
-    if (current === 'todo') return 'in_progress';
-    if (current === 'in_progress') return 'done';
-    return 'todo';
-  };
-
-  const getNextStatusLabel = (current: TaskStatus): string => {
-    if (current === 'todo') return '▶ Iniciar';
-    if (current === 'in_progress') return '✓ Concluir';
-    return '↩ Reabrir';
-  };
-
-  if (loading) {
-    return <div className="loading">Carregando tarefas...</div>;
+export default function App() {
+  const [tasks,setTasks]=useState<Task[]>([]),[categories,setCategories]=useState<Category[]>([]),[priorities,setPriorities]=useState<Priority[]>([]),[subjects,setSubjects]=useState<Subject[]>([]);
+  const [loading,setLoading]=useState(true),[error,setError]=useState(''),[message,setMessage]=useState('');
+  const [showForm,setShowForm]=useState(false),[editing,setEditing]=useState<Task|null>(null),[subjectOpen,setSubjectOpen]=useState(false);
+  const [selectedId,setSelectedId]=useState<number|null>(null),[deleteId,setDeleteId]=useState<number|null>(null);
+  const [period,setPeriod]=useState<Period>('all'),[start,setStart]=useState(localToday()),[end,setEnd]=useState(localToday());
+  const [statusBusy,setStatusBusy]=useState(false);
+  async function load() {
+    setLoading(true);setError('');
+    try{const [t,c,p,s]=await Promise.all([api.getTasks(),api.getCategories(),api.getPriorities(),api.getSubjects()]);setTasks(t);setCategories(c);setPriorities(p);setSubjects(s);}
+    catch(err){setError((err as Error).message);}finally{setLoading(false);}
   }
-
-  const todoTasks = tasks.filter(t => t.status === 'todo');
-  const inProgressTasks = tasks.filter(t => t.status === 'in_progress');
-  const doneTasks = tasks.filter(t => t.status === 'done');
-
-  const totalTasks = tasks.length;
-  const completedTasks = doneTasks.length;
-  const pendingTasks = totalTasks - completedTasks;
-
-  const columns: { key: TaskStatus; title: string; icon: string; tasks: Task[]; className: string }[] = [
-    { key: 'todo', title: 'A Fazer', icon: '📋', tasks: todoTasks, className: 'column-todo' },
-    { key: 'in_progress', title: 'Em Progresso', icon: '⚡', tasks: inProgressTasks, className: 'column-in-progress' },
-    { key: 'done', title: 'Concluída', icon: '✅', tasks: doneTasks, className: 'column-done' },
-  ];
-
-  return (
-    <>
-      <header className="header">
-        <h1>📝 Gestão de Tarefas</h1>
-        <div className="header-stats">
-          <span>✅ Concluídas: {completedTasks}</span>
-          <span>⏳ Pendentes: {pendingTasks}</span>
-          <span>📊 Total: {totalTasks}</span>
-        </div>
-        <button className="btn-new-task" onClick={handleCreateTask}>
-          + Nova Tarefa
-        </button>
-      </header>
-
-      <main className="kanban-board">
-        {columns.map(col => (
-          <section key={col.key} className={`kanban-column ${col.className}`}>
-            <div className="column-header">
-              <h2>{col.icon} {col.title}</h2>
-              <span className="column-count">{col.tasks.length}</span>
-            </div>
-            {col.tasks.map(task => (
-              <TaskCard
-                key={task.id}
-                task={task}
-                onView={() => handleViewTask(task)}
-                onEdit={() => handleEditTask(task)}
-                onDelete={() => handleDeleteRequest(task.id)}
-                onStatusChange={() => handleStatusChange(task.id, getNextStatus(task.status))}
-                statusLabel={getNextStatusLabel(task.status)}
-              />
-            ))}
-            {col.tasks.length === 0 && (
-              <p style={{ textAlign: 'center', color: '#aaa', padding: '2rem 0', fontSize: '0.85rem' }}>
-                Nenhuma tarefa
-              </p>
-            )}
-          </section>
-        ))}
-      </main>
-
-      {showFormModal && (
-        <TaskFormModal
-          task={editingTask}
-          categories={categories}
-          priorities={priorities}
-          onSubmit={handleFormSubmit}
-          onClose={() => setShowFormModal(false)}
-        />
-      )}
-
-      {showDetailModal && selectedTask && (
-        <TaskDetailModal
-          task={selectedTask}
-          onClose={() => { setShowDetailModal(false); setSelectedTask(null); }}
-          onDelete={() => handleDeleteRequest(selectedTask.id)}
-          onMarkDone={() => handleStatusChange(selectedTask.id, 'done').then(() => { setShowDetailModal(false); setSelectedTask(null); })}
-          onRefresh={loadData}
-        />
-      )}
-
-      {showConfirmDelete && (
-        <ConfirmDialog
-          message="Tem certeza que deseja excluir esta tarefa? Esta ação não pode ser desfeita."
-          onConfirm={handleConfirmDelete}
-          onCancel={() => { setShowConfirmDelete(false); setTaskToDelete(null); }}
-        />
-      )}
-    </>
-  );
+  useEffect(()=>{void load();},[]);
+  const update=(task:Task)=>setTasks(old=>old.some(t=>t.id===task.id) ? old.map(t=>t.id===task.id ? task : t) : [...old,task]);
+  let range: {start?:string;end?:string}={},filterError='';
+  try{range=periodRange(period,localToday(),start,end);}catch(err){filterError=(err as Error).message;}
+  const visible=filterError ? [] : tasks.filter(t=>period==='unplanned' ? t.sessions.length===0 : !range.start || t.sessions.some(s=>s.planned_date>=range.start! && s.planned_date<=range.end!));
+  const done=visible.filter(t=>t.status==='done').length,selected=tasks.find(t=>t.id===selectedId);
+  const columns: {key:TaskStatus;title:string;className:string}[]=[{key:'todo',title:'📋 A fazer',className:'column-todo'},{key:'in_progress',title:'⚡ Em progresso',className:'column-in-progress'},{key:'done',title:'✅ Concluídas',className:'column-done'}];
+  async function submit(data:TaskFormData){const task=editing ? await api.updateTask(editing.id,data) : await api.createTask(data);update(task);setShowForm(false);setMessage('Atividade salva.');}
+  return <>
+    <header className="header"><h1>📝 Gestão de Tarefas</h1><div className="header-stats" aria-live="polite">
+      <span>Concluídas: {done}</span><span>Pendentes: {visible.length-done}</span><span>Total: {visible.length}</span></div>
+      <div className="header-actions"><button className="btn-new-task" onClick={()=>setSubjectOpen(true)}>+ Disciplina</button>
+        <button className="btn-new-task" onClick={()=>{setEditing(null);setShowForm(true);}}>+ Nova atividade</button></div></header>
+    <section className="period-filter" aria-label="Filtro de planejamento"><div className="form-group"><label htmlFor="period">Período de estudo</label>
+      <select id="period" value={period} onChange={e=>setPeriod(e.target.value as Period)}>
+        <option value="all">Todas</option><option value="today">Hoje</option><option value="month">Este mês</option><option value="semester">Este semestre</option><option value="custom">Personalizado</option><option value="unplanned">Sem planejamento</option></select></div>
+      {period==='custom' && <div className="custom-range"><div className="form-group"><label htmlFor="range-start">Data inicial</label><input id="range-start" type="date" value={start} onChange={e=>setStart(e.target.value)} /></div>
+        <div className="form-group"><label htmlFor="range-end">Data final</label><input id="range-end" type="date" value={end} onChange={e=>setEnd(e.target.value)} /></div></div>}
+      <p className="help-text" role="status">{filterError ? 'Período não aplicado.' : range.start ? `Intervalo aplicado: ${formatDate(range.start)} a ${formatDate(range.end!)} (inclusive).` : period==='unplanned' ? 'Atividades sem sessões de estudo.' : 'Todas as atividades, com ou sem planejamento.'}</p>
+      {period==='semester' && <p className="help-text">Semestre civil: janeiro a junho ou julho a dezembro. Convenção do protótipo, não calendário oficial da UCS.</p>}
+      {filterError && <p className="error-message" role="alert">{filterError}</p>}</section>
+    {error && <div role="alert" className="error-message page-message">{error} <button className="btn btn-secondary" onClick={()=>void load()}>Tentar novamente</button></div>}
+    {message && <p className="success-message page-message" role="status">{message}</p>}
+    {loading ? <p className="loading">Carregando atividades…</p> : <>
+      {!filterError && visible.length===0 && <p role="status" className="page-message">Nenhuma atividade neste período. Escolha Todas para consultar as demais.</p>}
+      <main className="kanban-board">{columns.map(col=><section className={`kanban-column ${col.className}`} key={col.key} aria-label={col.title}>
+        <div className="column-header"><h2>{col.title}</h2><span className="column-count">{visible.filter(t=>t.status===col.key).length}</span></div>
+        {visible.filter(t=>t.status===col.key).map(t=><TaskCard key={t.id} task={t} onView={()=>setSelectedId(t.id)} onEdit={()=>{setEditing(t);setShowForm(true);}} onDelete={()=>setDeleteId(t.id)}
+          statusLabel={t.status==='todo'?'Iniciar':t.status==='in_progress'?'Concluir':'Reabrir'} onStatusChange={()=>{
+            if(statusBusy)return;setStatusBusy(true);setError('');api.updateTaskStatus(t.id,t.status==='todo'?'in_progress':t.status==='in_progress'?'done':'todo').then(update).catch(err=>setError(err.message)).finally(()=>setStatusBusy(false));
+          }} />)}
+        {visible.filter(t=>t.status===col.key).length===0 && <p className="empty-column">Nenhuma atividade</p>}</section>)}</main>
+    </>}
+    {showForm && <TaskFormModal task={editing} categories={categories} priorities={priorities} subjects={subjects} onSubmit={submit} onClose={()=>setShowForm(false)} />}
+    {subjectOpen && <SubjectModal onClose={()=>setSubjectOpen(false)} onCreated={s=>{setSubjects(old=>[...old,s].sort((a,b)=>a.name.localeCompare(b.name)));setMessage('Disciplina cadastrada.');}} />}
+    {selected && <TaskDetailModal task={selected} onClose={()=>setSelectedId(null)} onDelete={()=>setDeleteId(selected.id)} onUpdated={update} />}
+    {deleteId!==null && <ConfirmDialog message="Excluir esta atividade e seus comentários e sessões? Esta ação não pode ser desfeita." onCancel={()=>setDeleteId(null)} onConfirm={async()=>{
+      await api.deleteTask(deleteId);setTasks(old=>old.filter(t=>t.id!==deleteId));if(selectedId===deleteId)setSelectedId(null);setDeleteId(null);setMessage('Atividade excluída.');
+    }} />}
+  </>;
 }
-
-export default App;

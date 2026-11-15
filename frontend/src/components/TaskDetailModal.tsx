@@ -1,139 +1,42 @@
 import { useState, useEffect } from 'react';
 import { Task, Comment } from '../types';
 import * as api from '../api';
+import { formatDate } from '../../../shared/planning';
+import Modal from './Modal';
+import SessionEditor from './SessionEditor';
 
-interface Props {
-  task: Task;
-  onClose: () => void;
-  onDelete: () => void;
-  onMarkDone: () => void;
-  onRefresh: () => void;
+export default function TaskDetailModal({ task, onClose, onDelete, onUpdated }: {
+  task: Task; onClose: () => void; onDelete: () => void; onUpdated: (task: Task) => void;
+}) {
+  const [comments, setComments] = useState<Comment[]>([]), [text, setText] = useState('');
+  const [error, setError] = useState(''), [busy, setBusy] = useState(false), [message, setMessage] = useState('');
+  useEffect(() => { let active=true; api.getComments(task.id).then(rows => {if(active)setComments(rows);}).catch(err=>{if(active)setError(err.message);});return()=>{active=false;}; }, [task.id]);
+  return <Modal title={task.title} large onClose={() => {if(!busy)onClose();}}>
+    <div className="task-detail-badges"><span className="badge badge-priority">{task.priority_emoji} {task.priority_name}</span>
+      <span className="badge badge-category">{task.category_emoji} {task.category_name}</span>
+      <span className="badge badge-status">{{todo:'A fazer',in_progress:'Em progresso',done:'Concluída'}[task.status]}</span></div>
+    <p className="card-line">Disciplina: {task.subject_name || 'Sem disciplina'}</p>
+    {task.description && <p className="task-detail-description">{task.description}</p>}
+    <p className="card-line">Prazo da atividade: {formatDate(task.due_date)}</p>
+    <p className="card-line">Criada em: {formatDate(task.created_at.slice(0,10))}</p>
+    <div className="task-detail-actions">
+      {task.status !== 'done' && <button className="btn btn-success" disabled={busy} onClick={async () => {
+        setBusy(true);setError('');try{onUpdated(await api.updateTaskStatus(task.id,'done'));setMessage('Atividade concluída.');}catch(err){setError((err as Error).message);}finally{setBusy(false);}
+      }}>Marcar como concluída</button>}
+      <button className="btn btn-danger" disabled={busy} onClick={onDelete}>Excluir atividade</button>
+      <button className="btn btn-secondary" disabled={busy} onClick={onClose}>Fechar</button></div>
+    <SessionEditor task={task} onUpdated={onUpdated} onBusyChange={setBusy} />
+    <section className="comments-section" aria-labelledby="comments-title"><h3 id="comments-title">Comentários ({comments.length})</h3>
+      <form onSubmit={async event => {
+        event.preventDefault();if(busy)return;setBusy(true);setError('');
+        try { const comment=await api.addComment(task.id,text);setComments(old=>[comment,...old]);setText('');setMessage('Comentário adicionado.'); }
+        catch(err){setError((err as Error).message);}finally{setBusy(false);}
+      }}><label htmlFor="new-comment">Novo comentário</label><div className="comment-form"><input id="new-comment" value={text} onChange={e=>setText(e.target.value)} required />
+        <button disabled={busy}>Enviar comentário</button></div></form>
+      <ul className="comment-list">{comments.map(c=><li className="comment-item" key={c.id}><p>{c.text}</p>
+        <small>{formatDate(c.created_at.slice(0,10))}</small><button disabled={busy} aria-label={`Excluir comentário: ${c.text}`} onClick={async()=>{
+          setBusy(true);setError('');try{await api.deleteComment(c.id);setComments(old=>old.filter(x=>x.id!==c.id));}catch(err){setError((err as Error).message);}finally{setBusy(false);}
+        }}>Excluir</button></li>)}</ul></section>
+    {error && <p role="alert" className="error-message">{error}</p>}{message && <p role="status" className="success-message">{message}</p>}
+  </Modal>;
 }
-
-function TaskDetailModal({ task, onClose, onDelete, onMarkDone, onRefresh }: Props) {
-  const [comments, setComments] = useState<Comment[]>([]);
-  const [newComment, setNewComment] = useState('');
-
-  useEffect(() => {
-    loadComments();
-  }, [task.id]);
-
-  const loadComments = async () => {
-    const data = await api.getComments(task.id);
-    setComments(data);
-  };
-
-  const handleAddComment = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!newComment.trim()) return;
-    await api.addComment(task.id, newComment.trim());
-    setNewComment('');
-    loadComments();
-  };
-
-  const handleDeleteComment = async (commentId: number) => {
-    await api.deleteComment(commentId);
-    loadComments();
-  };
-
-  const formatDate = (date: string | null) => {
-    if (!date) return 'Não definida';
-    return new Date(date).toLocaleDateString('pt-BR', {
-      day: '2-digit',
-      month: 'long',
-      year: 'numeric',
-    });
-  };
-
-  const statusLabels: Record<string, string> = {
-    todo: '📋 A Fazer',
-    in_progress: '⚡ Em Progresso',
-    done: '✅ Concluída',
-  };
-
-  return (
-    <div className="modal-overlay" onClick={onClose}>
-      <div className="modal modal-large" onClick={e => e.stopPropagation()}>
-        <div className="task-detail-header">
-          <h2 className="task-detail-title">{task.title}</h2>
-        </div>
-
-        <div className="task-detail-badges">
-          <span className="badge badge-priority">{task.priority_emoji} {task.priority_name}</span>
-          <span className="badge badge-category">{task.category_emoji} {task.category_name}</span>
-          <span className="badge badge-status">{statusLabels[task.status]}</span>
-        </div>
-
-        {task.description && (
-          <div className="task-detail-description">
-            {task.description}
-          </div>
-        )}
-
-        <div className="task-detail-info">
-          <div className="task-detail-info-item">
-            <span>Vencimento</span>
-            <span>{formatDate(task.due_date)}</span>
-          </div>
-          <div className="task-detail-info-item">
-            <span>Criada em</span>
-            <span>{formatDate(task.created_at)}</span>
-          </div>
-          <div className="task-detail-info-item">
-            <span>Prioridade</span>
-            <span>{task.priority_emoji} {task.priority_name}</span>
-          </div>
-          <div className="task-detail-info-item">
-            <span>Categoria</span>
-            <span>{task.category_emoji} {task.category_name}</span>
-          </div>
-        </div>
-
-        <div className="task-detail-actions">
-          {task.status !== 'done' && (
-            <button className="btn btn-success" onClick={onMarkDone}>
-              ✅ Marcar como Concluída
-            </button>
-          )}
-          <button className="btn btn-danger" onClick={onDelete}>
-            🗑️ Excluir
-          </button>
-          <button className="btn btn-secondary" onClick={onClose}>
-            Fechar
-          </button>
-        </div>
-
-        <div className="comments-section">
-          <h3>💬 Notas / Comentários ({comments.length})</h3>
-          <form className="comment-form" onSubmit={handleAddComment}>
-            <input
-              type="text"
-              value={newComment}
-              onChange={e => setNewComment(e.target.value)}
-              placeholder="Adicionar um comentário..."
-            />
-            <button type="submit">Enviar</button>
-          </form>
-          <ul className="comment-list">
-            {comments.map(comment => (
-              <li key={comment.id} className="comment-item">
-                <p>{comment.text}</p>
-                <small>{new Date(comment.created_at).toLocaleDateString('pt-BR')}</small>
-                <button onClick={() => handleDeleteComment(comment.id)} title="Excluir comentário">
-                  ✕
-                </button>
-              </li>
-            ))}
-            {comments.length === 0 && (
-              <li className="comment-item" style={{ justifyContent: 'center', color: '#aaa' }}>
-                <p>Nenhum comentário ainda.</p>
-              </li>
-            )}
-          </ul>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-export default TaskDetailModal;

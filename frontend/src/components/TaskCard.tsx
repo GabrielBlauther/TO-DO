@@ -1,45 +1,19 @@
 import { Task } from '../types';
+import { formatDate, localToday } from '../../../shared/planning';
 
-interface Props {
-  task: Task;
-  onView: () => void;
-  onEdit: () => void;
-  onDelete: () => void;
-  onStatusChange: () => void;
-  statusLabel: string;
+export default function TaskCard({ task, onView, onEdit, onDelete, onStatusChange, statusLabel }: {
+  task: Task; onView: () => void; onEdit: () => void; onDelete: () => void; onStatusChange: () => void; statusLabel: string;
+}) {
+  const overdue = task.due_date && task.due_date < localToday() && task.status !== 'done';
+  return <article className="task-card">
+    <div className="task-card-header"><button className="task-card-title title-button" onClick={onView} aria-label={`Detalhes de ${task.title}`}>{task.title}</button>
+      <span title={`Prioridade ${task.priority_name}`}>{task.priority_emoji} {task.priority_name}</span></div>
+    <p className="card-line">Disciplina: {task.subject_name || 'Sem disciplina'}</p>
+    <p className="card-line">Categoria: {task.category_emoji} {task.category_name}</p>
+    <p className={`card-line ${overdue ? 'overdue' : ''}`}>Prazo: {formatDate(task.due_date)}{overdue ? ' — vencido' : ''}</p>
+    <div className="card-planning"><strong>Planejamento:</strong>
+      {task.sessions.length === 0 ? <p>Sem planejamento</p> : <ul>{task.sessions.map(s => <li key={s.id}>{formatDate(s.planned_date)} · {s.start_time || 'Sem horário'} · {s.duration_minutes} min</li>)}</ul>}</div>
+    <div className="task-card-actions"><button className="btn-status" onClick={onStatusChange}>{statusLabel}</button>
+      <button onClick={onEdit}>Editar</button><button className="btn-delete" onClick={onDelete} aria-label={`Excluir ${task.title}`}>Excluir</button></div>
+  </article>;
 }
-
-function TaskCard({ task, onView, onEdit, onDelete, onStatusChange, statusLabel }: Props) {
-  const isOverdue = task.due_date && new Date(task.due_date) < new Date() && task.status !== 'done';
-
-  const formatDate = (date: string | null) => {
-    if (!date) return '';
-    return new Date(date).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
-  };
-
-  return (
-    <div className="task-card" onClick={onView}>
-      <div className="task-card-header">
-        <span className="task-card-title">{task.title}</span>
-        <span className="task-card-priority">{task.priority_emoji}</span>
-      </div>
-      <div className="task-card-meta">
-        <span className="task-card-category">
-          {task.category_emoji} {task.category_name}
-        </span>
-        {task.due_date && (
-          <span className={`task-card-due ${isOverdue ? 'overdue' : ''}`}>
-            📅 {formatDate(task.due_date)}
-          </span>
-        )}
-      </div>
-      <div className="task-card-actions" onClick={e => e.stopPropagation()}>
-        <button className="btn-status" onClick={onStatusChange}>{statusLabel}</button>
-        <button onClick={onEdit}>✏️ Editar</button>
-        <button className="btn-delete" onClick={onDelete}>🗑️</button>
-      </div>
-    </div>
-  );
-}
-
-export default TaskCard;
