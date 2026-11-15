@@ -67,6 +67,12 @@ export function createDatabase(path = "todo.db") {
       request_json TEXT NOT NULL,
       result_json TEXT NOT NULL
     );
+    CREATE TABLE IF NOT EXISTS mutation_receipts (
+      request_key TEXT PRIMARY KEY,
+      request_json TEXT NOT NULL,
+      response_json TEXT NOT NULL,
+      response_status INTEGER NOT NULL
+    );
   `);
 
   // Seed priorities

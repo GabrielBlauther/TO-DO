@@ -8,9 +8,13 @@ class HttpError extends Error {
 }
 const headers = {
   'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'GET, POST, PUT, PATCH, DELETE, OPTIONS', 'Access-Control-Allow-Headers': 'Content-Type',
+  'Access-Control-Allow-Methods': 'GET, POST, PUT, PATCH, DELETE, OPTIONS', 'Access-Control-Allow-Headers': 'Content-Type, X-Request-Key',
 };
-const json = (data: unknown, status = 200) => new Response(JSON.stringify(data), { status, headers });
+const responseBodies = new WeakMap<Response,string>();
+const json = (data: unknown, status = 200) => {
+  const body=JSON.stringify(data),response=new Response(body,{status,headers});
+  responseBodies.set(response,body);return response;
+};
 const selectTask = `SELECT t.*, c.name category_name, c.emoji category_emoji,
   p.name priority_name, p.level priority_level, p.emoji priority_emoji, s.name subject_name
   FROM tasks t JOIN categories c ON c.id=t.category_id
@@ -33,6 +37,7 @@ export function createHandler(db: Database) {
       const url = new URL(req.url), path = url.pathname, method = req.method;
       const body = ['POST', 'PUT', 'PATCH'].includes(method) ? await req.json().catch(() => { throw new HttpError('Não foi possível ler os dados enviados.'); }) : {};
       if (!body || typeof body !== 'object' || Array.isArray(body)) throw new HttpError('Dados inválidos.');
+      const execute = ():Response => {
       if (path === '/api/focus/confirm' && method === 'POST') return json(confirmFocus(db,body));
       if (path === '/api/tasks' && method === 'GET') {
         const start = url.searchParams.get('start'), end = url.searchParams.get('end'), unplanned = url.searchParams.get('unplanned') === 'true';
@@ -111,6 +116,24 @@ export function createHandler(db: Database) {
       if (path === '/api/categories' && method === 'GET') return json(db.query('SELECT * FROM categories ORDER BY name').all());
       if (path === '/api/priorities' && method === 'GET') return json(db.query('SELECT * FROM priorities ORDER BY level').all());
       return json({ error: 'Caminho não encontrado.' }, 404);
+      };
+      const key=req.headers.get('X-Request-Key');
+      if (!['POST','PUT','PATCH','DELETE'].includes(method) || path==='/api/focus/confirm') return execute();
+      if (key && !/^[\w-]{16,128}$/.test(key)) throw new HttpError('Identificação da tentativa inválida. Reabra o formulário.');
+      // Validation, changes and their receipt commit together, including deletes.
+      return db.transaction(() => {
+        const signature=JSON.stringify({method,path,body});
+        if(key){
+          const saved=db.query('SELECT * FROM mutation_receipts WHERE request_key=?').get(key) as {request_json:string;response_json:string;response_status:number}|null;
+          if(saved){
+            if(saved.request_json!==signature)throw new HttpError('Esta tentativa corresponde a outros dados. Verifique o pedido anterior antes de alterar as escolhas.',409);
+            return new Response(saved.response_json,{status:saved.response_status,headers});
+          }
+        }
+        const response=execute();
+        if(key && response.ok)db.query('INSERT INTO mutation_receipts VALUES (?,?,?,?)').run(key,signature,responseBodies.get(response)!,response.status);
+        return response;
+      })();
     } catch (error) {
       if (error instanceof HttpError || error instanceof PlanningError) return json({ error: error.message }, error.status);
       if (error instanceof Error && /Informe|duração/.test(error.message)) return json({ error: error.message }, 400);
