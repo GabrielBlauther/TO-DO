@@ -62,6 +62,11 @@ export function createDatabase(path = "todo.db") {
     );
     CREATE INDEX IF NOT EXISTS study_sessions_task ON study_sessions(task_id);
     CREATE INDEX IF NOT EXISTS study_sessions_date ON study_sessions(planned_date);
+    CREATE TABLE IF NOT EXISTS focus_confirmations (
+      request_key TEXT PRIMARY KEY,
+      request_json TEXT NOT NULL,
+      result_json TEXT NOT NULL
+    );
   `);
 
   // Seed priorities

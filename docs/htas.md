@@ -2,7 +2,7 @@
 
 As HTAs descrevem objetivos e ações do aluno. Os detalhes de interface podem mudar após avaliação. Não são resultados de testes.
 
-A primeira etapa implementa disciplinas e planejamento manual de sessões com filtros. Foco, timer, sugestão e troca de atividade ainda não existem; portanto nenhuma das duas HTAs está integralmente implementada. Editar uma sessão manualmente não equivale ao fluxo de substituição da HTA 2.
+A primeira etapa implementou disciplinas e planejamento manual. As etapas seguintes acrescentaram calendário e suporte funcional às duas HTAs por Foco em janela única, timer e reorganização atômica. Regras e evidências técnicas em [modo-foco.md](modo-foco.md); não houve avaliação com participantes. A revisão acadêmica dos fluxos continua necessária. Editar uma sessão manualmente no calendário não equivale ao fluxo de substituição do Foco.
 
 ## HTA 1 — Realizar uma sessão de estudo com foco
 Objetivo: estudar uma atividade escolhida com apoio do timer e registrar o andamento.

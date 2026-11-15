@@ -1,5 +1,7 @@
 import type { Database } from 'bun:sqlite';
-import { validDate, sessionInterval, overlaps } from '../shared/planning';
+import { validDate } from '../shared/planning';
+import { PlanningError, validateSession } from './session-rules';
+import { confirmFocus } from './focus';
 
 class HttpError extends Error {
   constructor(message: string, public status = 400) { super(message); }
@@ -31,6 +33,7 @@ export function createHandler(db: Database) {
       const url = new URL(req.url), path = url.pathname, method = req.method;
       const body = ['POST', 'PUT', 'PATCH'].includes(method) ? await req.json().catch(() => { throw new HttpError('Não foi possível ler os dados enviados.'); }) : {};
       if (!body || typeof body !== 'object' || Array.isArray(body)) throw new HttpError('Dados inválidos.');
+      if (path === '/api/focus/confirm' && method === 'POST') return json(confirmFocus(db,body));
       if (path === '/api/tasks' && method === 'GET') {
         const start = url.searchParams.get('start'), end = url.searchParams.get('end'), unplanned = url.searchParams.get('unplanned') === 'true';
         if ((start !== null || end !== null) && (!validDate(start) || !validDate(end) || start > end)) throw new HttpError('Informe um intervalo de datas válido, com início até o fim.');
@@ -84,13 +87,7 @@ export function createHandler(db: Database) {
         if ((listMatch && method === 'POST') || (sessionMatch && method === 'PUT')) {
           const data = { ...existing, ...body }, time = data.start_time === '' || data.start_time === undefined ? null : data.start_time;
           if (time !== null && typeof time !== 'string') throw new HttpError('Horário inválido.');
-          const interval = sessionInterval(data.planned_date, time, data.duration_minutes);
-          if (interval) {
-            const others = db.query('SELECT ss.*, t.title FROM study_sessions ss JOIN tasks t ON t.id=ss.task_id WHERE ss.start_time IS NOT NULL AND ss.id != ?').all(sid || 0) as (Session & { title: string })[];
-            const conflict = others.find(other => overlaps(interval, sessionInterval(other.planned_date, other.start_time, other.duration_minutes)!));
-            if (conflict) throw new HttpError(`Conflito com "${conflict.title}" em ${conflict.planned_date} às ${conflict.start_time}. Escolha outro horário ou cancele.`, 409);
-          }
-          if (parent.due_date && data.planned_date > parent.due_date && body.confirm_after_due !== true) throw new HttpError('O estudo está após o prazo da atividade. Revise ou confirme conscientemente para salvar.', 422);
+          validateSession(db,parent.due_date,{...data,start_time:time},sid || 0,body.confirm_after_due===true);
           const args = [data.planned_date, time, data.duration_minutes];
           if (sid) db.query('UPDATE study_sessions SET planned_date=?,start_time=?,duration_minutes=? WHERE id=? AND task_id=?').run(...args, sid, id);
           else db.query('INSERT INTO study_sessions (planned_date,start_time,duration_minutes,task_id) VALUES (?,?,?,?)').run(...args, id);
@@ -115,7 +112,7 @@ export function createHandler(db: Database) {
       if (path === '/api/priorities' && method === 'GET') return json(db.query('SELECT * FROM priorities ORDER BY level').all());
       return json({ error: 'Caminho não encontrado.' }, 404);
     } catch (error) {
-      if (error instanceof HttpError) return json({ error: error.message }, error.status);
+      if (error instanceof HttpError || error instanceof PlanningError) return json({ error: error.message }, error.status);
       if (error instanceof Error && /Informe|duração/.test(error.message)) return json({ error: error.message }, 400);
       console.error(error); return json({ error: 'Não foi possível salvar ou consultar os dados. Tente novamente.' }, 500);
     }

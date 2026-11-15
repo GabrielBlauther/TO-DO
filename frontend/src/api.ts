@@ -1,6 +1,10 @@
 import { Task, Comment, Category, Priority, TaskFormData, TaskStatus, Subject, SessionFormData } from './types';
+import type { FocusRequest, FocusResult } from '../../shared/focus';
 
 const BASE_URL = '/api';
+export class ApiError extends Error {
+  constructor(message: string, public status: number) { super(message); }
+}
 
 async function request<T>(url: string, options?: RequestInit): Promise<T> {
   const res = await fetch(`${BASE_URL}${url}`, {
@@ -9,7 +13,7 @@ async function request<T>(url: string, options?: RequestInit): Promise<T> {
   }).catch(() => { throw new Error('Não foi possível conectar à API. Confira a conexão e tente novamente.'); });
   if (!res.ok) {
     const error = await res.json().catch(() => ({ error: 'Não foi possível concluir a operação.' }));
-    throw new Error(error.error || 'Não foi possível concluir a operação.');
+    throw new ApiError(error.error || 'Não foi possível concluir a operação.',res.status);
   }
   return res.json();
 }
@@ -43,3 +47,4 @@ export const saveSession = (taskId: number, data: SessionFormData, sessionId?: n
   request<Task>(`/tasks/${taskId}/sessions${sessionId ? `/${sessionId}` : ''}`, { method: sessionId ? 'PUT' : 'POST', body: JSON.stringify(data) });
 export const deleteSession = (taskId: number, sessionId: number) =>
   request<Task>(`/tasks/${taskId}/sessions/${sessionId}`, { method: 'DELETE' });
+export const confirmFocus = (data: FocusRequest) => request<FocusResult>('/focus/confirm',{method:'POST',body:JSON.stringify(data)});

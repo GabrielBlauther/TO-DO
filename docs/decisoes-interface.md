@@ -54,3 +54,12 @@ Os modais alterados passaram a usar diálogo nativo com nome acessível, conten�
 - Os formulários, avisos e cancelamentos são os mesmos do quadro. Consultar uma sessão abre a atividade com aquela sessão em edição; selecionar um dia preenche a data de uma nova sessão, sem gravar até confirmar. O foco volta ao controle de origem ou ao seletor de visualização se o evento removido deixou de existir.
 
 Decisões técnicas e testes efetivamente realizados estão em [calendario-estudos.md](calendario-estudos.md). Não houve nova avaliação com participantes nem certificação de acessibilidade.
+
+## Foco em janela única implementado
+- Direção A materializada: sugestão/motivo, atividade identificada, origem explícita, opções de destino, campos condicionais e resumo no mesmo diálogo. O início exige confirmação; não há um assistente obrigatório de várias telas.
+- Controle e prevenção de erros: opção sem alterar o planejamento não insere outra sessão; reagendamento preserva prazos e demais sessões; remoção identifica somente o agendamento substituído. Confirmação atômica e repetível protege contra falhas parciais e resposta perdida.
+- Sugestão de horário explicada como encaixe entre registros, sem supor disponibilidade pessoal. Lista do dia ajuda a revisar a escolha; conflito e aviso de prazo usam a validação existente.
+- Timer com números e progresso discreto, sem movimento decorativo. Mudanças de fase/situação são anunciadas; segundos não têm região viva. Minimizar/Escape preserva execução e o retorno de foco segue o componente de diálogo existente.
+- Término de ciclo não conclui atividade nem inicia outra fase. A conclusão tem botão distinto e depende de resposta bem-sucedida da API. Recuperação e limites por origem do navegador são descritos em [modo-foco.md](modo-foco.md).
+
+Houve verificação técnica no Chrome, teclado e tela estreita. Não houve comparação empírica das alternativas, teste com participantes ou certificação de acessibilidade; o guia de estilo e a avaliação acadêmica permanecem pendentes.

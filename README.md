@@ -16,7 +16,7 @@ O projeto é desenvolvido no contexto do **Trabalho III — Design de Interaçã
 
 A proposta aplica Design Centrado no Usuário para conectar necessidades dos estudantes a requisitos, alternativas de interface e um protótipo navegável. O foco está na qualidade da interação, na clareza das informações e no controle do usuário sobre suas decisões.
 
-> **Em desenvolvimento:** o repositório parte de um gerenciador de tarefas existente. Disciplinas, sessões de estudo, filtros e calendário visual estão implementados. Modo Foco, timer e sugestões continuam planejados.
+> **Em desenvolvimento:** disciplinas, sessões de estudo, filtros, calendário visual e modo Foco estão implementados. Avaliação acadêmica, guia completo de estilo e revisão ampla de acessibilidade continuam em andamento.
 
 ## Funcionalidades da base
 
@@ -31,6 +31,7 @@ A proposta aplica Design Centrado no Usuário para conectar necessidades dos est
 - Filtros Todas, Hoje, Este mês, Este semestre, Personalizado e Sem planejamento.
 - Validação de conflitos de horário e confirmação de estudo após o prazo.
 - Visualização mensal de calendário, com navegação entre meses e planejamento por dia.
+- Foco em janela única, sugestão explicada, Pomodoro recuperável e reorganização atômica do estudo anterior.
 
 ## Evolução planejada
 
@@ -38,10 +39,10 @@ A proposta aplica Design Centrado no Usuário para conectar necessidades dos est
 - [x] Separar a data planejada de estudo do prazo da atividade.
 - [x] Consultar períodos diários, mensais, semestrais e personalizados por um filtro na mesma tela.
 - [x] Integrar as atividades a um calendário.
-- [ ] Criar o modo Foco com timer Pomodoro e controles de pausa e encerramento.
-- [ ] Sugerir uma atividade com base no planejamento e nos prazos, explicando o motivo.
-- [ ] Permitir trocar a atividade de estudo e reorganizar a sessão anterior.
-- [ ] Implementar feedback, validações e tratamento de conflitos de horário.
+- [x] Criar o modo Foco com timer Pomodoro e controles de pausa e encerramento.
+- [x] Sugerir uma atividade com base no planejamento e nos prazos, explicando o motivo.
+- [x] Permitir trocar a atividade de estudo e reorganizar a sessão anterior.
+- [x] Implementar feedback, validações e tratamento de conflitos de horário.
 - [ ] Revisar navegação por teclado, contraste e adaptação a telas menores.
 - [ ] Documentar a avaliação do protótipo e as melhorias realizadas.
 
@@ -137,6 +138,14 @@ Em **Visualização**, escolha **Calendário**. O filtro de período é mantido 
 Selecione um dia, escolha uma atividade existente e use **Planejar sessão neste dia**; a data vem preenchida no formulário. Selecione uma sessão para consultar a atividade e editar ou remover aquele planejamento. **Ver mais** abre todos os eventos do dia. Em **Sem planejamento**, use a lista de atividades e a ação **Planejar**. Em telas estreitas, o mês aparece como uma agenda em lista.
 
 Consulte [decisões, testes e roteiro do calendário](docs/calendario-estudos.md).
+
+### Usar o Foco
+
+Reinicie o backend após atualizar esta versão para aplicar a migração aditiva do recibo de confirmação. Clique em **Foco**, no Quadro ou Calendário, consulte a sugestão e selecione a atividade. Havendo várias sessões de origem, escolha explicitamente qual será considerada. Ao trocar a atividade, decida o destino do estudo anterior, confira o resumo e use **Confirmar e iniciar foco**.
+
+O padrão é estudo de 25 minutos e pausa de 5. Estudo pode ser ajustado entre 1 e 180 minutos inteiros. Pausar, minimizar, mudar a visualização e recarregar preservam o estado no mesmo navegador/endereço. Zero exige uma decisão; **Concluir atividade** é uma ação distinta. Repetir ciclos não cria novos agendamentos. Uma confirmação com resposta perdida pode ser recuperada sem duplicar o planejamento.
+
+Consulte [regras, recuperação, limites e roteiros das duas tarefas](docs/modo-foco.md).
 
 Endereços padrão:
 
