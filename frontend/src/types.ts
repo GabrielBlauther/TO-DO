@@ -13,6 +13,9 @@ export interface Task {
   priority_name: string;
   priority_level: number;
   priority_emoji: string;
+  subject_id: number | null;
+  subject_name: string | null;
+  sessions: StudySession[];
 }
 
 export interface Comment {
@@ -42,5 +45,16 @@ export interface TaskFormData {
   description: string;
   priority_id: number;
   category_id: number;
-  due_date: string;
+  due_date: string | null;
+  subject_id: number | null;
+  confirm_after_due?: boolean;
 }
+
+export interface Subject { id: number; name: string }
+export interface SessionFormData {
+  planned_date: string;
+  start_time: string | null;
+  duration_minutes: number;
+  confirm_after_due?: boolean;
+}
+export interface StudySession extends SessionFormData { id: number; task_id: number }

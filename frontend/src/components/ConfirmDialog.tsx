@@ -1,26 +1,15 @@
-interface Props {
-  message: string;
-  onConfirm: () => void;
-  onCancel: () => void;
-}
+import { useState } from 'react';
+import Modal from './Modal';
 
-function ConfirmDialog({ message, onConfirm, onCancel }: Props) {
-  return (
-    <div className="modal-overlay" onClick={onCancel}>
-      <div className="modal confirm-dialog" onClick={e => e.stopPropagation()}>
-        <h2>⚠️ Confirmação</h2>
-        <p>{message}</p>
-        <div className="form-actions">
-          <button className="btn btn-secondary" onClick={onCancel}>
-            Cancelar
-          </button>
-          <button className="btn btn-danger" onClick={onConfirm}>
-            Excluir
-          </button>
-        </div>
-      </div>
-    </div>
-  );
+export default function ConfirmDialog({ message, onConfirm, onCancel }: {
+  message: string; onConfirm: () => Promise<void>; onCancel: () => void;
+}) {
+  const [busy,setBusy]=useState(false),[error,setError]=useState('');
+  return <Modal title="Confirmar exclusão" onClose={()=>{if(!busy)onCancel();}}>
+    <p>{message}</p>{error && <p className="error-message" role="alert">{error}</p>}
+    <div className="form-actions"><button className="btn btn-secondary" disabled={busy} onClick={onCancel}>Cancelar</button>
+      <button className="btn btn-danger" disabled={busy} onClick={async()=>{
+        if(busy)return;setBusy(true);setError('');try{await onConfirm();}catch(err){setError((err as Error).message);}finally{setBusy(false);}
+      }}>{busy ? 'Excluindo…' : 'Excluir'}</button></div>
+  </Modal>;
 }
-
-export default ConfirmDialog;

@@ -1,4 +1,4 @@
-import { Task, Comment, Category, Priority, TaskFormData, TaskStatus } from './types';
+import { Task, Comment, Category, Priority, TaskFormData, TaskStatus, Subject, SessionFormData } from './types';
 
 const BASE_URL = '/api';
 
@@ -6,10 +6,10 @@ async function request<T>(url: string, options?: RequestInit): Promise<T> {
   const res = await fetch(`${BASE_URL}${url}`, {
     headers: { 'Content-Type': 'application/json' },
     ...options,
-  });
+  }).catch(() => { throw new Error('Não foi possível conectar à API. Confira a conexão e tente novamente.'); });
   if (!res.ok) {
-    const error = await res.json().catch(() => ({ error: 'Request failed' }));
-    throw new Error(error.error || 'Request failed');
+    const error = await res.json().catch(() => ({ error: 'Não foi possível concluir a operação.' }));
+    throw new Error(error.error || 'Não foi possível concluir a operação.');
   }
   return res.json();
 }
@@ -36,3 +36,10 @@ export const deleteComment = (id: number) =>
 // Categories & Priorities
 export const getCategories = () => request<Category[]>('/categories');
 export const getPriorities = () => request<Priority[]>('/priorities');
+
+export const getSubjects = () => request<Subject[]>('/subjects');
+export const createSubject = (name: string) => request<Subject>('/subjects', { method: 'POST', body: JSON.stringify({ name }) });
+export const saveSession = (taskId: number, data: SessionFormData, sessionId?: number) =>
+  request<Task>(`/tasks/${taskId}/sessions${sessionId ? `/${sessionId}` : ''}`, { method: sessionId ? 'PUT' : 'POST', body: JSON.stringify(data) });
+export const deleteSession = (taskId: number, sessionId: number) =>
+  request<Task>(`/tasks/${taskId}/sessions/${sessionId}`, { method: 'DELETE' });
