@@ -2,6 +2,8 @@
 
 Projeto acadêmico de IHC da UCS, desenvolvido a partir do to-do existente. Leia `docs/projeto-ihc.md`, `docs/htas.md`, `docs/decisoes-interface.md`, `docs/roadmap.md` e `docs/referencias/INDICE.md` antes de alterar funcionalidades.
 
+Para planejamento e calendário, consulte também `docs/modelo-dados.md`, `docs/validacao-planejamento.md` e `docs/calendario-estudos.md`, distinguindo registros históricos do estado atual.
+
 ## Fontes
 - Exigências acadêmicas: `docs/referencias/diretrizes/Trabalho-III.pdf`.
 - Fundamentação: PDFs em `docs/referencias/aulas/`; extrações auxiliares em `docs/referencias/textos/`.
@@ -47,4 +49,5 @@ Não repita instalação e testes apenas para incorporar documentação. Para no
 - Modelo e migração: `docs/modelo-dados.md`. Disciplinas são opcionais e independentes das categorias; atividades possuem várias sessões. Prazo continua pertencendo à atividade.
 - Períodos: Todas, Hoje, Este mês, Este semestre, Personalizado e Sem planejamento, por data planejada das sessões; atividades e contadores sem duplicação. Semestre civil jan–jun/jul–dez, não calendário oficial da UCS.
 - Resultados desta etapa, roteiro e limitações: `docs/validacao-planejamento.md`. Há testes Bun de migração/API/regras e verificação no Chrome, inclusive teclado e tela estreita. Não confundir isso com avaliação com participantes ou conformidade completa de acessibilidade.
-- Calendário visual, Foco, timer, sugestões e troca de atividades continuam planejados. As duas HTAs completas ainda não estão implementadas.
+- Calendário mensal implementado na etapa seguinte, com seletor Quadro/Calendário, sem alterar sessões ou API. Regras e verificações: `docs/calendario-estudos.md`.
+- Foco, timer, sugestões e troca de atividades continuam planejados. As duas HTAs completas ainda não estão implementadas.

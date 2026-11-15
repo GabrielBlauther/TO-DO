@@ -1,5 +1,7 @@
 # Validação da primeira etapa acadêmica
 
+Registro histórico da primeira etapa. A validação posterior do calendário está em [calendario-estudos.md](calendario-estudos.md); ela não substitui nem amplia retroativamente os resultados abaixo.
+
 Branch: `feat/planejamento-academico`, criada da main após confirmar o PR #3 (`19b591b`). Modelo registrado antes da alteração do esquema em `6d2d585`; backend em `04a5fc7`, correção de validação em `ef63826` e interface em `10da003`. Não houve merge automático.
 
 ## Ambiente e preservação

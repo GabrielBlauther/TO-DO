@@ -45,3 +45,12 @@ Consultar fontes originais para fundamentar o relatório. Recomendações didát
 O Kanban foi preservado, com um único seletor de período, rótulos distintos de prazo e planejamento, cadastro simples de disciplina e gerenciamento manual de várias sessões nos detalhes. Avisos após o prazo exigem confirmação explícita; conflitos impedem a gravação e permitem corrigir ou cancelar. Formulários mantêm valores quando a gravação falha.
 
 Os modais alterados passaram a usar diálogo nativo com nome acessível, contenção de Tab/Shift+Tab, Escape para cancelar, retorno de foco e sem descarte por clique no fundo. Foram acrescentados rótulos persistentes e foco visível. Houve verificação funcional no Chrome, teclado e viewport de 390 px, além de inspeção de capturas; isso não certifica conformidade normativa, contraste completo ou uso com leitor de tela. O guia acima e as decisões específicas de Foco continuam pendentes.
+
+## Calendário integrado
+- Um seletor Quadro/Calendário preserva a tela principal e o período escolhido, mantendo contexto e consistência (Navegação e Princípios e Diretrizes). Mês visualizado e intervalo filtrado têm rótulos distintos para explicitar o estado.
+- Sessões são projeções da mesma atividade; contadores continuam contando atividades únicas. Dias sem planejamento não recebem datas inventadas: essas atividades têm uma lista com ação explícita de planejar.
+- O dia atual usa texto Hoje e contorno; a seleção usa texto Selecionado, contorno tracejado e `aria-pressed`. Reconhecimento e feedback não dependem apenas de cor (Cores, Layout e IHC e Qualidade).
+- Até três eventos por célula, com Ver mais para a lista completa; abaixo de 700 px, lista de dias do mês. Isso procura limitar a carga visual para as personas hipotéticas, sem afirmar superioridade empírica.
+- Os formulários, avisos e cancelamentos são os mesmos do quadro. Consultar uma sessão abre a atividade com aquela sessão em edição; selecionar um dia preenche a data de uma nova sessão, sem gravar até confirmar. O foco volta ao controle de origem ou ao seletor de visualização se o evento removido deixou de existir.
+
+Decisões técnicas e testes efetivamente realizados estão em [calendario-estudos.md](calendario-estudos.md). Não houve nova avaliação com participantes nem certificação de acessibilidade.
