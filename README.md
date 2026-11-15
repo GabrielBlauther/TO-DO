@@ -31,7 +31,8 @@ A proposta aplica Design Centrado no Usuário para conectar necessidades dos est
 - Filtros Todas, Hoje, Este mês, Este semestre, Personalizado e Sem planejamento.
 - Validação de conflitos de horário e confirmação de estudo após o prazo.
 - Visualização mensal de calendário, com navegação entre meses e planejamento por dia.
-- Foco em janela única, sugestão explicada, Pomodoro recuperável e reorganização atômica do estudo anterior.
+- Foco com escolha, ajuste pertinente e revisão, sugestão explicada, Pomodoro recuperável e reorganização atômica do estudo anterior.
+- Rascunhos preservados ao retornar e verificação de gravações sem confirmação, sem duplicar pedidos.
 
 ## Evolução planejada
 
@@ -43,8 +44,8 @@ A proposta aplica Design Centrado no Usuário para conectar necessidades dos est
 - [x] Sugerir uma atividade com base no planejamento e nos prazos, explicando o motivo.
 - [x] Permitir trocar a atividade de estudo e reorganizar a sessão anterior.
 - [x] Implementar feedback, validações e tratamento de conflitos de horário.
-- [ ] Revisar navegação por teclado, contraste e adaptação a telas menores.
-- [ ] Documentar a avaliação do protótipo e as melhorias realizadas.
+- [x] Revisar os fluxos existentes, retorno, teclado e contraste dos controles corrigidos, com diagnóstico e verificações registrados.
+- [ ] Ampliar a revisão de acessibilidade e realizar/documentar avaliação humana do protótipo.
 
 ## Fluxos principais
 
@@ -141,11 +142,19 @@ Consulte [decisões, testes e roteiro do calendário](docs/calendario-estudos.md
 
 ### Usar o Foco
 
-Reinicie o backend após atualizar esta versão para aplicar a migração aditiva do recibo de confirmação. Clique em **Foco**, no Quadro ou Calendário, consulte a sugestão e selecione a atividade. Havendo várias sessões de origem, escolha explicitamente qual será considerada. Ao trocar a atividade, decida o destino do estudo anterior, confira o resumo e use **Confirmar e iniciar foco**.
+Reinicie o backend após atualizar esta versão para aplicar as migrações aditivas dos recibos. A interface verifica se o servidor suporta a recuperação segura antes de gravar; se ele ainda estiver na versão antiga, os campos ficam preservados e a mensagem orienta reiniciar o servidor.
+
+Clique em **Foco**, no Quadro ou Calendário. Em **Escolher o que estudar**, consulte a sugestão, selecione a atividade e qual estudo de hoje quer usar ou substituir; **Nenhum destes** permite planejar um novo. Continue para **Ajustar o planejamento**, quando pertinente, e depois **Revisar e iniciar**. A mesma atividade do estudo escolhido pula o ajuste. Use **Voltar** para corrigir; **Guardar escolhas e voltar** ou Escape conserva a preparação na mesma página. **Cancelar preparação e descartar escolhas** não grava.
 
 O padrão é estudo de 25 minutos e pausa de 5. Estudo pode ser ajustado entre 1 e 180 minutos inteiros. Pausar, minimizar, mudar a visualização e recarregar preservam o estado no mesmo navegador/endereço. Zero exige uma decisão; **Concluir atividade** é uma ação distinta. Repetir ciclos não cria novos agendamentos. Uma confirmação com resposta perdida pode ser recuperada sem duplicar o planejamento.
 
+**Minimizar Foco** mantém o timer para consultar o quadro e voltar. **Encerrar este ciclo** mostra as escolhas de continuação e permite retomar o restante se encerrou por engano. **Encerrar estudo e voltar** libera a escolha de outra atividade e não desfaz o planejamento salvo. A duração de um estudo planejado pode conter vários ciclos; ela não é o prazo da atividade.
+
+Se faltar confirmação ao salvar atividade, disciplina, estudo ou comentário, os campos ficam preservados e a alteração bloqueada para **Verificar resultado**. Fechar o formulário não cancela uma requisição já enviada; o aviso principal recupera o mesmo pedido, inclusive após recarregar a mesma aba. Evite refazer o cadastro. Pedidos comuns usam armazenamento da aba; fechar a aba ou limpar esse armazenamento pode perder a recuperação. Rascunhos ainda não enviados não são recuperados após recarregar. Ao cadastrar uma atividade, **Cadastrar disciplina aqui** retorna ao formulário sem perder título, descrição ou prazo.
+
 Consulte [regras, recuperação, limites e roteiros das duas tarefas](docs/modo-foco.md).
+
+Veja a [revisão de IHC](docs/revisao-ihc.md) para diagnóstico, fontes originais, antes/depois, capturas, verificações e limitações. A inspeção técnica não é uma avaliação com participantes.
 
 Endereços padrão:
 

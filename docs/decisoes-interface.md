@@ -1,18 +1,20 @@
 # Interface e fundamentação inicial
 
+**Estado atual:** a revisão de 15/11/2026 substituiu a direção A pela organização da alternativa B em etapas internas, sem mudar de contexto da tela principal. A comparação abaixo preserva o histórico das hipóteses; os benefícios não foram comprovados com participantes. Decisões atuais e evidências em [revisao-ihc.md](revisao-ihc.md).
+
 ## Alternativas exploradas no chat
 Ambas usam o mesmo cenário fictício: havia Cálculo em uma sessão; o aluno escolhe Programação e pode reagendar Cálculo. Datas do exemplo não são dados reais do usuário.
 
-### A — Janela única (direção escolhida)
+### A — Janela única com escolhas simultâneas (direção inicial)
 Tela principal → botão Foco → janela com sugestão e motivo, seleção de atividade, campos condicionais de reorganização, resumo e ação de início → timer → resultado/retorno.
 
 Campos de reagendamento aparecem apenas se houver troca e o aluno optar por reagendar. O resumo mostra as consequências antes de confirmar. Seleção, revisão e início permanecem no mesmo contexto.
 
-### B — Etapas guiadas (alternativa para comparação)
+### B — Etapas guiadas (adotada após inspeção técnica)
 Tela principal → escolher atividade → ajustar planejamento quando necessário → revisar e iniciar → timer → resultado/retorno. Botão Voltar permite revisar escolhas anteriores.
 
 ### Comparação e justificativa provisória
-Janela única facilita revisar escolhas simultaneamente e reduz avanços; pode acumular informações quando vários campos aparecem. Etapas guiadas reduzem informações simultâneas e podem ajudar iniciantes, mas exigem mais transições e retorno para comparar escolhas. A direção escolhida é janela única com divulgação progressiva, considerando a rapidez esperada por Lucas e mantendo rótulos claros para Marina e Renata. Não há comprovação empírica de superioridade.
+Janela única facilita revisar escolhas simultaneamente e reduz avanços; pode acumular informações quando vários campos aparecem. Etapas guiadas reduzem informações simultâneas e podem ajudar iniciantes, mas exigem mais transições e retorno para comparar escolhas. A escolha inicial foi janela única com divulgação progressiva, considerando a rapidez esperada por Lucas e mantendo rótulos claros para Marina e Renata. A inspeção posterior motivou etapas com retorno preservado. Não há comprovação empírica de superioridade.
 
 Os esboços interativos foram apresentados no chat. Este documento registra os fluxos, mas NÃO substitui as imagens/wireframes exigidos para a entrega. Produzir e preservar os dois estudos visuais antes do relatório final.
 
@@ -27,7 +29,7 @@ Os esboços interativos foram apresentados no chat. Este documento registra os f
 | Status indicado por texto além da cor | Diferentes capacidades perceptuais | Cores, IHC e Qualidade: legibilidade e acessibilidade |
 
 ## Guia de estilo a completar com o protótipo
-- Paleta e valores de contraste medidos; identidade visual ainda não foi escolhida. Não presumir a paleta de outros projetos do usuário.
+- Completar paleta e identidade global; os pares de controles/feedback já medidos estão na revisão abaixo. Não presumir a paleta de outros projetos do usuário.
 - Fonte, tamanhos, pesos e hierarquia consistentes.
 - Botões primários/secundários e estados: normal, hover, foco, pressionado, processando e erro.
 - Campos com rótulos persistentes; erro associado ao campo; não usar só placeholder.
@@ -51,11 +53,13 @@ Os modais alterados passaram a usar diálogo nativo com nome acessível, conten�
 - Sessões são projeções da mesma atividade; contadores continuam contando atividades únicas. Dias sem planejamento não recebem datas inventadas: essas atividades têm uma lista com ação explícita de planejar.
 - O dia atual usa texto Hoje e contorno; a seleção usa texto Selecionado, contorno tracejado e `aria-pressed`. Reconhecimento e feedback não dependem apenas de cor (Cores, Layout e IHC e Qualidade).
 - Até três eventos por célula, com Ver mais para a lista completa; abaixo de 700 px, lista de dias do mês. Isso procura limitar a carga visual para as personas hipotéticas, sem afirmar superioridade empírica.
-- Os formulários, avisos e cancelamentos são os mesmos do quadro. Consultar uma sessão abre a atividade com aquela sessão em edição; selecionar um dia preenche a data de uma nova sessão, sem gravar até confirmar. O foco volta ao controle de origem ou ao seletor de visualização se o evento removido deixou de existir.
+- Os formulários, avisos e cancelamentos são os mesmos do quadro. Após a revisão, consultar uma sessão abre a atividade com o estudo destacado e focado em consulta; Editar é explícito. Selecionar um dia preenche a data de uma nova sessão, sem gravar até confirmar. O foco volta ao controle de origem ou ao seletor de visualização se o evento removido deixou de existir.
 
 Decisões técnicas e testes efetivamente realizados estão em [calendario-estudos.md](calendario-estudos.md). Não houve nova avaliação com participantes nem certificação de acessibilidade.
 
 ## Foco em janela única implementado
+
+Registro da primeira implementação. A revisão posterior abaixo altera a apresentação das escolhas e os rótulos, mantendo as regras de planejamento, sugestão e persistência.
 - Direção A materializada: sugestão/motivo, atividade identificada, origem explícita, opções de destino, campos condicionais e resumo no mesmo diálogo. O início exige confirmação; não há um assistente obrigatório de várias telas.
 - Controle e prevenção de erros: opção sem alterar o planejamento não insere outra sessão; reagendamento preserva prazos e demais sessões; remoção identifica somente o agendamento substituído. Confirmação atômica e repetível protege contra falhas parciais e resposta perdida.
 - Sugestão de horário explicada como encaixe entre registros, sem supor disponibilidade pessoal. Lista do dia ajuda a revisar a escolha; conflito e aviso de prazo usam a validação existente.
@@ -63,3 +67,18 @@ Decisões técnicas e testes efetivamente realizados estão em [calendario-estud
 - Término de ciclo não conclui atividade nem inicia outra fase. A conclusão tem botão distinto e depende de resposta bem-sucedida da API. Recuperação e limites por origem do navegador são descritos em [modo-foco.md](modo-foco.md).
 
 Houve verificação técnica no Chrome, teclado e tela estreita. Não houve comparação empírica das alternativas, teste com participantes ou certificação de acessibilidade; o guia de estilo e a avaliação acadêmica permanecem pendentes.
+
+## Decisões da revisão de IHC
+
+| Decisão atual | Relação com as personas hipotéticas | Fonte original e motivo |
+| --- | --- | --- |
+| Escolher → ajustar somente quando pertinente → revisar; Voltar mantém valores | Marina/Renata: orientação e correção; Lucas: reutilizar estudo pula ajuste | Princípios pp. 16, 20 e 43; Fatores Humanos pp. 15–17. Menos telas não garante simplicidade; o diagnóstico mostrou escolhas acumuladas e perda ao retornar. Não é prova de superioridade da alternativa. |
+| Nomear estudo por atividade, disciplina, data, horário e duração; explicar prazo e ciclo | Marina: reconhecer sem aprender “origem” ou memorizar identificadores | Princípios pp. 34–35 e 38–39; Navegação pp. 52–58. Identificadores permanecem internos. |
+| Resultado incerto bloqueia alteração do pedido, permite verificar e sair para o aviso principal | Renata: recuperar sem refazer; Lucas: evitar duplicação | Princípios pp. 26 e 40–43. O teste perdeu uma resposta após commit e duplicou atividade antes da correção. Não fingir que Cancelar desfaz algo já enviado. |
+| Consultar evento não abre edição; cadastro auxiliar retorna ao rascunho | Marina/Renata: reconhecer estado e manter trabalho | Navegação pp. 73–80; Princípios pp. 20–21. Separar consulta/alteração e preservar retorno. |
+| Exclusão identificada com uma confirmação; comentário com cancelamento antes de gravar; retomar ciclo encerrado por engano | Renata: correção; Lucas: evitar confirmações repetitivas | Princípios pp. 19–20; Navegação pp. 21–27. Fricção proporcional; não exigir digitar título nem acrescentar confirmação a salvar/minimizar. Exclusão permanente não promete desfazer. |
+| Erro focável, data legível e campos preservados; contagem só após consulta confirmada | Todos: perceber o estado e como continuar | Princípios pp. 34–43; Layout pp. 101–103. Foco e texto complementam cor. |
+
+Contrastes dos controles corrigidos foram calculados por luminância relativa: branco/primário `#4338ca` **7,90:1** (antes 3,66); branco/excluir `#b91c1c` **6,47:1** (antes 3,76); branco/concluir `#047857` **5,48:1** (antes 2,54). Secundário `#444` sobre `#f0f2f5`: **8,68:1**; ajuda `#4b5563`/branco e erro `#991b1b`/`#fff1f2`: **7,56:1**. Hover dos botões não reduz mais opacidade; usa sublinhado. Foco tem contorno de 3 px e deslocamento de 3 px; mensagens também usam texto. Medidas dos pares sólidos indicados, não auditoria de todos os estados/componentes nem declaração de conformidade WCAG. Fonte didática: Cores pp. 36–38.
+
+Essas decisões formam uma parte concreta do guia; wireframes das duas alternativas, avaliação humana e guia completo continuam pendentes. Capturas da aplicação são evidências da implementação, não substitutos dos estudos de baixa fidelidade.

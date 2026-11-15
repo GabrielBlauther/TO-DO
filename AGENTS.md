@@ -4,6 +4,7 @@ Projeto acadêmico de IHC da UCS, desenvolvido a partir do to-do existente. Leia
 
 Para planejamento e calendário, consulte também `docs/modelo-dados.md`, `docs/validacao-planejamento.md` e `docs/calendario-estudos.md`, distinguindo registros históricos do estado atual.
 Para execução de estudo e reorganização, leia `docs/modo-foco.md`, inclusive limites da recuperação local e da confirmação idempotente.
+Para interação, leia também `docs/revisao-ihc.md`: diagnóstico anterior às correções, fontes/páginas, evidências e limitações. Prioridade: enunciado → aulas originais → decisões/personas/HTAs próprias (revisáveis). O código não é a especificação correta por existir.
 
 ## Fontes
 - Exigências acadêmicas: `docs/referencias/diretrizes/Trabalho-III.pdf`.
@@ -17,7 +18,10 @@ Para execução de estudo e reorganização, leia `docs/modo-foco.md`, inclusive
 ## Implementação
 - Preserve e aproveite a arquitetura existente. Evite mudanças de stack, bibliotecas desnecessárias e funcionalidades fora do escopo.
 - Interface em português brasileiro. Uma tela principal com filtro de período; não criar três abas independentes para dia, mês e semestre.
-- Modo Foco em janela única com campos condicionais; manter cancelamento e revisão antes de alterar o planejamento.
+- Foco com etapas internas de escolha, ajuste pertinente e revisão; Voltar mantém escolhas. Reutilizar o mesmo estudo pula o ajuste. A revisão de IHC substitui a exigência anterior de reunir todas as escolhas simultaneamente.
+- Distinguir guardar preparação, descartar preparação, minimizar timer, encerrar ciclo e encerrar estudo. Nunca anunciar cancelamento de uma requisição já enviada como se desfizesse seus efeitos.
+- Erros precisam informar operação, causa conhecida, estado e recuperação. Resultado incerto mantém o mesmo pedido/chave; verificar antes de permitir outra gravação. Preservar campos; não inventar causas nem afirmar ausência de gravação após perda de resposta.
+- Atividade, disciplina, prazo, estudo planejado e ciclo são conceitos distintos. Usar vocabulário reconhecível e campos condicionais. Recomendações das aulas são contextuais, não regras universais.
 - Prazo da atividade, data de estudo e término do timer são conceitos diferentes.
 - Preserve dados existentes e use migrações compatíveis. Nunca recrie o banco para acrescentar um campo.
 - Verifique regras de datas, cancelamento, falhas e conflitos com testes proporcionais. Diferencie testes de API, build e inspeção real da interface.
@@ -52,3 +56,10 @@ Não repita instalação e testes apenas para incorporar documentação. Para no
 - Resultados desta etapa, roteiro e limitações: `docs/validacao-planejamento.md`. Há testes Bun de migração/API/regras e verificação no Chrome, inclusive teclado e tela estreita. Não confundir isso com avaliação com participantes ou conformidade completa de acessibilidade.
 - Calendário mensal implementado na etapa seguinte, com seletor Quadro/Calendário, sem alterar sessões ou API. Regras e verificações: `docs/calendario-estudos.md`.
 - Foco em janela única, sugestões determinísticas, timer recuperável e reorganização atômica implementados na etapa seguinte. Regras, testes e limitações em `docs/modo-foco.md`. As duas HTAs têm suporte funcional; não apresentar isso como avaliação com participantes ou comprovação de usabilidade.
+
+## Revisão de IHC implementada
+- Foco integrado à main pelo PR #6 (`9952103`), confirmado antes de criar `fix/revisao-ihc`. Não presumir integrações posteriores.
+- Diagnóstico e correções em `docs/revisao-ihc.md`; consulta textual integral das 15 aulas e enunciado, com inspeção visual delimitada e limitações explícitas. Não houve avaliação com participantes.
+- Mutações comuns agora usam recibos transacionais em `mutation_receipts`; a interface verifica suporte do servidor antes de gravar. Reiniciar o backend atualizado aplica a migração aditiva sem recriar o banco.
+- Pedidos comuns pendentes são guardados em `sessionStorage` nesta aba; Foco continua em `localStorage`. Campos bloqueados após resposta incerta, com verificação do mesmo pedido ou fechamento para recuperar pelo aviso principal. Fechar a aba/limpar armazenamento tem limites descritos na revisão.
+- Testes e build passaram; Chrome desktop/390 px incluiu os dois fluxos, erros, teclado, retorno e duas abas. Não equivalem a teste de usabilidade ou auditoria completa de acessibilidade.

@@ -123,4 +123,62 @@ Desfazer não será prometido para exclusão permanente de atividade: envolve co
 
 ## Evidências posteriores
 
-Preencher após implementar e verificar. Este diagnóstico foi registrado antes das alterações de código.
+O diagnóstico foi registrado e enviado em `41d746e`, antes das alterações. Correções: recibos atômicos `366abb0`; formulários/recuperação `3d4f75f`; compatibilidade do servidor `0cd07da`; Foco guiado/retomada `e81817f`; preservação da duração do próximo ciclo ao minimizar `2743f53`. A documentação posterior não altera o registro dos problemas originais.
+
+| Problema | Antes → depois | Evidência e alcance |
+| --- | --- | --- |
+| R01 | “Não conectou; tente novamente” e duas atividades → estado incerto explícito, mesmo pedido/chave e um único registro | Chrome: perder resposta após commit real em atividade, estudo, comentário, Foco e conclusão; verificar sem duplicar. Fechar formulário, recarregar e recuperar pelo aviso principal também passou. Bun: recibo persistido, exclusão repetida e rollback quando falha a gravação do recibo. |
+| R02 | Escape apaga preparação/erro vaza no cabeçalho → guardar e voltar preserva campos/etapa, descarte explícito não grava, erro contextual | Chrome: ciclo de 40 min mantido ao sair/reabrir e ao usar Voltar; cancelar preparação preserva resposta completa da API. A duração ainda não iniciada do próximo ciclo também sobrevive a minimizar/reabrir. |
+| R03 | Todas as escolhas juntas, “origem” e números internos → escolher, ajustar somente se pertinente e revisar, com estudos reconhecíveis | Chrome: mesma atividade pula Ajustar; três destinos de troca, novo estudo, ajuste manual e retorno mantendo campos. Atualização após remoção externa do estudo retorna à escolha explícita. A melhoria da compreensão continua hipótese a avaliar com alunos. |
+| R04 | Consulta falhou mas mostra zero comentários → carregamento/falha/lista vazia confirmada distintos | Chrome: bloquear GET, nenhum zero confirmado, Recarregar comentários recupera lista. No código, erro da consulta tem estado separado das gravações. |
+| R05 | Abandonar atividade para cadastrar disciplina → cadastro auxiliar dentro do formulário e retorno ao rascunho | Chrome: abrir/cancelar/cadastrar disciplina mantém título, descrição e prazo; nova disciplina selecionada; Escape permite Continuar editando ou descartar. |
+| R06 | Erro cortado/foco no body/data técnica → erro visível focado com operação, data legível, estado e ação | Chrome 390 px: conflito mantém data/horário/duração, mensagem inteira dentro da viewport e foco no alerta; Tab segue dentro do diálogo; 10:30 conflitante → 11:00 consecutivo salva. |
+| R07 | Retornar podia encerrar sem distinção suficiente → minimizar preserva, encerrar ciclo oferece retomada do restante, encerrar estudo libera outra escolha | Chrome: pausar/recarregar/retomar; minimizar, trocar visualização e reabrir mantém instante final; encerramento antecipado retomável; cancelar próximo ciclo não inicia nada; duração inválida conserva estado. Bun: restante recuperado após recarga, fim natural não retomado como ciclo antigo. |
+| R08 | Exclusão genérica/comentário apagado imediatamente → título/alcance e confirmação única cancelável, comentário identificado | Chrome: cancelar exclusão de atividade, sessão e comentário preserva registros; confirmar remoção de sessão mantém atividade/prazo; confirmar comentário remove somente ele. API: repetir DELETE com recibo funciona mesmo sem o objeto, sem repetir efeitos. Não houve simulação de resposta perdida na exclusão de atividade pelo navegador; essa parte da recuperação foi verificada na API. |
+| R09 | Evento abre edição → consulta com estudo destacado/focado, Editar explícito | Chrome desktop: evento não abre formulário; Editar abre o correspondente; cancelar e voltar mantém mês/filtro. Dia → planejar → cancelar → fechar detalhes retorna ao mesmo dia/atividade escolhida. |
+| R10 | Quadro vazio sem consulta confirmada, destruição destacada e contraste insuficiente em botões → contagens “—” antes de confirmar carga, resultados só após consulta, exclusão secundária e contrastes corrigidos | Chrome: falha inicial não mostra quadro vazio nem habilita cadastro sem referências; recarregar recupera uso. Desktop/390 px sem rolagem horizontal; capturas inspecionadas. Contrastes dos pares sólidos calculados em decisões de interface, não certificação de acessibilidade. |
+
+### Capturas próprias
+
+Imagens da aplicação, com **dados fictícios no banco isolado**, preservadas no repositório para revisão. Não contêm páginas dos materiais didáticos e não são alternativas de baixa fidelidade. Foram capturadas em momentos distintos dos roteiros: compare a organização da interação, não os horários/contadores como se fosse um experimento controlado.
+
+- [Antes: Foco com escolhas simultâneas](imagens/revisao-ihc/antes-foco.png) → [depois: escolha com contexto](imagens/revisao-ihc/depois-escolha.png).
+- [Depois: revisão em tela estreita com Voltar e confirmação](imagens/revisao-ihc/depois-revisao-mobile.png).
+- [Antes: conflito parcialmente cortado](imagens/revisao-ihc/antes-erro-mobile.png) → [depois: operação, estado, recuperação e foco no erro](imagens/revisao-ihc/depois-erro-mobile.png).
+
+### Ambiente e resultados
+
+Windows/PowerShell, Bun 1.4.4; Chrome **157.0.8103.51**, headless controlado por Playwright Python já disponível localmente, America/Sao_Paulo, relógio controlado em 15/11/2026. Desktop 1366×900 e viewport 390×844, preferência de movimento reduzido. Não simulamos esperar 25 minutos reais; avançamos o relógio para testar estados. Backend 3004 com banco em `.cache/revisao-ui`; frontend 5176 com interceptação de **todas** as chamadas `/api/` para esse backend, incluindo a consulta OPTIONS. Os dados fictícios foram removidos/recriados somente nesse banco isolado.
+
+- `bun run test` na raiz: **37 testes, 198 asserções, zero falhas**, incluindo regras anteriores de migração, filtros, datas, calendário e atomicidade do Foco. Quatro testes novos: recibos persistentes e repetição segura; rollback ao falhar recibo; cliente recuperando pedido e recusando servidor incompatível; retomada de ciclo encerrado. O log “falha simulada” é esperado no teste que provoca erro do SQLite.
+- `bun run --bun build` em `frontend`: TypeScript e Vite aprovados. `git diff --check` aprovado. Lint não configurado; nenhuma dependência/lockfile alterado.
+- Percurso final Chrome: duas HTAs e auxiliares da tabela, Tab/Shift+Tab contidos, Escape/retorno coerentes, campos conservados após falha, ausência de rolagem horizontal em 390 px e zero erros JavaScript de página. Duas abas confirmando o mesmo início resultaram em uma chamada efetiva, uma inclusão e o mesmo timer recuperado. Servidor sem cabeçalho de suporte não recebeu o cadastro; mensagem e título foram preservados.
+- Os servidores de teste foram encerrados após o percurso. A aplicação pessoal que já estava aberta não foi interrompida nem reiniciada pelos testes.
+- Testes Bun usam memória/diretórios temporários, incluindo criação nova, migração de esquema legado isolado e reinicialização. Testes de API não são testes pela interface; percurso no Chrome é verificação técnica, não prova de usabilidade.
+
+**Preservação:** não executamos gravações de teste, migração ou restauração no banco pessoal. Inicialmente os hashes coincidiam; posteriormente `todo.db` permaneceu igual, mas WAL/SHM mudaram enquanto Gabriel experimentava a aplicação, conforme confirmação no chat. Não é correto alegar igualdade final de todos os hashes. A auditoria foi feita somente em cópias: o WAL continha o prefixo com o hash inicial exato, permitindo guardar uma cópia consistente do estado inicial em `.cache/revisao-ui/auditoria-inicial/todo.db`; uma segunda cópia do estado corrente passou em `integrity_check`. Nada foi restaurado/sobrescrito no original e esses arquivos não entram no Git. As alterações pessoais foram mantidas.
+
+### Recuperação e limites técnicos
+
+Reiniciar o backend atualizado é necessário para criar `mutation_receipts` aditivamente. Antes de enviar cada gravação, a interface consulta OPTIONS e exige `X-Write-Recovery: 1`; um servidor antigo não deve ignorar silenciosamente a chave de repetição. Erro antes desse envio diz que nenhuma **nova** gravação foi enviada, preservando a possibilidade de pedidos anteriores já estarem salvos. Falha após envio/5xx/resposta ilegível é tratada como resultado incerto, sem inventar causa ou garantir ausência de gravação. Requisições têm limite de 15 segundos para não permanecer indefinidamente em envio.
+
+Pedidos comuns pendentes são guardados com conteúdo/chave em `sessionStorage`: sobrevivem a fechar formulário e recarregar **a mesma aba**. Fechar a aba/limpar armazenamento pode perder a chave; não refazer cadastros sem conferir o planejamento. Não há recuperação entre dispositivos. Foco continua com seu pedido pendente/timer em `localStorage` e Web Locks; seus limites anteriores permanecem. Recibos persistem no SQLite, sem limpeza automática nesta revisão. Resposta de recibo é a confirmação original, não uma consulta atual se outro processo mudou o registro; recuperação pelo aviso principal recarrega os dados.
+
+Rascunhos não enviados ficam na página enquanto se retorna/guarda preparação; fechar uma edição preenchida oferece continuar ou descartar. Não prometemos recuperação desses rascunhos após recarregar. Exclusão permanente tem prevenção contextual, sem falso desfazer depois da gravação. Corrupção/interdição do armazenamento não foi exercitada pelo navegador nesta revisão; testes unitários verificam rejeição de registros inválidos, mas não há reparo automático de dados de navegador corrompidos.
+
+### O que depende de avaliação humana
+
+Não houve entrevistas, alunos participantes, comparação empírica entre alternativas ou métricas de sucesso/tempo/satisfação. Ainda avaliar se os termos e as etapas são compreendidos por Marina/Renata/Lucas (personas hipotéticas), se há excesso de instrução e se a sugestão/destino do estudo anterior correspondem ao modelo mental real. Leitor de tela, zoom elevado, outros navegadores, dispositivos físicos e revisão completa de contraste/teclado continuam pendentes. Esses limites impedem afirmar conformidade de acessibilidade ou usabilidade comprovada.
+
+Materiais indexados estão presentes; somente as extrações foram consultadas integralmente. Páginas compostas só por figuras não são compreendidas pela leitura textual; fora da amostra visual declarada, detalhes de imagens/vídeos não fundamentam esta revisão. As duas alternativas visuais de baixa fidelidade, guia completo, relatório e slides ainda precisam ser concluídos conforme o Trabalho III. Capturas e código não substituem essas entregas.
+
+### Roteiro curto para revisão interna
+
+1. Reiniciar a API atualizada conforme README e usar uma base separada para ensaios destrutivos. Criar duas atividades e planejar dois estudos de hoje para uma delas. Prazo da atividade é a entrega; data planejada é quando estudar.
+2. Em Nova atividade, preencher título/descrição/prazo, cadastrar disciplina ali e voltar. Cancelar o cadastro auxiliar preserva campos; cancelar atividade preenchida permite continuar ou descartar.
+3. Abrir Foco, reconhecer o estudo pelo nome/disciplina/data/horário, escolher outra atividade e Continuar. Experimentar manter, reagendar e remover somente o agendamento escolhido; revisar consequências e outras sessões preservadas.
+4. Em reagendar, provocar sobreposição, ler erro e usar Voltar; corrigir para horário consecutivo. Experimentar uma data após o prazo, revisar ou confirmar conscientemente. Guardar e reabrir mantém campos; descartar antes do envio não muda o banco.
+5. Iniciar Foco, pausar, minimizar, alternar Quadro/Calendário e voltar. Encerrar ciclo, retomar seu restante, escolher/cancelar próximo ciclo, ou encerrar estudo. Concluir atividade é separado; não acontece em zero.
+6. Selecionar evento do calendário: começa em consulta. Editar ou remover explicitamente; cancelar mantém estudo/prazo. Selecionar dia, planejar e voltar ao mesmo dia.
+7. Com ferramentas de teste, perder uma resposta **após** o servidor gravar: conferir a mensagem de resultado incerto e Verificar resultado, inclusive pelo aviso principal após fechar/recarregar. Não usar dados pessoais para simular essas falhas. Sem simular rede, usar roteiro documentado como verificação pendente, sem inventar resultado.
+8. Repetir com Tab/Shift+Tab/Escape e tela estreita; registrar observações reais e dúvidas de compreensão. Se colegas participarem, documentar método/contexto e distinguir revisão interna de avaliação com usuários-alvo.

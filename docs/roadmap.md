@@ -10,6 +10,7 @@
 - Consultar novamente as referências remotas em tarefas futuras; este registro não garante o estado de PRs posteriores.
 - Preparação do calendário: integração de `feat/planejamento-academico` confirmada pelo PR #4, commit `e9f6af1` da `origin/main`; branch `feat/calendario-estudos` criada dessa main atualizada, sem descartar alterações ou realizar merge automático.
 - Preparação do Foco: integração de `feat/calendario-estudos` confirmada pelo PR #5, commit `11ffef1` da `origin/main`; branch `feat/modo-foco` criada dessa main atualizada.
+- Preparação da revisão de IHC: `feat/modo-foco` integrada pelo PR #6, commit `9952103`; confirmado por fetch/ancestralidade. Main atualizada por fast-forward; branch `fix/revisao-ihc` criada com árvore limpa. Nenhum merge automático.
 
 ## Validação de execução já relatada
 Resultados da etapa anterior, confirmados por Gabriel neste chat; não repetidos apenas para incorporar documentação:
@@ -39,7 +40,7 @@ Estado atualizado pela primeira etapa acadêmica na branch `feat/planejamento-ac
 | Categoria | Estado e fonte |
 | --- | --- |
 | Obrigatório no Trabalho III | Contexto, problema, objetivos e ao menos 3 personas; estrutura de informação; histórias OU casos de uso; 2 tarefas críticas intermediárias com HTAs e planos; plataforma e restrições; 2 alternativas visuais para ao menos uma tarefa e justificativa; protótipo cobrindo as duas tarefas com transições, feedback e erros; guia de estilo; ao menos 3 decisões fundamentadas e medidas de acessibilidade; relatório, protótipo/alternativas acessíveis e slides com demonstração. Fonte: enunciado, pp. 1–2. Entrega e apresentação: 03/12/2026. |
-| Decisões de produto confirmadas | Organização de estudos; web com adaptação a telas menores; arquitetura existente; tela principal com filtro temporal; calendário; janela única de Foco com campos condicionais; sugestão explicada e escolha manual; revisão antes de reorganizar. Fontes: projeto, HTAs e decisões de interface. Não são funcionalidades já entregues nem exigências específicas do professor. |
+| Decisões de produto confirmadas | Organização de estudos; web com adaptação a telas menores; arquitetura existente; tela principal com filtro temporal; calendário; Foco com escolha, ajuste pertinente e revisão em etapas com retorno; sugestão explicada e escolha manual. O fluxo simultâneo inicial foi revisto por inspeção técnica, sem alegar superioridade empírica. Fontes: projeto, HTAs, decisões e revisão de IHC; não são exigências específicas do professor. |
 | Hipóteses | Problema/necessidades e personas Lucas, Marina e Renata; benefícios esperados da janela única. Não há entrevistas, avaliações com participantes ou superioridade empírica das alternativas documentadas. |
 | Definições técnicas | Modelo mínimo em `modelo-dados.md`; sugestões determinísticas, busca simples de horário, confirmação transacional e recuperação local do timer definidos na etapa de Foco em `modo-foco.md`. Não há sincronização global de execução entre dispositivos. |
 
@@ -48,7 +49,7 @@ O enunciado não exige backend ou persistência real, nem determina uma quantida
 ## Lacunas e inconsistências identificadas
 - O bloqueio por falta de runtime e a ausência de merge da base eram registros antigos; foram substituídos acima por resultados relatados e estado remoto conferido.
 - As duas alternativas estão descritas, mas seus wireframes/imagens ainda não estão preservados no pacote. Descrições textuais não substituem os estudos visuais exigidos.
-- Completar o guia de estilo com valores concretos e contraste medido; a paleta ainda não foi escolhida. Recomendações das aulas não comprovam conformidade normativa.
+- Completar o guia de estilo e a identidade global; a revisão acrescentou cores concretas e medidas de contraste para controles/feedback, sem auditar todos os componentes. Recomendações das aulas não comprovam conformidade normativa.
 - Acesso sem sessões, semestre, duração e conflitos foram definidos e implementados nesta etapa. Datas civis não são convertidas para exibição via UTC; o planejamento usa o calendário local do navegador, sem sincronização entre fusos.
 - Relação entre planejamento/ciclo, inclusão sem origem, busca de horário, desempates e recuperação local definidos na etapa de Foco. Limpeza de armazenamento, mudança do relógio, múltiplas origens/dispositivos e ausência de APIs de navegador têm limitações registradas em `modo-foco.md`.
 - O descarte por clique fora foi corrigido nos modais alterados. Ainda verificar leitor de tela, contraste completo e outros navegadores/dispositivos. Os testes funcionais atuais não comprovam a usabilidade das futuras HTAs.
@@ -59,9 +60,9 @@ O enunciado não exige backend ou persistência real, nem determina uma quantida
 2. Verificação inicial de fluxos existentes no Chrome realizada nesta etapa, com teclado e tela estreita; manter roteiro de regressão e ampliar acessibilidade depois.
 3. Modelo mínimo, migração, disciplinas, sessões e filtros integrados à main pelo PR #4.
 4. Calendário visual integrado à main pelo PR #5, sem duplicar o modelo de planejamento.
-5. Foco, sugestão, timer e conclusão explícita implementados na branch `feat/modo-foco`; revisar o PR antes de integrar à main.
+5. Foco, sugestão, timer e conclusão explícita integrados à main pelo PR #6; essa integração foi conferida ao preparar a revisão de IHC.
 6. Troca, reagendamento, revisão, cancelamento e recuperação de falhas implementados nessa branch, com testes de atomicidade e idempotência. Não confundir suporte funcional às HTAs com avaliação de usabilidade concluída.
-7. Revisar acessibilidade, registrar decisões e completar guia de estilo.
+7. Revisão técnica de interação implementada em `fix/revisao-ihc`: linguagem, retorno/rascunhos, etapas do Foco, recuperação de gravações, consulta do calendário, comentários e contraste de controles. [Diagnóstico, fontes e evidências](revisao-ihc.md). Guia completo/auditoria ampla de acessibilidade continuam pendentes; inspeção técnica não equivale a teste com participantes.
 8. Revisão interna do grupo com roteiro das duas tarefas; registrar somente observações realmente coletadas.
 9. Completar relatório, wireframes das alternativas, slides, instruções de demonstração e ensaio.
 
@@ -80,3 +81,9 @@ Capturas do fluxo, resultado real de build/testes, versão/commit avaliado, difi
 Foram lidos o enunciado e os textos auxiliares das 15 aulas listadas no [índice local](referencias/INDICE.md). A consulta visual foi delimitada: enunciado completo (pp. 1–3); ciclo de design em Design de IHC e UX (p. 12); exemplos de layout (pp. 38 e 43); controle/cancelamento e recuperação de erros em Princípios e Diretrizes (pp. 19–20 e 41–42); fricção de ações destrutivas em Navegação (pp. 25–27); exemplo de login e tabela de preparação de teste em Avaliação II (pp. 12 e 16); daltonismo/contraste em Cores (pp. 34 e 38); ícones sem rótulos (p. 75); modelo do processador humano em Fatores Humanos (p. 32). Isso não equivale a inspecionar todas as imagens das aulas, nem a avaliar a interface do projeto.
 
 PDFs, extrações e imagens auxiliares de consulta permanecem locais e fora dos commits. O índice e o `.gitignore` de referências são versionados; um clone não contém os materiais didáticos e precisará de cópias locais para abrir esses links.
+
+## Resultado da revisão de interação
+
+Diagnóstico registrado e enviado em `41d746e` antes das correções. Recibos atômicos `366abb0`; formulários/recuperação `3d4f75f`; verificação de compatibilidade `0cd07da`; Foco guiado/retomada `e81817f`; preservação da escolha de duração ao minimizar `2743f53`. As capturas próprias em `docs/imagens/revisao-ihc` usam dados fictícios isolados; os materiais didáticos permanecem locais.
+
+Build aprovado e 37 testes/198 asserções aprovados. Chrome desktop/390 px: duas HTAs, erros reais/simulados, cancelamentos, retorno, teclado, duas abas e resultado perdido após commit. Não houve avaliação com participantes, leitor de tela ou auditoria completa de acessibilidade. A base de teste ficou isolada; Gabriel confirmou estar experimentando a aplicação pessoal durante a revisão, portanto não alegar igualdade final dos hashes WAL/SHM. Não restauramos nem sobrescrevemos alterações pessoais.

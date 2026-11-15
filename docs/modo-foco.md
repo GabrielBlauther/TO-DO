@@ -1,10 +1,10 @@
-# Modo Foco em janela única
+# Modo Foco: escolha, planejamento e execução
 
 Implementado na branch `feat/modo-foco`, criada da main `11ffef1` após confirmar o merge do calendário pelo PR #5. Sem merge automático. Modelo registrado antes da implementação em `af3bc55`; regras/backend em `f9824aa`; recuperação local em `79e614b`; interface em `54a5712`.
 
 ## Escolha e sugestão
 
-O botão Foco permanece no cabeçalho tanto no Quadro quanto no Calendário. Seleção de atividade, origem, ajustes condicionais, resumo e confirmação estão no mesmo diálogo. O timer substitui o conteúdo desse diálogo depois da confirmação; não há assistente obrigatório com várias etapas.
+O botão Foco permanece no cabeçalho tanto no Quadro quanto no Calendário. Após a [revisão de IHC](revisao-ihc.md), o diálogo organiza três etapas: **Escolher o que estudar → Ajustar o planejamento → Revisar e iniciar**. Reutilizar o estudo da mesma atividade pula Ajustar. Voltar mantém valores, Guardar escolhas e voltar/Escape preserva preparação na mesma página, e Cancelar preparação descarta escolhas sem gravar. Rascunho ainda não enviado não é recuperado após recarregar. O timer substitui o conteúdo após a confirmação.
 
 Considerar somente atividades não concluídas, independentemente do filtro visual do quadro/calendário:
 
@@ -16,7 +16,7 @@ Considerar somente atividades não concluídas, independentemente do filtro visu
 
 Dentro do mesmo grupo de sessões: horário inicial crescente, nível de prioridade crescente (1 é alta), identificador da atividade e identificador da sessão. Para prazos iguais: prioridade e identificador da atividade. Os identificadores são desempates estáveis, não estimativas de importância. A atividade e sua disciplina são exibidas; não se sugere apenas uma matéria. Sem candidato com data, o aluno escolhe manualmente. Sem atividades disponíveis, há acesso ao cadastro.
 
-As origens disponíveis são as sessões de hoje das atividades não concluídas. Com várias origens, o campo começa sem escolha: selecionar uma explicitamente ou usar o botão que identifica a sessão sugerida. O resumo mostra identificador, atividade, data, horário e duração da origem. Não substituir silenciosamente uma sessão arbitrária.
+Os estudos disponíveis são as sessões de hoje das atividades não concluídas. Com vários estudos, o campo começa sem escolha: selecionar um explicitamente ou usar o botão que identifica o sugerido. “Qual estudo de hoje você quer usar ou substituir?” usa atividade, disciplina, data, horário e duração; identificadores e o termo técnico `origin` da API não aparecem como opções para o aluno. A alternativa Nenhum destes permite planejar novo estudo. O resumo mostra as consequências; não substituir silenciosamente uma sessão arbitrária. Se o estudo deixar de estar disponível após atualizar, retornar à escolha preservando os demais valores.
 
 ## Planejamento e execução
 
@@ -38,7 +38,7 @@ As regras de sessão são compartilhadas com o quadro/calendário: data válida,
 
 `POST /api/focus/confirm` valida a atividade atual e a fotografia da origem revisada pelo usuário. Se a origem mudou/foi removida, atualizar as atividades e revisar novamente. O resumo vem antes de Confirmar e iniciar foco; cancelar antes do envio não grava.
 
-Uma transação SQLite contém a reorganização e o recibo em `focus_confirmations`. A mesma chave e o mesmo pedido retornam o resultado anterior, mesmo quando a origem já foi removida pela primeira tentativa. Chave reaproveitada com outro pedido é rejeitada. O recibo persiste após reiniciar o backend; não é um histórico de produtividade ou timer.
+Uma transação SQLite contém a reorganização e o recibo em `focus_confirmations`. A mesma chave e o mesmo pedido retornam o resultado anterior, mesmo quando a origem já foi removida pela primeira tentativa. Chave reaproveitada com outro pedido é rejeitada. O recibo persiste após reiniciar o backend; não é um histórico de produtividade ou timer. A interface consulta o suporte do servidor atualizado antes das gravações; não confiar em backend antigo ainda em execução.
 
 Antes do envio, guardar chave e escolhas em `localStorage`. Erros de validação permitem corrigir o formulário. Em erro de rede ou resposta 5xx, a gravação pode já ter ocorrido: as escolhas ficam preservadas e bloqueadas para verificar/tentar novamente o mesmo pedido. Fechar e verificar depois mantém a pendência; recarregar a página também a recupera. Não gerar outra chave silenciosamente para um resultado incerto. Depois de recuperar o recibo, iniciar o timer sem repetir o planejamento.
 
@@ -51,13 +51,16 @@ Cliques repetidos são bloqueados imediatamente, além do botão desabilitado. W
 - Pausar guarda o restante; retomar calcula outro instante final. Recarregar recupera pausas e calcula o restante do ciclo em execução. Se o instante passou, mostrar término, sem iniciar outra fase nem concluir atividade.
 - Minimizar, Escape, mudar Quadro/Calendário ou minimizar o navegador não reiniciam o timer. O botão Foco mostra o tempo e reabre a mesma execução.
 - Apenas um estudo local, incluindo o resultado aguardando decisão. Novo ciclo ou pausa reutiliza a execução, sem chamar a confirmação de planejamento novamente.
-- Zero exige ação do usuário: pausa, outro ciclo ou retorno ao planejamento. Encerrar ciclo antecipadamente também leva a essas opções.
-- Concluir atividade é uma ação separada e explícita. A interface só mostra conclusão após resposta bem-sucedida da API; falha mantém a atividade pendente e permite tentar novamente.
-- Retornar ao planejamento limpa o estudo local. Não desfaz reorganizações anteriormente confirmadas. Uma atividade concluída precisa ser trocada antes de iniciar outro ciclo de estudo.
+- Zero exige ação: pausa, outro ciclo, minimizar ou encerrar estudo. Encerrar este ciclo antecipadamente também leva a essas opções; Retomar este ciclo de onde parei recupera o restante, inclusive após recarregar. Não recupera um ciclo que esgotou naturalmente.
+- Outro ciclo abre a duração somente quando escolhido; Cancelar próximo ciclo não inicia nada. Minimizar e voltar mantém essa escolha na mesma página.
+- Concluir atividade é separado e explícito. A interface só mostra conclusão após resposta bem-sucedida; perder a resposta pode significar que o servidor concluiu. Verificar conclusão da atividade repete o mesmo pedido com recibo, sem afirmar que ela permaneceu pendente.
+- Encerrar estudo e voltar limpa o estudo local. Não desfaz reorganizações já confirmadas. Minimizar preserva a execução/decisão para retorno. Uma atividade concluída precisa ser trocada antes de iniciar outro ciclo.
 
 O armazenamento usa as chaves `todo.focus.timer.v1` e `todo.focus.pending.v1`. Estado inválido ou indisponibilidade de armazenamento gera mensagem, sem simular recuperação. O modo usa Web Locks e armazenamento local no navegador; executar em localhost ou contexto seguro compatível. Não anuncia cada segundo: números/progresso têm `aria-live="off"`, e as mudanças de fase/situação são anunciadas separadamente.
 
 ## Verificações realizadas
+
+O registro abaixo descreve a implementação inicial (33 testes). A revisão posterior passou em 37 testes/198 asserções e novos percursos de navegador, incluindo retorno entre etapas, recuperação comum e retomada de ciclo encerrado; ver [evidências atuais](revisao-ihc.md#evidências-posteriores).
 
 Windows, Bun 1.4.4, Chrome headless controlado por Playwright local. API de teste em 3003 com banco em `.cache/focus-ui`, interface em 5175, requisições encaminhadas somente ao backend isolado. O banco original estava em uso pela aplicação local e não foi interrompido, migrado nem usado para gravações de teste. SHA-256 de `todo.db`, WAL e SHM iguais antes e depois desta etapa.
 
@@ -79,7 +82,7 @@ Build TypeScript + Vite aprovado e `git diff --check` aprovado. Lint continua se
 
 ## Roteiro das duas tarefas
 
-**HTA 1 — Realizar uma sessão de estudo:** abrir Foco, consultar atividade/disciplinas e motivo, escolher origem explicitamente quando necessário, aceitar ou selecionar outra atividade, revisar resumo e duração, confirmar, pausar/retomar e encerrar. Ao terminar, escolher pausa, novo ciclo ou retorno; concluir a atividade apenas se desejado pelo botão próprio. Minimizar e reabrir ou recarregar para experimentar recuperação.
+**HTA 1 — Realizar uma sessão de estudo:** abrir Foco, consultar atividade/disciplinas e motivo, escolher explicitamente o estudo de hoje quando necessário, aceitar ou selecionar outra atividade, continuar ao ajuste pertinente e depois revisar resumo/duração, voltar se precisar corrigir, confirmar, pausar/retomar e encerrar o ciclo. Ao terminar, escolher pausa, novo ciclo, minimizar ou Encerrar estudo e voltar; concluir atividade apenas pelo botão próprio. Minimizar/reabrir preserva também escolhas de preparação; recarregar recupera timer e pedido enviado pendente, não rascunho ainda não enviado.
 
 **HTA 2 — Trocar e reorganizar:** ter uma sessão de hoje em uma atividade e selecionar outra no Foco. Escolher entre manter o planejamento, reagendar ou remover somente o agendamento anterior. Na opção reagendar, consultar a sugestão e os registros do dia, ajustar data/horário, tratar conflito ou aviso de prazo e revisar o resumo. Cancelar preserva tudo; confirmar reorganiza atomicamente e inicia o estudo. Conferir Quadro/Calendário depois, incluindo outras sessões e o prazo da atividade anterior.
 
