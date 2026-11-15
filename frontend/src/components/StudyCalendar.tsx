@@ -56,7 +56,7 @@ export default function StudyCalendar({ tasks, visible, range, month, unplanned,
         <button className="btn btn-secondary" disabled={shiftMonth(month, 1) === month} onClick={() => onMonthChange(shiftMonth(month, 1))}>Próximo mês</button>
       </div>
     </div>
-    <p className="help-text">Navegar muda somente o mês visualizado. O período filtrado acima permanece ativo. Selecione um dia para planejar ou uma sessão para editar.</p>
+    <p className="help-text">Navegar muda somente o mês visualizado. O período filtrado acima permanece ativo. Selecione um dia para planejar ou um estudo para consultar; você poderá escolher Editar nos detalhes.</p>
     {entries.length === 0 && <p role="status" className="calendar-empty">Nenhuma sessão corresponde ao filtro neste mês. Navegue pelos meses ou revise o período.</p>}
     <div className="calendar-weekdays" aria-hidden="true">{['Seg','Ter','Qua','Qui','Sex','Sáb','Dom'].map(day => <span key={day}>{day}</span>)}</div>
     <ol className="calendar-grid" aria-label={`Dias de ${monthLabel(month)}`}>{monthDays(month).map((day, index) => {
@@ -82,6 +82,7 @@ export default function StudyCalendar({ tasks, visible, range, month, unplanned,
       {tasks.length === 0 && <p>Cadastre uma atividade na tela principal antes de planejar.</p>}
       <div className="form-actions"><button className="btn btn-secondary" onClick={() => setDayOpen(false)}>Fechar dia</button>
         <button className="btn btn-primary" onClick={() => onPlan(Number(taskId), selectedDay)} disabled={!taskId}>Planejar sessão neste dia</button></div>
+      {!taskId&&tasks.length>0&&<p className="help-text">Escolha a atividade acima para habilitar o planejamento. A data deste dia será preenchida; você poderá revisar antes de salvar.</p>}
     </Modal>}
   </section>;
 }

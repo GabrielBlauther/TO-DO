@@ -17,7 +17,7 @@ Gabriel concentra estruturação e desenvolvimento com apoio do Codex. Colegas t
 - Atividades por disciplina, prioridade, estado, data planejada e prazo quando aplicável.
 - Uma tela principal e filtro de período: hoje, mês, semestre e personalizado. Não criar três telas separadas por período.
 - Calendário ligado às atividades.
-- Botão Foco que abre uma janela única com sugestão explicada, seleção manual e Pomodoro.
+- Botão Foco com sugestão explicada, seleção manual e Pomodoro; após revisão de IHC, escolha, ajuste e revisão ficam em etapas internas com retorno preservado, em vez de todas as escolhas simultâneas.
 - Possibilidade de trocar a atividade e decidir o destino do estudo anterior.
 - Feedback, cancelamento, validações e acessibilidade.
 - Fora do escopo inicial: login, integração institucional, IA para sugestões, relatórios avançados e plataforma multiusuário.
@@ -53,7 +53,7 @@ São hipóteses a revisar; não atribuir falas ou dados de entrevistas a estas p
 - Uma sessão ocupa um intervalo, não o dia inteiro. Estudar duas disciplinas no mesmo dia é permitido.
 - Se a atividade atual for trocada: manter o planejamento e apenas estudar outra agora; substituir reagendando a anterior; ou substituir deixando a anterior pendente sem data.
 - Se não houver sessão original, adicionar a nova sessão sem perguntar por substituição.
-- Não apagar atividade anterior. Alterações de planejamento só se efetivam após confirmação; falha deve preservar consistência.
+- Não apagar atividade anterior. Alterações de planejamento só se efetivam após confirmação; falha deve preservar consistência. Sem resposta confirmada, verificar o mesmo pedido antes de alterá-lo: não presumir que a gravação falhou.
 - Reagendamento além do prazo gera aviso e oportunidade de revisar; não altera o prazo silenciosamente.
 - Ao terminar um ciclo: oferecer pausa, continuação ou retorno e permitir indicar se a atividade foi concluída.
 - Sem atividades, oferecer cadastro antes de iniciar.
@@ -62,6 +62,8 @@ São hipóteses a revisar; não atribuir falas ou dados de entrevistas a estas p
 O modelo mínimo e as regras já adotadas estão em [modelo-dados.md](modelo-dados.md): várias sessões por atividade, duração em minutos independente de Pomodoro, horário opcional, conflitos por sobreposição e semestre civil janeiro–junho/julho–dezembro. Essa convenção não é o calendário oficial da UCS.
 
 Desempates das sugestões, busca simples de intervalo livre, execução do ciclo e recuperação local foram definidos e implementados na etapa de [modo Foco](modo-foco.md), com seus limites explícitos. Essa definição é posterior à primeira etapa, cuja [validação histórica](validacao-planejamento.md) foi preservada. Não apresentar escolhas técnicas posteriores como decisões antigas ou resultados de pesquisa.
+
+A [revisão de IHC](revisao-ihc.md) corrigiu controle/retorno, linguagem, separação entre consulta e edição e recuperação das gravações comuns. Essas correções não validam as personas nem comprovam sucesso de uso por estudantes; os materiais acadêmicos e a avaliação humana continuam pendentes.
 
 ## Exigências do enunciado
 - Cenário, problema, objetivos e pelo menos 3 personas distintas.

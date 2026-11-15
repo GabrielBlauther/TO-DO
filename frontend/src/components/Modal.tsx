@@ -14,6 +14,19 @@ export default function Modal({ title, onClose, children, large = false, fallbac
       else if (fallbackFocusId) document.getElementById(fallbackFocusId)?.focus();
     };
   }, []);
+  useEffect(()=>{
+    const dialog=ref.current!;
+    const observer=new MutationObserver(()=>{
+      const alerts=Array.from(dialog.querySelectorAll<HTMLElement>('[role="alert"]'));
+      const alert=alerts.reverse().find(el=>el.textContent&&el.dataset.focusedText!==el.textContent);
+      const dialogs=Array.from(document.querySelectorAll('dialog[open]'));
+      if(!alert || dialog!==dialogs[dialogs.length-1])return;
+      alert.dataset.focusedText=alert.textContent||'';alert.tabIndex=-1;
+      requestAnimationFrame(()=>{if(alert.isConnected){alert.focus();alert.scrollIntoView({block:'nearest'});}});
+    });
+    observer.observe(dialog,{childList:true,subtree:true,characterData:true});
+    return()=>observer.disconnect();
+  },[]);
   return <dialog ref={ref} className={`modal ${large ? 'modal-large' : ''}`} aria-labelledby={titleId}
     onKeyDown={event => {
       if (event.key !== 'Tab') return;
@@ -21,7 +34,8 @@ export default function Modal({ title, onClose, children, large = false, fallbac
         .filter(el => !el.matches(':disabled') && el.tabIndex >= 0 && el.getClientRects().length > 0);
       const first = elements[0], last = elements[elements.length - 1];
       if (!first) { event.preventDefault(); return; }
-      if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+      if(!elements.includes(document.activeElement as HTMLElement)){event.preventDefault();(event.shiftKey?last:first).focus();}
+      else if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
       else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
     }}
     onCancel={event => { event.preventDefault(); onClose(); }}>

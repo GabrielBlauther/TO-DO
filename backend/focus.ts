@@ -11,7 +11,7 @@ function canonical(value: any): string {
 export function confirmFocus(db: Database, body: FocusRequest): FocusResult {
   if (typeof body.key!=='string' || !/^[\w-]{16,100}$/.test(body.key)) throw new PlanningError('Confirmação inválida. Reabra o Foco.');
   if (!validMinutes(body.minutes)) throw new PlanningError('O ciclo deve ter de 1 a 180 minutos inteiros.');
-  if (body.origin && (typeof body.origin!=='object' || Array.isArray(body.origin) || !Number.isSafeInteger(body.origin.id))) throw new PlanningError('Sessão de origem inválida.');
+  if (body.origin && (typeof body.origin!=='object' || Array.isArray(body.origin) || !Number.isSafeInteger(body.origin.id))) throw new PlanningError('O estudo planejado escolhido não é válido. Atualize as atividades e escolha novamente.');
   return db.transaction(() => {
     const request = canonical(body);
     const receipt = db.query('SELECT * FROM focus_confirmations WHERE request_key=?').get(body.key) as {request_json:string;result_json:string}|null;
@@ -27,7 +27,7 @@ export function confirmFocus(db: Database, body: FocusRequest): FocusResult {
     };
     const current = getTask(body.task_id);
     const original = body.origin ? db.query('SELECT * FROM study_sessions WHERE id=?').get(body.origin.id) as Origin|null : null;
-    if (body.origin && (!original || canonical(snapshot(original))!==canonical(body.origin))) throw new PlanningError('A sessão de origem mudou ou foi removida. Atualize os dados e revise a escolha.',409);
+    if (body.origin && (!original || canonical(snapshot(original))!==canonical(body.origin))) throw new PlanningError('O estudo planejado escolhido mudou ou foi removido. Atualize as atividades, volte à escolha e revise antes de confirmar.',409);
     const previous = original ? getTask(original.task_id) : null;
     function insert(data: SessionFormData) {
       validateSession(db,current.due_date,data,0,body.confirm_after_due===true);
@@ -38,7 +38,7 @@ export function confirmFocus(db: Database, body: FocusRequest): FocusResult {
       if (body.action!=='new' || !body.current) throw new PlanningError('Revise a inclusão do planejamento atual.');
       sessionId=insert(body.current);
     } else if (original.task_id===current.id) {
-      if (body.action!=='same') throw new PlanningError('A atividade já corresponde à origem. Revise a escolha.');
+      if (body.action!=='same') throw new PlanningError('Este estudo já pertence à atividade escolhida. Volte e revise o planejamento.');
       sessionId=original.id;
     } else if (body.action==='keep') {
       // Execution only: no automatic planning or conflicting insertion.

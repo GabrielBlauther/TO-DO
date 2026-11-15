@@ -1,8 +1,9 @@
 import { Task } from '../types';
 import { formatDate, localToday } from '../../../shared/planning';
 
-export default function TaskCard({ task, onView, onEdit, onDelete, onStatusChange, statusLabel }: {
+export default function TaskCard({ task, onView, onEdit, onDelete, onStatusChange, statusLabel, busy }: {
   task: Task; onView: () => void; onEdit: () => void; onDelete: () => void; onStatusChange: () => void; statusLabel: string;
+  busy:boolean;
 }) {
   const overdue = task.due_date && task.due_date < localToday() && task.status !== 'done';
   return <article className="task-card">
@@ -13,7 +14,7 @@ export default function TaskCard({ task, onView, onEdit, onDelete, onStatusChang
     <p className={`card-line ${overdue ? 'overdue' : ''}`}>Prazo: {formatDate(task.due_date)}{overdue ? ' — vencido' : ''}</p>
     <div className="card-planning"><strong>Planejamento:</strong>
       {task.sessions.length === 0 ? <p>Sem planejamento</p> : <ul>{task.sessions.map(s => <li key={s.id}>{formatDate(s.planned_date)} · {s.start_time || 'Sem horário'} · {s.duration_minutes} min</li>)}</ul>}</div>
-    <div className="task-card-actions"><button className="btn-status" onClick={onStatusChange}>{statusLabel}</button>
+    <div className="task-card-actions"><button className="btn-status" disabled={busy} onClick={onStatusChange}>{busy?'Atualizando situação…':statusLabel}</button>
       <button onClick={onEdit}>Editar</button><button className="btn-delete" onClick={onDelete} aria-label={`Excluir ${task.title}`}>Excluir</button></div>
   </article>;
 }

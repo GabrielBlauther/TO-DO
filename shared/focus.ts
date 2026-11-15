@@ -73,7 +73,7 @@ export function recoverTimer(value: unknown, now: number): FocusTimer | null {
 export function changeTimer(timer: FocusTimer, action: 'pause'|'resume'|'end', now: number): FocusTimer {
   const t = recoverTimer(timer,now)!;
   if (action==='pause' && t.status==='running') return {...t,status:'paused',remainingMs:remaining(t,now)};
-  if (action==='resume' && t.status==='paused') return {...t,status:'running',deadline:now+t.remainingMs};
+  if (action==='resume' && (t.status==='paused'||(t.status==='finished'&&t.endedEarly&&t.remainingMs>0))) return {...t,status:'running',deadline:now+t.remainingMs,endedEarly:false};
   if (action==='end' && t.status!=='finished') return {...t,status:'finished',remainingMs:remaining(t,now),endedEarly:true};
   return t;
 }
