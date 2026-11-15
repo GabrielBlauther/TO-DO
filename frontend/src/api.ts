@@ -39,6 +39,12 @@ function operation(url:string,method:string,body?:string){
 export async function retryMutation(item:PendingMutation){
   return request(item.url,{method:item.method,body:item.body},item);
 }
+async function checkRecoverySupport(label:string){
+  let response:Response;
+  try{response=await fetch(`${BASE_URL}/tasks`,{method:'OPTIONS',signal:AbortSignal.timeout(15000)});}
+  catch{throw new Error(`Não foi possível preparar o pedido de ${label}: o serviço de dados não respondeu. Nenhuma nova gravação foi enviada nesta tentativa; pedidos anteriores podem estar salvos. Tente verificar novamente quando o serviço responder.`);}
+  if(!response.ok||response.headers.get('X-Write-Recovery')!=='1')throw new Error(`Não foi possível preparar o pedido de ${label}: o serviço conectado não confirmou suporte à recuperação segura. Nenhuma nova gravação foi enviada nesta tentativa; pedidos anteriores podem estar salvos. Reinicie o servidor com a versão atual do projeto e tente verificar novamente.`);
+}
 
 async function request<T>(url: string, options?: RequestInit, retry?:PendingMutation): Promise<T> {
   const method=options?.method||'GET',body=options?.body as string|undefined;
@@ -47,6 +53,8 @@ async function request<T>(url: string, options?: RequestInit, retry?:PendingMuta
   const label=operation(url,method,body);
   const recovery=url==='/focus/confirm'?'Verificar confirmação pendente':'Verificar resultado';
   let item:PendingMutation|undefined;
+  // A running old backend must not silently ignore the receipt key.
+  if(method!=='GET')await checkRecoverySupport(label);
   if(mutation){
     item=retry||pendingMutations().find(p=>p.url===url&&p.method===method&&p.body===body)||{key:attempts.get(identity)||crypto.randomUUID(),url,method,body,label};
     attempts.set(identity,item.key);remember(item);

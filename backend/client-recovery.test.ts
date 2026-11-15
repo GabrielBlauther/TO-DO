@@ -12,7 +12,7 @@ test('cliente conserva o mesmo pedido após resposta perdida e permite verificar
   let lost=true;
   globalThis.fetch=(async(url:string,options:RequestInit)=>{
     const response=await handler(new Request('http://localhost'+url,options));
-    if(lost){lost=false;throw new TypeError('simulação de perda depois do commit');}
+    if(lost&&options.method!=='OPTIONS'){lost=false;throw new TypeError('simulação de perda depois do commit');}
     return response;
   }) as typeof fetch;
   try{
@@ -27,6 +27,11 @@ test('cliente conserva o mesmo pedido após resposta perdida e permite verificar
     // A later deliberate identical comment remains possible after confirmation.
     await api.addComment(result.id,'Repetição segura');expect(db.query('SELECT * FROM comments WHERE task_id=?').all(result.id)).toHaveLength(2);
     await expect(api.createSubject('')).rejects.toThrow('não foi aplicado');expect(api.pendingMutations()).toHaveLength(0);
+    const working=globalThis.fetch;
+    globalThis.fetch=(async()=>new Response(null,{status:204})) as typeof fetch;
+    await expect(api.createSubject('Servidor anterior')).rejects.toThrow('não confirmou suporte');
+    expect(db.query('SELECT * FROM subjects WHERE name=?').all('Servidor anterior')).toHaveLength(0);
+    globalThis.fetch=working;
     values.set('todo.mutations.pending.v1','corrompido');
     await expect(api.createSubject('Não enviar')).rejects.toThrow();expect(db.query('SELECT * FROM subjects WHERE name=?').all('Não enviar')).toHaveLength(0);
   }finally{

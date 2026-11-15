@@ -1,5 +1,5 @@
 import {useRef,useState} from 'react';
-import {UncertainError} from './api';
+import {ApiError,UncertainError} from './api';
 
 /** Retains the original operation until an uncertain response is reconciled. */
 export function useAttempt(){
@@ -11,7 +11,7 @@ export function useAttempt(){
     lock.current=true;setBusy(true);setError('');
     const job=retry||operation;
     try{await job();setRetry(null);}
-    catch(err){setError((err as Error).message);setRetry(err instanceof UncertainError?()=>job:null);}
+    catch(err){setError((err as Error).message);setRetry(err instanceof UncertainError||(retry&&!(err instanceof ApiError))?()=>job:null);}
     finally{lock.current=false;setBusy(false);}
   }
   return {busy,error,setError,uncertain:!!retry,run};

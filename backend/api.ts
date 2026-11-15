@@ -8,6 +8,7 @@ class HttpError extends Error {
 }
 const headers = {
   'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*',
+  'X-Write-Recovery': '1', 'Access-Control-Expose-Headers': 'X-Write-Recovery',
   'Access-Control-Allow-Methods': 'GET, POST, PUT, PATCH, DELETE, OPTIONS', 'Access-Control-Allow-Headers': 'Content-Type, X-Request-Key',
 };
 const responseBodies = new WeakMap<Response,string>();
