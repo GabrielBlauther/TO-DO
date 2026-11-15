@@ -79,11 +79,18 @@ As personas iniciais são hipóteses de projeto. Revisões internas e eventuais 
 
 É necessário ter o **Bun** instalado. Execute os comandos a partir da pasta raiz do projeto, onde estão `backend` e `frontend`.
 
+Confirme a instalação com `bun --version`. No Windows, se o comando não for reconhecido após a instalação, feche e reabra o editor. Para ajustar apenas o terminal PowerShell atual:
+
+```powershell
+$env:Path = "$env:USERPROFILE\.bun\bin;$env:Path"
+bun --version
+```
+
 Instale as dependências da interface:
 
 ```bash
 cd frontend
-bun install
+bun install --frozen-lockfile
 cd ..
 ```
 
@@ -93,19 +100,31 @@ Inicie a API em um terminal:
 bun run backend/index.ts
 ```
 
+Na primeira execução, a API cria `todo.db` no diretório de trabalho, com as tabelas e os dados de exemplo definidos em `backend/database.ts`. Não é necessário copiar um banco existente. Os bancos locais e seus arquivos auxiliares não são versionados.
+
 Em outro terminal, inicie a interface:
 
 ```bash
 cd frontend
-bun run dev
+bun run --bun dev
 ```
+
+O argumento `--bun` executa o Vite com Bun, inclusive quando Node.js não está instalado.
+
+Para verificar os tipos TypeScript e gerar o build de produção, execute dentro de `frontend`:
+
+```bash
+bun run --bun build
+```
+
+O resultado fica em `frontend/dist`, que não é versionado. Não há scripts de testes automatizados ou lint configurados nesta base.
 
 Endereços padrão:
 
 - Interface: `http://localhost:5173`
 - API: `http://localhost:3001`
 
-Caso uma porta esteja ocupada, confira o endereço informado no terminal.
+O Vite pode escolher outra porta se a 5173 estiver ocupada; confira o endereço informado no terminal. A API usa a porta fixa 3001 e precisa que ela esteja livre.
 
 ## Contexto acadêmico
 
