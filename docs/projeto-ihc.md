@@ -61,7 +61,7 @@ São hipóteses a revisar; não atribuir falas ou dados de entrevistas a estas p
 ## Detalhes técnicos ainda a definir
 O modelo mínimo e as regras já adotadas estão em [modelo-dados.md](modelo-dados.md): várias sessões por atividade, duração em minutos independente de Pomodoro, horário opcional, conflitos por sobreposição e semestre civil janeiro–junho/julho–dezembro. Essa convenção não é o calendário oficial da UCS.
 
-Continuam pendentes desempates das sugestões, busca automática de horários livres, sessões reais de foco e comportamento do timer em segundo plano/recarregamento. Essas funcionalidades não foram implementadas nesta primeira etapa; não apresentar hipóteses como decisões antigas. Consulte [a validação da etapa](validacao-planejamento.md) para o estado real.
+Desempates das sugestões, busca simples de intervalo livre, execução do ciclo e recuperação local foram definidos e implementados na etapa de [modo Foco](modo-foco.md), com seus limites explícitos. Essa definição é posterior à primeira etapa, cuja [validação histórica](validacao-planejamento.md) foi preservada. Não apresentar escolhas técnicas posteriores como decisões antigas ou resultados de pesquisa.
 
 ## Exigências do enunciado
 - Cenário, problema, objetivos e pelo menos 3 personas distintas.

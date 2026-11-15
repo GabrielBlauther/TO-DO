@@ -1,0 +1,94 @@
+# Modo Foco em janela única
+
+Implementado na branch `feat/modo-foco`, criada da main `11ffef1` após confirmar o merge do calendário pelo PR #5. Sem merge automático. Modelo registrado antes da implementação em `af3bc55`; regras/backend em `f9824aa`; recuperação local em `79e614b`; interface em `54a5712`.
+
+## Escolha e sugestão
+
+O botão Foco permanece no cabeçalho tanto no Quadro quanto no Calendário. Seleção de atividade, origem, ajustes condicionais, resumo e confirmação estão no mesmo diálogo. O timer substitui o conteúdo desse diálogo depois da confirmação; não há assistente obrigatório com várias etapas.
+
+Considerar somente atividades não concluídas, independentemente do filtro visual do quadro/calendário:
+
+1. Sessões de hoje cujo intervalo contém o horário atual.
+2. Próxima sessão com horário de hoje.
+3. Sessões com horário de hoje já passado.
+4. Sessões de hoje sem horário.
+5. Sem sessões de hoje, atividade com prazo vencido mais antigo; depois, prazo futuro mais próximo (incluindo hoje).
+
+Dentro do mesmo grupo de sessões: horário inicial crescente, nível de prioridade crescente (1 é alta), identificador da atividade e identificador da sessão. Para prazos iguais: prioridade e identificador da atividade. Os identificadores são desempates estáveis, não estimativas de importância. A atividade e sua disciplina são exibidas; não se sugere apenas uma matéria. Sem candidato com data, o aluno escolhe manualmente. Sem atividades disponíveis, há acesso ao cadastro.
+
+As origens disponíveis são as sessões de hoje das atividades não concluídas. Com várias origens, o campo começa sem escolha: selecionar uma explicitamente ou usar o botão que identifica a sessão sugerida. O resumo mostra identificador, atividade, data, horário e duração da origem. Não substituir silenciosamente uma sessão arbitrária.
+
+## Planejamento e execução
+
+| Escolha | Gravação de planejamento |
+| --- | --- |
+| Mesma atividade da origem | Reutilizar a sessão existente, sem alterações. |
+| Outra atividade, sem alterar planejamento | Preservar integralmente a origem; executar o timer sem criar outro agendamento. |
+| Substituir e reagendar | Mover a sessão original preservando identificador e duração; inserir uma sessão da atividade atual no intervalo original. |
+| Substituir e deixar sem data | Remover somente a sessão original; inserir uma sessão da atividade atual no intervalo original. A atividade anterior e suas demais sessões permanecem. |
+| Sem origem | Incluir uma sessão para a atividade atual, com data, horário opcional e duração de planejamento revisáveis. |
+
+Nenhuma dessas escolhas altera prazos ou apaga a atividade anterior. Se a atividade anterior tiver outras sessões, deixar uma sessão sem data não a torna inteiramente Sem planejamento; isso aparece no resumo. O ciclo não representa a duração inteira do agendamento: uma sessão de 90 minutos pode apoiar vários ciclos sem novas inserções.
+
+O reagendamento aparece somente na opção correspondente. A sugestão de horário procura o primeiro intervalo sem sobreposição entre os registros, incluindo o intervalo que será ocupado pela substituta: hoje e os seis dias seguintes, inícios em passos de 15 minutos entre 08h e 20h, terminando até 20h e não começando no passado. Durações acima de 12 horas ou ausência de encaixe exigem escolha manual. Isso não presume disponibilidade pessoal. Há lista de sessões cadastradas no dia escolhido e ajuste manual.
+
+As regras de sessão são compartilhadas com o quadro/calendário: data válida, duração inteira positiva, horário opcional, sobreposição de intervalos e aviso após o prazo. O servidor exige confirmação explícita de novas datas após o prazo. Conflito não pode ser ignorado: corrigir o intervalo ou cancelar. As validações de ambas as gravações participam da mesma transação.
+
+## Confirmação, falha e repetição
+
+`POST /api/focus/confirm` valida a atividade atual e a fotografia da origem revisada pelo usuário. Se a origem mudou/foi removida, atualizar as atividades e revisar novamente. O resumo vem antes de Confirmar e iniciar foco; cancelar antes do envio não grava.
+
+Uma transação SQLite contém a reorganização e o recibo em `focus_confirmations`. A mesma chave e o mesmo pedido retornam o resultado anterior, mesmo quando a origem já foi removida pela primeira tentativa. Chave reaproveitada com outro pedido é rejeitada. O recibo persiste após reiniciar o backend; não é um histórico de produtividade ou timer.
+
+Antes do envio, guardar chave e escolhas em `localStorage`. Erros de validação permitem corrigir o formulário. Em erro de rede ou resposta 5xx, a gravação pode já ter ocorrido: as escolhas ficam preservadas e bloqueadas para verificar/tentar novamente o mesmo pedido. Fechar e verificar depois mantém a pendência; recarregar a página também a recupera. Não gerar outra chave silenciosamente para um resultado incerto. Depois de recuperar o recibo, iniciar o timer sem repetir o planejamento.
+
+Cliques repetidos são bloqueados imediatamente, além do botão desabilitado. Web Locks serializa confirmações entre abas da mesma origem. As abas leem o mesmo estado local antes de iniciar e recebem atualizações por eventos de armazenamento.
+
+## Timer e recuperação
+
+- Estudo padrão de 25 minutos; duração ajustável de **1 a 180 minutos inteiros** antes do primeiro ciclo e de novos ciclos. Pausa curta fixa de 5 minutos. Esse limite aplica-se ao ciclo, não ao planejamento.
+- Estado local versionado: atividade, recibo, sessão quando houver, fase, situação, duração total, restante pausado e instante final em milissegundos. Timer ativo deriva o restante de `Date.now()` e do instante final; o intervalo apenas atualiza a exibição.
+- Pausar guarda o restante; retomar calcula outro instante final. Recarregar recupera pausas e calcula o restante do ciclo em execução. Se o instante passou, mostrar término, sem iniciar outra fase nem concluir atividade.
+- Minimizar, Escape, mudar Quadro/Calendário ou minimizar o navegador não reiniciam o timer. O botão Foco mostra o tempo e reabre a mesma execução.
+- Apenas um estudo local, incluindo o resultado aguardando decisão. Novo ciclo ou pausa reutiliza a execução, sem chamar a confirmação de planejamento novamente.
+- Zero exige ação do usuário: pausa, outro ciclo ou retorno ao planejamento. Encerrar ciclo antecipadamente também leva a essas opções.
+- Concluir atividade é uma ação separada e explícita. A interface só mostra conclusão após resposta bem-sucedida da API; falha mantém a atividade pendente e permite tentar novamente.
+- Retornar ao planejamento limpa o estudo local. Não desfaz reorganizações anteriormente confirmadas. Uma atividade concluída precisa ser trocada antes de iniciar outro ciclo de estudo.
+
+O armazenamento usa as chaves `todo.focus.timer.v1` e `todo.focus.pending.v1`. Estado inválido ou indisponibilidade de armazenamento gera mensagem, sem simular recuperação. O modo usa Web Locks e armazenamento local no navegador; executar em localhost ou contexto seguro compatível. Não anuncia cada segundo: números/progresso têm `aria-live="off"`, e as mudanças de fase/situação são anunciadas separadamente.
+
+## Verificações realizadas
+
+Windows, Bun 1.4.4, Chrome headless controlado por Playwright local. API de teste em 3003 com banco em `.cache/focus-ui`, interface em 5175, requisições encaminhadas somente ao backend isolado. O banco original estava em uso pela aplicação local e não foi interrompido, migrado nem usado para gravações de teste. SHA-256 de `todo.db`, WAL e SHM iguais antes e depois desta etapa.
+
+**Automatizados no repositório:** `bun run test` passou com **33 testes e 160 asserções**. Inclui todos os testes anteriores e casos de sugestões/desempates, limite de duração, horário livre, três opções de troca, mesma atividade, inclusão sem origem, origem alterada, múltiplas sessões, conflitos entre as gravações, aviso após prazo, preservação de atividades/prazos, recibo repetido e persistido, rollback com falha provocada na segunda gravação, pausa/retomada, término e recuperação do timer/pendência. Não houve espera de 25 minutos reais; as funções de tempo recebem instantes controlados.
+
+**Pelo navegador:** Chrome em America/Sao_Paulo, desktop 1366×1000 e tela de 390×844, preferência de movimento reduzido e relógio controlado em 15/11/2026. Capturas inspecionadas, sem erros JavaScript de página no roteiro final:
+
+- Origem explícita quando há várias sessões, sugestão aceita diretamente, escolha manual sem candidato datado e acesso ao cadastro quando só há atividades concluídas.
+- Cancelamento antes de confirmar, conflito mantendo escolhas, três alternativas de troca, resumo das outras sessões preservadas e aviso de reagendamento após prazo.
+- Estudo de 25 minutos, avanço virtual do relógio, pausa que mantém restante, recarga recuperando pausa, retomada e término; pausa de 5 minutos e outro ciclo sem nova confirmação/inserção.
+- Minimização e troca para Calendário sem alterar o instante final; outra aba recuperando a mesma execução.
+- Perda de resposta **depois de commit real no servidor**, recarga e repetição do mesmo pedido retornando o recibo sem duplicar sessões. Campos e origem da confirmação recuperados.
+- Duas abas confirmando simultaneamente, com resposta da primeira retida: apenas uma chamada de confirmação efetiva, uma sessão incluída e um timer compartilhado.
+- Dois envios imediatos do formulário não duplicando a inclusão sem origem; duração planejada de 90 minutos independente do ciclo de 25.
+- Falha de conexão ao concluir não marcando a atividade; nova tentativa bem-sucedida somente por ação explícita.
+- Tab dentro do diálogo, Escape minimizando e retornando foco ao botão Foco, clique no fundo preservando escolhas, fluxo estreito sem rolagem horizontal.
+
+Build TypeScript + Vite aprovado e `git diff --check` aprovado. Lint continua sem configuração. Servidores isolados encerrados ao final.
+
+## Roteiro das duas tarefas
+
+**HTA 1 — Realizar uma sessão de estudo:** abrir Foco, consultar atividade/disciplinas e motivo, escolher origem explicitamente quando necessário, aceitar ou selecionar outra atividade, revisar resumo e duração, confirmar, pausar/retomar e encerrar. Ao terminar, escolher pausa, novo ciclo ou retorno; concluir a atividade apenas se desejado pelo botão próprio. Minimizar e reabrir ou recarregar para experimentar recuperação.
+
+**HTA 2 — Trocar e reorganizar:** ter uma sessão de hoje em uma atividade e selecionar outra no Foco. Escolher entre manter o planejamento, reagendar ou remover somente o agendamento anterior. Na opção reagendar, consultar a sugestão e os registros do dia, ajustar data/horário, tratar conflito ou aviso de prazo e revisar o resumo. Cancelar preserva tudo; confirmar reorganiza atomicamente e inicia o estudo. Conferir Quadro/Calendário depois, incluindo outras sessões e o prazo da atividade anterior.
+
+Para experimentar esta versão, reiniciar o backend para aplicar a migração aditiva do recibo antes de iniciar o Foco. Não usar a base pessoal para ensaios destrutivos; os roteiros de falhas foram executados somente no banco isolado.
+
+## Limitações e evidência acadêmica
+
+Há um timer por **origem/perfil de navegador**, compartilhado entre suas abas; não existe exclusão global entre dispositivos, perfis, janelas privadas ou endereços diferentes (localhost e 127.0.0.1 são origens distintas). Não há conta nem sincronização remota de execução. Limpar o armazenamento elimina a recuperação local e a chave de uma confirmação pendente; não desfaz o planejamento salvo. Falta de Web Locks/armazenamento impede iniciar com as garantias desta versão. Não há notificações externas; a sinalização de término está na aplicação.
+
+O relógio do sistema é a referência. Alterá-lo manualmente pode afetar o restante; não há relógio confiável remoto ou auditoria de horas estudadas. Conflitos verificam apenas as sessões registradas, não compromissos pessoais externos. Sugestões usam dados já carregados; Atualizar atividades permite revisar mudanças externas, e o servidor revalida a origem antes de confirmar.
+
+Não houve entrevistas ou avaliação de usabilidade com participantes. Leitor de tela, outros navegadores/dispositivos físicos e revisão completa de contraste permanecem pendentes; os testes funcionais não certificam conformidade de acessibilidade. As duas HTAs têm suporte funcional nesta versão, mas sua qualidade de uso e os artefatos acadêmicos (wireframes, guia completo e avaliação) ainda precisam ser revisados pelo grupo.
