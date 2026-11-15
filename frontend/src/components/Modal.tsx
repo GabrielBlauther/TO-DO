@@ -1,14 +1,18 @@
 import { useEffect, useId, useRef, ReactNode } from 'react';
 
-export default function Modal({ title, onClose, children, large = false }: {
-  title: string; onClose: () => void; children: ReactNode; large?: boolean;
+export default function Modal({ title, onClose, children, large = false, fallbackFocusId }: {
+  title: string; onClose: () => void; children: ReactNode; large?: boolean; fallbackFocusId?: string;
 }) {
   const ref = useRef<HTMLDialogElement>(null), titleId = useId();
   useEffect(() => {
     const dialog = ref.current!;
     const origin = document.activeElement as HTMLElement | null;
     dialog.showModal();
-    return () => { dialog.close(); if (origin?.isConnected) origin.focus(); };
+    return () => {
+      dialog.close();
+      if (origin?.isConnected) origin.focus();
+      else if (fallbackFocusId) document.getElementById(fallbackFocusId)?.focus();
+    };
   }, []);
   return <dialog ref={ref} className={`modal ${large ? 'modal-large' : ''}`} aria-labelledby={titleId}
     onKeyDown={event => {

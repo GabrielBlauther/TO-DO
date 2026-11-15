@@ -3,13 +3,21 @@ import { Task, StudySession, SessionFormData } from '../types';
 import { formatDate, localToday, sessionInterval } from '../../../shared/planning';
 import * as api from '../api';
 
-export default function SessionEditor({ task, onUpdated, onBusyChange }: { task: Task; onUpdated: (task: Task) => void; onBusyChange: (busy: boolean) => void }) {
-  const [editing, setEditing] = useState<StudySession | 'new' | null>(null);
-  const [data, setData] = useState<SessionFormData>({planned_date:localToday(),start_time:'',duration_minutes:50});
+export default function SessionEditor({ task, onUpdated, onBusyChange, initialDate, initialSessionId }: {
+  task: Task; onUpdated: (task: Task) => void; onBusyChange: (busy: boolean) => void;
+  initialDate?: string; initialSessionId?: number;
+}) {
+  const initialSession = task.sessions.find(session => session.id === initialSessionId);
+  const [editing, setEditing] = useState<StudySession | 'new' | null>(initialSession || (initialDate ? 'new' : null));
+  const [data, setData] = useState<SessionFormData>(initialSession || {planned_date:initialDate || localToday(),start_time:'',duration_minutes:50});
   const [confirmed, setConfirmed] = useState(false), [error, setError] = useState(''), [message, setMessage] = useState('');
   const [busy, setBusyState] = useState(false), [removeId, setRemoveId] = useState<number | null>(null);
   function setBusy(value: boolean) { setBusyState(value); onBusyChange(value); }
-  useEffect(() => { if (editing) document.getElementById('planned-date')?.focus(); }, [editing]);
+  useEffect(() => {
+    if (!editing) return;
+    const frame = requestAnimationFrame(() => document.getElementById('planned-date')?.focus());
+    return () => cancelAnimationFrame(frame);
+  }, [editing]);
   const afterDue = !!task.due_date && data.planned_date > task.due_date;
   function edit(session: StudySession | 'new') {
     setEditing(session); setRemoveId(null); setConfirmed(false); setError(''); setMessage('');
