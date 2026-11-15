@@ -575,3 +575,35 @@ fieldset { border: 0; min-width: 0; }
   .btn, .task-card-actions button { min-height: 44px; }
 }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; } }
+
+/* The monthly projection uses the same activities and study sessions as the board. */
+.study-calendar { max-width: 1400px; margin: 1.5rem auto; padding: 1.5rem; background: white; border-radius: 12px; }
+.calendar-toolbar { display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; }
+.calendar-toolbar h2 { font-size: 1.2rem; }
+.calendar-navigation { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+.calendar-weekdays, .calendar-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); }
+.calendar-weekdays { margin-top: 1rem; text-align: center; font-weight: 600; }
+.calendar-weekdays span { padding: 0.6rem; }
+.calendar-grid, .calendar-events, .calendar-day-list, .unplanned-list { list-style: none; }
+.calendar-grid { gap: 0.3rem; }
+.calendar-day { border: 1px solid #cbd5e1; border-radius: 6px; padding: 0.4rem; min-height: 130px; min-width: 0; }
+.calendar-day.is-today { border: 2px solid #37318a; }
+.calendar-day.is-selected { outline: 2px dashed #37318a; outline-offset: -5px; }
+.calendar-date { display: flex; gap: 0.4rem; flex-wrap: wrap; align-items: center; border: 0; background: #f0f2f5; border-radius: 4px; padding: 0.4rem; width: 100%; text-align: left; color: #1a1a2e; cursor: pointer; min-height: 36px; }
+.calendar-date small { font-size: 0.7rem; font-weight: 600; }
+.calendar-event { display: flex; flex-direction: column; gap: 0.15rem; width: 100%; text-align: left; font: inherit; font-size: 0.8rem; background: #f4f2ff; color: #302568; border: 1px solid #c7c2e7; border-radius: 5px; padding: 0.5rem; margin: 0.4rem 0; cursor: pointer; overflow-wrap: anywhere; }
+.calendar-event:hover { background: #e6e1ff; }
+.calendar-more { border: 0; background: none; text-decoration: underline; color: #37318a; padding: 0.4rem; cursor: pointer; text-align: left; }
+.calendar-empty { border: 1px solid #cbd5e1; padding: 0.8rem; margin: 0.8rem 0; border-radius: 6px; }
+.calendar-day-list { margin: 1rem 0; }
+.unplanned-list li { display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; padding: 1rem; border: 1px solid #cbd5e1; border-radius: 6px; margin-top: 0.8rem; overflow-wrap: anywhere; }
+.unplanned-list p { margin-top: 0.3rem; font-size: 0.85rem; }
+@media (max-width: 700px) {
+  .study-calendar { margin: 1rem; padding: 1rem; }
+  .calendar-grid { grid-template-columns: 1fr; gap: 0.7rem; }
+  .calendar-weekdays, .calendar-blank { display: none; }
+  .calendar-day { min-height: auto; }
+  .calendar-date { min-height: 44px; }
+  .calendar-date > span::before { content: 'Dia '; }
+  .calendar-navigation .btn { min-height: 44px; }
+}

@@ -23,4 +23,4 @@ Estudo em data posterior ao prazo exige aviso e confirmação explícita, inclus
 
 ## Limites
 
-Sem calendário visual, timer, sugestão, troca automática de atividade ou contas. Esta etapa não define sessões reais de foco. Testes de migração e API usam bancos temporários e cópia consistente isolada da base antiga; o banco original não é usado para gravações de teste.
+O modelo inicial não define timer, sugestão, troca automática de atividade, contas ou sessões reais de foco. O calendário visual acrescentado depois é apenas uma projeção das sessões existentes, sem nova tabela, cópia de atividade, migração ou endpoint. Regras de navegação em [calendario-estudos.md](calendario-estudos.md). Testes de migração e API usam bancos temporários e cópia consistente isolada da base antiga; o banco original não é usado para gravações de teste.

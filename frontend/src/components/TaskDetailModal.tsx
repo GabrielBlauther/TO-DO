@@ -5,13 +5,14 @@ import { formatDate } from '../../../shared/planning';
 import Modal from './Modal';
 import SessionEditor from './SessionEditor';
 
-export default function TaskDetailModal({ task, onClose, onDelete, onUpdated }: {
+export default function TaskDetailModal({ task, onClose, onDelete, onUpdated, initialDate, initialSessionId }: {
   task: Task; onClose: () => void; onDelete: () => void; onUpdated: (task: Task) => void;
+  initialDate?: string; initialSessionId?: number;
 }) {
   const [comments, setComments] = useState<Comment[]>([]), [text, setText] = useState('');
   const [error, setError] = useState(''), [busy, setBusy] = useState(false), [message, setMessage] = useState('');
   useEffect(() => { let active=true; api.getComments(task.id).then(rows => {if(active)setComments(rows);}).catch(err=>{if(active)setError(err.message);});return()=>{active=false;}; }, [task.id]);
-  return <Modal title={task.title} large onClose={() => {if(!busy)onClose();}}>
+  return <Modal title={task.title} large fallbackFocusId="view-mode" onClose={() => {if(!busy)onClose();}}>
     <div className="task-detail-badges"><span className="badge badge-priority">{task.priority_emoji} {task.priority_name}</span>
       <span className="badge badge-category">{task.category_emoji} {task.category_name}</span>
       <span className="badge badge-status">{{todo:'A fazer',in_progress:'Em progresso',done:'Concluída'}[task.status]}</span></div>
@@ -25,7 +26,7 @@ export default function TaskDetailModal({ task, onClose, onDelete, onUpdated }: 
       }}>Marcar como concluída</button>}
       <button className="btn btn-danger" disabled={busy} onClick={onDelete}>Excluir atividade</button>
       <button className="btn btn-secondary" disabled={busy} onClick={onClose}>Fechar</button></div>
-    <SessionEditor task={task} onUpdated={onUpdated} onBusyChange={setBusy} />
+    <SessionEditor task={task} onUpdated={onUpdated} onBusyChange={setBusy} initialDate={initialDate} initialSessionId={initialSessionId} />
     <section className="comments-section" aria-labelledby="comments-title"><h3 id="comments-title">Comentários ({comments.length})</h3>
       <form onSubmit={async event => {
         event.preventDefault();if(busy)return;setBusy(true);setError('');

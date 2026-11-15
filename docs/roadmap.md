@@ -8,6 +8,7 @@
 - Branch de contexto: `docs/contexto-ihc`, atualizada por fast-forward até `538bb10` antes de incorporar os arquivos. README atualizado preservado sem nova edição.
 - Código, configurações e lockfile incluídos; banco local e dependências ignorados.
 - Consultar novamente as referências remotas em tarefas futuras; este registro não garante o estado de PRs posteriores.
+- Preparação do calendário: integração de `feat/planejamento-academico` confirmada pelo PR #4, commit `e9f6af1` da `origin/main`; branch `feat/calendario-estudos` criada dessa main atualizada, sem descartar alterações ou realizar merge automático.
 
 ## Validação de execução já relatada
 Resultados da etapa anterior, confirmados por Gabriel neste chat; não repetidos apenas para incorporar documentação:
@@ -29,7 +30,8 @@ Estado atualizado pela primeira etapa acadêmica na branch `feat/planejamento-ac
 
 - Existem: quadro Kanban, cadastro/edição/consulta/exclusão de tarefas, mudança de status, categorias, prioridades, prazo (`due_date`), comentários, contadores e confirmação de exclusão. `backend/database.ts` cria SQLite e dados de exemplo; estes dados fictícios não são evidências de tarefas acadêmicas concluídas.
 - Implementados nesta etapa: disciplinas opcionais independentes de categorias; múltiplas sessões com data, horário opcional e duração; prazo separado; seis opções de período em um seletor, sem duplicar atividades ou contadores; Sem planejamento; conflitos por sobreposição; aviso e confirmação após prazo; migração aditiva repetível e testes Bun. Modelo em [modelo-dados.md](modelo-dados.md).
-- Não existem ainda: calendário visual, sugestão de estudo, Pomodoro, execução real de sessões de foco e substituição/reorganização transacional entre atividades.
+- Calendário visual implementado na etapa seguinte: seletor Quadro/Calendário, mês independente do filtro, grade mensal/agenda estreita, sessões nos dias correspondentes, lista Sem planejamento e reutilização de consulta/edição/remoção/planejamento. Navegação e evidências em [calendario-estudos.md](calendario-estudos.md).
+- Não existem ainda: sugestão de estudo, Pomodoro, execução real de sessões de foco e substituição/reorganização transacional entre atividades.
 - Escopo, personas hipotéticas, histórias, duas HTAs e alternativas já têm versão inicial. Não confundir documentação proposta com funcionalidades prontas.
 
 ## Natureza dos requisitos e decisões
@@ -54,8 +56,8 @@ O enunciado não exige backend ou persistência real, nem determina uma quantida
 ## Sequência
 1. Integrar este contexto e verificar o estado do Git; documentar lacunas reais.
 2. Verificação inicial de fluxos existentes no Chrome realizada nesta etapa, com teclado e tela estreita; manter roteiro de regressão e ampliar acessibilidade depois.
-3. Modelo mínimo, migração, disciplinas, sessões e filtros implementados nesta etapa; revisar o PR antes de integrar à main.
-4. Próxima etapa funcional: calendário visual usando as sessões existentes, sem duplicar o modelo de planejamento.
+3. Modelo mínimo, migração, disciplinas, sessões e filtros integrados à main pelo PR #4.
+4. Calendário visual implementado na branch `feat/calendario-estudos`, sem duplicar o modelo de planejamento; revisar o PR antes de integrar à main.
 5. Implementar janela única de Foco, sugestão explicada, timer e decisões de conclusão.
 6. Implementar troca, reagendamento, revisão, cancelamento e falhas consistentes.
 7. Revisar acessibilidade, registrar decisões e completar guia de estilo.
