@@ -8,6 +8,7 @@ import TaskDetailModal from './components/TaskDetailModal';
 import ConfirmDialog from './components/ConfirmDialog';
 import SubjectModal from './components/SubjectModal';
 import StudyCalendar from './components/StudyCalendar';
+import FocusControl from './components/FocusControl';
 import { initialMonth } from './calendar';
 
 export default function App() {
@@ -44,6 +45,7 @@ export default function App() {
     <header className="header"><h1>📝 Gestão de Tarefas</h1><div className="header-stats" aria-live="polite">
       <span>Concluídas: {done}</span><span>Pendentes: {visible.length-done}</span><span>Total: {visible.length}</span></div>
       <div className="header-actions"><button className="btn-new-task" onClick={()=>setSubjectOpen(true)}>+ Disciplina</button>
+        <FocusControl tasks={tasks} disabled={loading} onUpdated={update} onRefresh={async()=>setTasks(await api.getTasks())} onCreate={()=>{setEditing(null);setShowForm(true);}} />
         <button className="btn-new-task" onClick={()=>{setEditing(null);setShowForm(true);}}>+ Nova atividade</button></div></header>
     <section className="period-filter" aria-label="Filtro de planejamento"><div className="form-group"><label htmlFor="period">Período de estudo</label>
       <select id="period" value={period} onChange={e=>setPeriod(e.target.value as Period)}>
