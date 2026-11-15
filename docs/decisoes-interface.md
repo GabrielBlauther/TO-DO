@@ -1,0 +1,42 @@
+# Interface e fundamentação inicial
+
+## Alternativas exploradas no chat
+Ambas usam o mesmo cenário fictício: havia Cálculo em uma sessão; o aluno escolhe Programação e pode reagendar Cálculo. Datas do exemplo não são dados reais do usuário.
+
+### A — Janela única (direção escolhida)
+Tela principal → botão Foco → janela com sugestão e motivo, seleção de atividade, campos condicionais de reorganização, resumo e ação de início → timer → resultado/retorno.
+
+Campos de reagendamento aparecem apenas se houver troca e o aluno optar por reagendar. O resumo mostra as consequências antes de confirmar. Seleção, revisão e início permanecem no mesmo contexto.
+
+### B — Etapas guiadas (alternativa para comparação)
+Tela principal → escolher atividade → ajustar planejamento quando necessário → revisar e iniciar → timer → resultado/retorno. Botão Voltar permite revisar escolhas anteriores.
+
+### Comparação e justificativa provisória
+Janela única facilita revisar escolhas simultaneamente e reduz avanços; pode acumular informações quando vários campos aparecem. Etapas guiadas reduzem informações simultâneas e podem ajudar iniciantes, mas exigem mais transições e retorno para comparar escolhas. A direção escolhida é janela única com divulgação progressiva, considerando a rapidez esperada por Lucas e mantendo rótulos claros para Marina e Renata. Não há comprovação empírica de superioridade.
+
+Os esboços interativos foram apresentados no chat. Este documento registra os fluxos, mas NÃO substitui as imagens/wireframes exigidos para a entrega. Produzir e preservar os dois estudos visuais antes do relatório final.
+
+## Decisões a implementar e verificar
+| Decisão | Necessidade/persona | Fundamentação e material |
+| --- | --- | --- |
+| Tela principal com filtro e retorno claro | Lucas: rapidez; Renata: orientação | Navegação.pdf: navegação plana e redução da carga de memória |
+| Sugestão com motivo e opção de troca | Marina: apoio para decidir; Lucas: autonomia | Princípios e Diretrizes: controle do usuário; visibilidade e reconhecimento |
+| Resumo antes de confirmar reorganização | Renata: corrigir escolhas com confiança | Prevenção de erros e controle; Navegação.pdf: rótulos e feedback |
+| Botões Iniciar foco, Reagendar estudo e Cancelar | Marina: compreensão sem treinamento | Navegação.pdf: ação explícita e hierarquia de botões |
+| Tempo numérico e animação discreta | Todos: perceber progresso sem distração | Guias de Estilo.pdf: movimento com propósito; Fatores Humanos |
+| Status indicado por texto além da cor | Diferentes capacidades perceptuais | Cores, IHC e Qualidade: legibilidade e acessibilidade |
+
+## Guia de estilo a completar com o protótipo
+- Paleta e valores de contraste medidos; identidade visual ainda não foi escolhida. Não presumir a paleta de outros projetos do usuário.
+- Fonte, tamanhos, pesos e hierarquia consistentes.
+- Botões primários/secundários e estados: normal, hover, foco, pressionado, processando e erro.
+- Campos com rótulos persistentes; erro associado ao campo; não usar só placeholder.
+- Ícones consistentes com rótulos quando a função não for evidente.
+- Espaçamentos coerentes e layout adaptável.
+- Janela acessível: nome, foco inicial, contenção de foco, retorno ao botão de origem, teclado e cancelamento previsível.
+- Evitar descartar edição por clique acidental fora da janela.
+- Não depender somente de cor, som ou animação. Respeitar preferência de movimento reduzido.
+- Timer não deve anunciar cada segundo a leitores de tela; anunciar mudanças relevantes de estado.
+- Mensagens claras e sem jargão técnico; erros com orientação para recuperação.
+
+Consultar fontes originais para fundamentar o relatório. Recomendações didáticas não são prova de conformidade com uma norma; verificar versões e critérios oficiais se declarar conformidade.
