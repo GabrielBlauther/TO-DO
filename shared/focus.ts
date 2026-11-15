@@ -63,7 +63,8 @@ export function newCycle(result: FocusResult, phase: FocusTimer['phase'], now: n
 export const remaining = (timer: FocusTimer, now: number) => timer.status === 'running' ? Math.max(0,Math.min(timer.totalMs,timer.deadline-now)) : timer.remainingMs;
 export function recoverTimer(value: unknown, now: number): FocusTimer | null {
   const t = value as FocusTimer | null;
-  if (!t || t.version!==1 || typeof t.key!=='string' || !Number.isSafeInteger(t.task_id) || !validMinutes(t.minutes)
+  if (!t || t.version!==1 || typeof t.key!=='string' || !t.key || !Number.isSafeInteger(t.task_id) || t.task_id<=0 || !validMinutes(t.minutes)
+    || (t.session_id!==null && (!Number.isSafeInteger(t.session_id)||t.session_id<=0)) || typeof t.endedEarly!=='boolean'
     || !['study','break'].includes(t.phase) || !['running','paused','finished'].includes(t.status)
     || !Number.isFinite(t.deadline) || !Number.isFinite(t.remainingMs) || t.remainingMs<0 || t.remainingMs>t.totalMs
     || t.totalMs!==(t.phase==='break'?5:t.minutes)*60000) return null;

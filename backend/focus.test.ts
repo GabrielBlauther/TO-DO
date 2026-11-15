@@ -4,6 +4,9 @@ import { createHandler } from './api';
 import { confirmFocus } from './focus';
 import { snapshot, suggestFocus, freeSlot, newCycle, remaining, changeTimer, recoverTimer, validMinutes, type FocusRequest } from '../shared/focus';
 import type { Task } from '../frontend/src/types';
+import { mkdtempSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 let db: ReturnType<typeof createDatabase>;
 let handle: ReturnType<typeof createHandler>;
 let tasks: Task[];
@@ -71,6 +74,16 @@ test('confirmação repetida retorna recibo, inclusive após origem removida, se
   expect(confirmFocus(db,JSON.parse(JSON.stringify(request)))).toEqual(first);
   expect(rows()).toEqual(before);
   expect(()=>confirmFocus(db,{...request,minutes:30})).toThrow('outras escolhas');
+});
+test('recibo e planejamento persistem ao reabrir o banco e repetir após reinicialização',()=>{
+  const path=join(mkdtempSync(join(tmpdir(),'todo-focus-')),'test.db');
+  let disk=createDatabase(path);
+  const request:FocusRequest={key:crypto.randomUUID(),task_id:1,origin:null,action:'new',minutes:25,confirm_after_due:true,current:{planned_date:'2026-11-15',start_time:null,duration_minutes:90},previous:null};
+  const result=confirmFocus(disk,request);disk.close();disk=createDatabase(path);
+  expect(confirmFocus(disk,request)).toEqual(result);
+  expect(disk.query('SELECT * FROM study_sessions').all()).toHaveLength(1);
+  expect(disk.query('SELECT * FROM focus_confirmations').all()).toHaveLength(1);
+  disk.close();
 });
 test('conflitos inclusive entre reagendamento e substituição revertem todas as gravações',()=>{
   const before=rows(),request=body('reschedule');request.previous!.start_time='10:30';
