@@ -16,6 +16,11 @@ export default function SessionEditor({ task, onUpdated, onBusyChange, onDraftCh
   const [removeId, setRemoveId] = useState<number | null>(null);
   const {busy,error,setError,uncertain,run}=useAttempt();
   const previousEditing=useRef<typeof editing>(null);
+  useEffect(()=>{
+    if(!initialSessionId)return;
+    const frame=requestAnimationFrame(()=>document.getElementById(`study-${initialSessionId}`)?.focus());
+    return()=>cancelAnimationFrame(frame);
+  },[initialSessionId]);
   useEffect(()=>onBusyChange(busy),[busy]);
   useEffect(()=>onDraftChange(!!editing&&!uncertain),[editing,uncertain]);
   useEffect(() => {
@@ -34,7 +39,7 @@ export default function SessionEditor({ task, onUpdated, onBusyChange, onDraftCh
     <h3 id="planning-title">Planejamento de estudo</h3>
     <p className="help-text">Prazo da atividade: {formatDate(task.due_date)}. Reagendar estudo não altera o prazo.</p>
     {task.sessions.length === 0 && <p>Sem planejamento</p>}
-    <ul className="session-list">{task.sessions.map(session => <li key={session.id} className={session.id===initialSessionId?'selected-session':''}>
+    <ul className="session-list">{task.sessions.map(session => <li key={session.id} id={`study-${session.id}`} tabIndex={session.id===initialSessionId?-1:undefined} className={session.id===initialSessionId?'selected-session':''}>
       {session.id===initialSessionId&&<strong>Estudo selecionado no calendário</strong>}
       <p>{formatDate(session.planned_date)} · {session.start_time || 'Sem horário'} · {session.duration_minutes} min</p>
       <div className="session-actions"><button type="button" className="btn btn-secondary" disabled={busy||uncertain||!!editing} onClick={() => edit(session)} aria-label={`Editar sessão de ${formatDate(session.planned_date)} às ${session.start_time || 'sem horário'}`}>Editar sessão</button>

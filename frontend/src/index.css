@@ -298,7 +298,8 @@ body {
 }
 
 .btn:hover {
-  opacity: 0.9;
+  opacity: 1;
+  text-decoration: underline;
 }
 
 .btn-primary {

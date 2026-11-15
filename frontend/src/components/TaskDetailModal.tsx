@@ -15,6 +15,7 @@ export default function TaskDetailModal({ task, onClose, onDelete, onUpdated, in
   const [sessionBusy,setSessionBusy]=useState(false),[sessionDraft,setSessionDraft]=useState(false);
   const [message,setMessage]=useState(''),[removeComment,setRemoveComment]=useState<number|null>(null),[leaving,setLeaving]=useState(false);
   const {busy:writing,error,setError,uncertain,run}=useAttempt();
+  const [operation,setOperation]=useState<'status'|'comment'|'delete'>('comment');
   const busy=writing||sessionBusy,dirty=sessionDraft||!!text.trim();
   async function loadComments(){
     setCommentsLoading(true);setCommentsError('');
@@ -34,7 +35,7 @@ export default function TaskDetailModal({ task, onClose, onDelete, onUpdated, in
     {task.description&&<p className="task-detail-description">{task.description}</p>}
     <p className="card-line">Prazo da atividade: {formatDate(task.due_date)}</p>
     <div className="task-detail-actions">
-      <button className="btn btn-secondary" disabled={busy||uncertain} onClick={()=>{setMessage('');void run(async()=>{onUpdated(await api.updateTaskStatus(task.id,task.status==='done'?'todo':'done'));setMessage(task.status==='done'?'Atividade reaberta.':'Atividade concluída. Você pode reabri-la aqui.');});}}>{task.status==='done'?'Reabrir atividade':'Marcar como concluída'}</button>
+      <button className="btn btn-secondary" disabled={busy||uncertain} onClick={()=>{setOperation('status');setMessage('');void run(async()=>{onUpdated(await api.updateTaskStatus(task.id,task.status==='done'?'todo':'done'));setMessage(task.status==='done'?'Atividade reaberta.':'Atividade concluída. Você pode reabri-la aqui.');});}}>{writing&&operation==='status'?'Atualizando situação…':task.status==='done'?'Reabrir atividade':'Marcar como concluída'}</button>
       <button className="btn btn-secondary" disabled={busy} onClick={close}>{uncertain?'Fechar e verificar depois':'Fechar'}</button>
     </div>
     <SessionEditor task={task} onUpdated={onUpdated} onBusyChange={setSessionBusy} onDraftChange={setSessionDraft} initialDate={initialDate} initialSessionId={initialSessionId}/>
@@ -43,14 +44,14 @@ export default function TaskDetailModal({ task, onClose, onDelete, onUpdated, in
       {commentsError&&<div className="error-message" role="alert"><p>{commentsError} A lista de comentários não foi confirmada.</p><button className="btn btn-secondary" disabled={commentsLoading} onClick={()=>void loadComments()}>Recarregar comentários</button></div>}
       {!commentsLoading&&!commentsError&&!comments.length&&<p>Nenhum comentário enviado.</p>}
       <form onSubmit={event=>{
-        event.preventDefault();setMessage('');void run(async()=>{const comment=await api.addComment(task.id,text);setComments(old=>[comment,...old.filter(c=>c.id!==comment.id)]);setText('');setMessage('Comentário adicionado.');});
+        event.preventDefault();setOperation('comment');setMessage('');void run(async()=>{const comment=await api.addComment(task.id,text);setComments(old=>[comment,...old.filter(c=>c.id!==comment.id)]);setText('');setMessage('Comentário adicionado.');});
       }}><label htmlFor="new-comment">Novo comentário</label><div className="comment-form"><input id="new-comment" value={text} onChange={e=>setText(e.target.value)} required disabled={busy||uncertain}/>
-        <button disabled={busy}>{writing?'Enviando…':uncertain?'Verificar resultado':'Enviar comentário'}</button></div></form>
+        <button disabled={busy||uncertain}>{writing&&operation==='comment'?'Enviando comentário…':'Enviar comentário'}</button></div></form>
       <ul className="comment-list">{comments.map(c=><li className="comment-item" key={c.id}><p>{c.text}</p>
         <small>{formatDate(c.created_at.slice(0,10))}</small><button disabled={busy||uncertain} aria-label={`Excluir comentário: ${c.text}`} onClick={()=>{setRemoveComment(c.id);setMessage('');setError('');}}>Excluir</button>
         {removeComment===c.id&&<div className="warning-message"><p>Excluir o comentário “{c.text}”? Não será possível recuperá-lo depois da confirmação.</p>
           <button className="btn btn-secondary" disabled={busy||uncertain} onClick={()=>setRemoveComment(null)}>Manter comentário</button>{' '}
-          <button className="btn btn-danger" disabled={busy} onClick={()=>void run(async()=>{await api.deleteComment(c.id);setComments(old=>old.filter(x=>x.id!==c.id));setRemoveComment(null);setMessage('Comentário excluído.');document.getElementById('new-comment')?.focus();})}>{uncertain?'Verificar resultado':'Confirmar exclusão do comentário'}</button></div>}
+          <button className="btn btn-danger" disabled={busy||uncertain} onClick={()=>{setOperation('delete');void run(async()=>{await api.deleteComment(c.id);setComments(old=>old.filter(x=>x.id!==c.id));setRemoveComment(null);setMessage('Comentário excluído.');document.getElementById('new-comment')?.focus();});}}>{writing&&operation==='delete'?'Excluindo comentário…':'Confirmar exclusão do comentário'}</button></div>}
       </li>)}</ul>
     </section>
     {error&&<p role="alert" className="error-message">{error}</p>}

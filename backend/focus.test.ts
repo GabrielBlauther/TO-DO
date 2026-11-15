@@ -135,3 +135,14 @@ test('timer usa instante final; pausa/retomada e recuperação não reiniciam ne
   for (const n of [0,181,-1,2.5])expect(validMinutes(n)).toBe(false);
   expect(rows()).toHaveLength(2);
 });
+
+test('encerramento antecipado pode ser retomado com o restante preservado após recarga',()=>{
+  const t=newCycle({key:'restore',task_id:101,session_id:201,minutes:25},'study',1000);
+  const ended=changeTimer(t,'end',61000);
+  const recovered=recoverTimer(JSON.parse(JSON.stringify(ended)),500000)!;
+  const resumed=changeTimer(recovered,'resume',500000);
+  expect(resumed.status).toBe('running');expect(resumed.endedEarly).toBe(false);
+  expect(remaining(resumed,500000)).toBe(24*60000);expect(resumed.task_id).toBe(t.task_id);
+  expect(changeTimer(recoverTimer(t,t.deadline+1)!,'resume',t.deadline+1).status).toBe('finished');
+  expect(rows()).toHaveLength(2);
+});
