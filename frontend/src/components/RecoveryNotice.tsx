@@ -10,7 +10,7 @@ export default function RecoveryNotice({onRecovered}:{onRecovered:()=>Promise<vo
   if(!items.length&&!error)return null;
   return <aside className="warning-message page-message" aria-label="Pedidos aguardando confirmação">
     {items.length>0&&<><h2>Confira os pedidos sem confirmação</h2>
-      <p>Uma gravação pode ter ocorrido. Não refaça o cadastro: verifique o mesmo pedido abaixo. Fechar um formulário não cancela uma requisição já enviada.</p>
+      <p>Uma gravação pode ter ocorrido. Não repita a alteração por outro caminho: verifique o mesmo pedido abaixo. Fechar um formulário não cancela uma requisição já enviada.</p>
       <ul>{items.map(item=><li key={item.key}>{item.label} <button className="btn btn-secondary" disabled={busy} onClick={async()=>{
         setBusy(true);setError('');try{await api.retryMutation(item);await onRecovered();}catch(err){setError((err as Error).message);}finally{setBusy(false);}
       }}>{busy?'Verificando…':'Verificar resultado'}</button></li>)}</ul></>}

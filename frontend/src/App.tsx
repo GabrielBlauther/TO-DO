@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, type DragEvent } from 'react';
 import { Task, Category, Priority, Subject, TaskStatus, TaskFormData } from './types';
 import { Period, periodRange, localToday, formatDate } from '../../shared/planning';
 import * as api from './api';
@@ -11,6 +11,7 @@ import StudyCalendar from './components/StudyCalendar';
 import FocusControl from './components/FocusControl';
 import RecoveryNotice from './components/RecoveryNotice';
 import { initialMonth } from './calendar';
+import {pendingStatusTasks,restoreTaskStatus,STATUS_LABELS} from './kanban';
 
 export default function App() {
   const [tasks,setTasks]=useState<Task[]>([]),[categories,setCategories]=useState<Category[]>([]),[priorities,setPriorities]=useState<Priority[]>([]),[subjects,setSubjects]=useState<Subject[]>([]);
@@ -18,7 +19,10 @@ export default function App() {
   const [showForm,setShowForm]=useState(false),[editing,setEditing]=useState<Task|null>(null),[subjectOpen,setSubjectOpen]=useState(false);
   const [selectedId,setSelectedId]=useState<number|null>(null),[deleteId,setDeleteId]=useState<number|null>(null);
   const [period,setPeriod]=useState<Period>('all'),[start,setStart]=useState(localToday()),[end,setEnd]=useState(localToday());
-  const [statusBusy,setStatusBusy]=useState(false);
+  const [movingId,setMovingId]=useState<number|null>(null),[draggedId,setDraggedId]=useState<number|null>(null),[dropTarget,setDropTarget]=useState<TaskStatus|null>(null);
+  const [pendingStatuses,setPendingStatuses]=useState(new Set<number>()),[recoveryUnavailable,setRecoveryUnavailable]=useState(false);
+  const [moveFocus,setMoveFocus]=useState<{elementId:string}|null>(null);
+  const moveLock=useRef(false);
   const [view,setView]=useState<'board'|'calendar'>('board');
   const [calendarMonth,setCalendarMonth]=useState(localToday().slice(0,7));
   const [planningDate,setPlanningDate]=useState<string|undefined>();
@@ -33,7 +37,39 @@ export default function App() {
     catch(err){setError((err as Error).message);return false;}finally{setLoading(false);}
   }
   useEffect(()=>{void load();},[]);
+  useEffect(()=>{
+    const sync=()=>{try{setPendingStatuses(pendingStatusTasks(api.pendingMutations()));setRecoveryUnavailable(false);}catch{setRecoveryUnavailable(true);}};
+    sync();window.addEventListener('todo-mutations',sync);return()=>window.removeEventListener('todo-mutations',sync);
+  },[]);
+  useEffect(()=>{if(moveFocus)document.getElementById(moveFocus.elementId)?.focus();},[moveFocus]);
   const update=(task:Task)=>setTasks(old=>old.some(t=>t.id===task.id) ? old.map(t=>t.id===task.id ? task : t) : [...old,task]);
+  function clearDrag(){setDraggedId(null);setDropTarget(null);}
+  async function moveTask(id:number,status:TaskStatus){
+    const before=tasks.find(task=>task.id===id);
+    if(!before||before.status===status||moveLock.current||pendingStatuses.has(id)||recoveryUnavailable)return;
+    moveLock.current=true;setMovingId(id);clearDrag();setError('');setMessage(`Movendo “${before.title}” para ${STATUS_LABELS[status]}…`);
+    setTasks(current=>current.map(task=>task.id===id?{...task,status}:task));
+    setMoveFocus({elementId:`task-card-${id}`});
+    try{
+      const saved=await api.updateTaskStatus(id,status);update(saved);setMessage(`“${saved.title}” movida para ${STATUS_LABELS[saved.status]}.`);
+      setMoveFocus({elementId:`task-move-${id}`});
+    }catch(err){
+      setTasks(current=>restoreTaskStatus(current,id,status,before.status));setMessage('');
+      let uncertain=err instanceof api.UncertainError;
+      try{uncertain=uncertain||pendingStatusTasks(api.pendingMutations()).has(id);}catch{uncertain=true;}
+      setError(uncertain?`Não foi possível confirmar a mudança de “${before.title}” para ${STATUS_LABELS[status]}. O cartão voltou provisoriamente para ${STATUS_LABELS[before.status]}, mas a situação no servidor pode ter mudado. Use Verificar resultado no aviso de pedidos pendentes antes de mover novamente.`
+        :`Não foi possível mover “${before.title}” para ${STATUS_LABELS[status]}. O cartão voltou para ${STATUS_LABELS[before.status]}. ${(err as Error).message}`);
+      setMoveFocus({elementId:'page-error'});
+    }finally{moveLock.current=false;setMovingId(null);}
+  }
+  function dragStart(task:Task,event:DragEvent<HTMLElement>){
+    if(moveLock.current||pendingStatuses.has(task.id)||recoveryUnavailable){event.preventDefault();return;}
+    event.dataTransfer.setData('application/x-todo-task',String(task.id));event.dataTransfer.effectAllowed='move';setDraggedId(task.id);
+  }
+  function dragOver(status:TaskStatus,event:DragEvent<HTMLElement>){
+    if(draggedId===null||moveLock.current||tasks.find(task=>task.id===draggedId)?.status===status)return;
+    event.preventDefault();event.dataTransfer.dropEffect='move';setDropTarget(status);
+  }
   let range: {start?:string;end?:string}={},filterError='';
   try{range=periodRange(period,localToday(),start,end);}catch(err){filterError=(err as Error).message;}
   useEffect(()=>{
@@ -60,18 +96,24 @@ export default function App() {
       <div className="form-group"><label htmlFor="view-mode">Visualização</label><select id="view-mode" value={view} onChange={e=>setView(e.target.value as 'board'|'calendar')}>
         <option value="board">Quadro</option><option value="calendar">Calendário</option></select></div></section>
     <RecoveryNotice onRecovered={async()=>{const refreshed=await load();setMessage(refreshed?'Resultado verificado. Os dados foram recarregados.':'Pedido confirmado. A consulta dos dados falhou; use Recarregar dados para conferir o estado atual.');}} />
-    {error && <div role="alert" className="error-message page-message">{error} <button className="btn btn-secondary" onClick={()=>void load()}>Recarregar dados</button></div>}
+    {error && <div id="page-error" tabIndex={-1} role="alert" className="error-message page-message">{error} <button className="btn btn-secondary" onClick={()=>void load()}>Recarregar dados</button></div>}
     {message && <p className="success-message page-message" role="status">{message}</p>}
     {loading ? <p className="loading" role="status">Carregando atividades…</p> : loaded && <>
       {!filterError && visible.length===0 && <p role="status" className="page-message">Nenhuma atividade neste período. Escolha Todas para consultar as demais.</p>}
       {view==='calendar' ? !filterError && <main><StudyCalendar tasks={tasks} visible={visible} range={range} month={calendarMonth} unplanned={period==='unplanned'}
         onMonthChange={setCalendarMonth} onOpen={(id,sid)=>openDetails(id,undefined,sid)} onPlan={(id,date)=>openDetails(id,date)} /></main>
-      : <main className="kanban-board">{columns.map(col=><section className={`kanban-column ${col.className}`} key={col.key} aria-label={col.title}>
+      : <main className="kanban-board" aria-label="Quadro de atividades"><p id="board-instructions" className="board-instructions">Arraste uma atividade para outra coluna ou use Mover para… no cartão, por teclado ou toque.</p>{columns.map(col=><section className={`kanban-column ${col.className} ${dropTarget===col.key?'is-drop-target':''}`} key={col.key} aria-label={col.title}
+        onDragOver={event=>dragOver(col.key,event)} onDragEnter={event=>dragOver(col.key,event)}
+        onDragLeave={event=>{if(!(event.relatedTarget instanceof Node)||!event.currentTarget.contains(event.relatedTarget))setDropTarget(current=>current===col.key?null:current);}}
+        onDrop={event=>{
+          event.preventDefault();const id=Number(event.dataTransfer.getData('application/x-todo-task'));const allowed=id===draggedId;
+          clearDrag();if(allowed)void moveTask(id,col.key);
+        }}>
         <div className="column-header"><h2>{col.title}</h2><span className="column-count">{visible.filter(t=>t.status===col.key).length}</span></div>
+        <p className="kanban-drop-hint">{dropTarget===col.key?`Solte aqui para mover para ${STATUS_LABELS[col.key]}.`:''}</p>
         {visible.filter(t=>t.status===col.key).map(t=><TaskCard key={t.id} task={t} onView={()=>openDetails(t.id)} onEdit={()=>{setEditing(t);setShowForm(true);}} onDelete={()=>setDeleteId(t.id)}
-          busy={statusBusy} statusLabel={t.status==='todo'?'Marcar em progresso':t.status==='in_progress'?'Marcar concluída':'Reabrir atividade'} onStatusChange={()=>{
-            if(statusBusy)return;setStatusBusy(true);setError('');setMessage('');api.updateTaskStatus(t.id,t.status==='todo'?'in_progress':t.status==='in_progress'?'done':'todo').then(task=>{update(task);setMessage(`Situação de “${task.title}” atualizada.`);}).catch(err=>setError(err.message)).finally(()=>setStatusBusy(false));
-          }} />)}
+          busy={movingId===t.id} disabled={movingId!==null||pendingStatuses.has(t.id)||recoveryUnavailable} pending={pendingStatuses.has(t.id)&&movingId===null} dragging={draggedId===t.id}
+          onMove={status=>void moveTask(t.id,status)} onDragStart={event=>dragStart(t,event)} onDragEnd={clearDrag} />)}
         {visible.filter(t=>t.status===col.key).length===0 && <p className="empty-column">Nenhuma atividade</p>}</section>)}</main>}
     </>}
     {showForm && <TaskFormModal task={editing} categories={categories} priorities={priorities} subjects={subjects} onSubjectCreated={s=>setSubjects(old=>[...old,s])} onSubmit={submit} onClose={()=>setShowForm(false)} />}
