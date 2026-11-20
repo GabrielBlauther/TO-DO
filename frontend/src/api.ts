@@ -55,7 +55,7 @@ async function request<T>(url: string, options?: RequestInit, retry?:PendingMuta
   const mutation=method!=='GET' && url!=='/focus/confirm';
   const identity=JSON.stringify({url,method,body});
   const label=operation(url,method,body);
-  const recovery=url==='/focus/confirm'?'Verificar confirmação pendente':'Verificar resultado';
+  const recovery=url==='/focus/confirm'?'Verificar confirmação':'Verificar resultado';
   let item:PendingMutation|undefined;
   // A running old backend must not silently ignore the receipt key.
   if(method!=='GET')await checkRecoverySupport(label);

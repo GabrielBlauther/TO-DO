@@ -1,8 +1,9 @@
 import { useEffect, useId, useRef, useState, ReactNode } from 'react';
 
 export default function Modal({ title, onClose, onConfirmClose, closeMessage, busy = false, children, large = false, fallbackFocusId,
-  expanded, onExpandedChange, onMinimize, minimizeTitle }: {
-  title: string; onClose: () => void; children: ReactNode; large?: boolean; fallbackFocusId?: string;
+  expanded, onExpandedChange, onMinimize, minimizeTitle, exitLabel, onDiscard }: {
+  title: string; onClose: () => void; children: ReactNode | ((requestClose:()=>void)=>ReactNode); large?: boolean; fallbackFocusId?: string;
+  exitLabel?:string; onDiscard?:()=>void;
   onConfirmClose?:()=>void; closeMessage?:string; busy?:boolean;
   expanded?:boolean; onExpandedChange?:(expanded:boolean)=>void; onMinimize?:()=>void; minimizeTitle?:string;
 }) {
@@ -89,12 +90,13 @@ export default function Modal({ title, onClose, onConfirmClose, closeMessage, bu
         <button ref={closeRef} type="button" className="modal-close" aria-label={`Fechar ${title}`} title="Fechar janela" disabled={busy} onClick={event=>{event.stopPropagation();requestExit();}}><span aria-hidden="true">×</span></button>
       </div>
     </div>
-    <div hidden={exitRequested}>{children}</div>
+    <div hidden={exitRequested}>{typeof children==='function'?children(()=>requestExit()):children}</div>
     {exitRequested&&<section className="modal-exit-confirmation">
       <h3 id={exitTitleId}>Sair de “{title}”?</h3>
       <p id={exitDescriptionId} aria-live="polite">{closeMessage||'Deseja sair deste diálogo? Dados ainda não enviados poderão ser descartados. O que já foi salvo será mantido.'}</p>
-      <div className="form-actions"><button ref={continueRef} type="button" className="btn btn-primary" onClick={continueHere}>Continuar aqui</button>
-        <button type="button" className="btn btn-secondary" disabled={busy} onClick={()=>{if(!busy)(onConfirmClose||onClose)();}}>Sair do diálogo</button></div>
+      <div className={`form-actions ${onDiscard||exitLabel?'focus-footer':''}`}><button ref={continueRef} type="button" className="btn btn-primary" onClick={continueHere}>Continuar aqui</button>
+        <button type="button" className="btn btn-secondary" disabled={busy} onClick={()=>{if(!busy)(onConfirmClose||onClose)();}}>{exitLabel||'Sair do diálogo'}</button>
+        {onDiscard&&<button type="button" className="btn focus-text-button" disabled={busy} onClick={()=>{if(!busy)onDiscard();}}>Descartar e sair</button>}</div>
     </section>}
     {busy&&<p className="help-text" role="status">Pedido em andamento. Aguarde o resultado antes de sair.</p>}
   </dialog>;
