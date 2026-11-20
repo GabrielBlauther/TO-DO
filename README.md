@@ -144,13 +144,15 @@ Consulte [decisões, testes e roteiro do calendário](docs/calendario-estudos.md
 
 Reinicie o backend após atualizar esta versão para aplicar as migrações aditivas dos recibos. A interface verifica se o servidor suporta a recuperação segura antes de gravar; se ele ainda estiver na versão antiga, os campos ficam preservados e a mensagem orienta reiniciar o servidor.
 
-Clique em **Foco**, no Quadro ou Calendário. Em **Escolher o que estudar**, consulte a sugestão, selecione a atividade e qual estudo de hoje quer usar ou substituir; **Nenhum destes** permite planejar um novo. Continue para **Ajustar o planejamento**, quando pertinente, e depois **Revisar e iniciar**. A mesma atividade do estudo escolhido pula o ajuste. Use **Voltar** para corrigir; **Guardar escolhas e voltar** ou Escape conserva a preparação na mesma página. **Cancelar preparação e descartar escolhas** não grava.
+Clique em **Foco**, no Quadro ou Calendário. Em **Escolher o que estudar**, consulte a sugestão, selecione a atividade e qual estudo de hoje quer usar ou substituir; **Nenhum destes** permite planejar um novo. Continue para **Ajustar o planejamento**, quando pertinente, e depois **Revisar e iniciar**. A mesma atividade do estudo escolhido pula o ajuste. Use **Voltar** para corrigir; **Guardar escolhas e voltar** conserva a preparação na mesma página. X, clique fora ou Escape pedem confirmação para minimizar, preservando as escolhas. **Cancelar preparação e descartar escolhas** não grava.
 
 O padrão é estudo de 25 minutos e pausa de 5. Estudo pode ser ajustado entre 1 e 180 minutos inteiros. Pausar, minimizar, mudar a visualização e recarregar preservam o estado no mesmo navegador/endereço. Zero exige uma decisão; **Concluir atividade** é uma ação distinta. Repetir ciclos não cria novos agendamentos. Uma confirmação com resposta perdida pode ser recuperada sem duplicar o planejamento.
 
 **Minimizar Foco** mantém o timer para consultar o quadro e voltar. **Encerrar este ciclo** mostra as escolhas de continuação e permite retomar o restante se encerrou por engano. **Encerrar estudo e voltar** libera a escolha de outra atividade e não desfaz o planejamento salvo. A duração de um estudo planejado pode conter vários ciclos; ela não é o prazo da atividade.
 
 Se faltar confirmação ao salvar atividade, disciplina, estudo ou comentário, os campos ficam preservados e a alteração bloqueada para **Verificar resultado**. Fechar o formulário não cancela uma requisição já enviada; o aviso principal recupera o mesmo pedido, inclusive após recarregar a mesma aba. Evite refazer o cadastro. Pedidos comuns usam armazenamento da aba; fechar a aba ou limpar esse armazenamento pode perder a recuperação. Rascunhos ainda não enviados não são recuperados após recarregar. Ao cadastrar uma atividade, **Cadastrar disciplina aqui** retorna ao formulário sem perder título, descrição ou prazo.
+
+Todos os modais têm **X** no canto superior direito. Clicar no X, fora da janela ou usar Escape apresenta **Continuar aqui** e **Sair do diálogo**. Continuar mantém os campos; sair informa se descarta o rascunho ou apenas minimiza o Foco. Escape durante essa confirmação volta ao formulário. Durante uma gravação, aguarde a confirmação do resultado antes de sair.
 
 Consulte [regras, recuperação, limites e roteiros das duas tarefas](docs/modo-foco.md).
 

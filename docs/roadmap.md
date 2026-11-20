@@ -11,6 +11,7 @@
 - Preparação do calendário: integração de `feat/planejamento-academico` confirmada pelo PR #4, commit `e9f6af1` da `origin/main`; branch `feat/calendario-estudos` criada dessa main atualizada, sem descartar alterações ou realizar merge automático.
 - Preparação do Foco: integração de `feat/calendario-estudos` confirmada pelo PR #5, commit `11ffef1` da `origin/main`; branch `feat/modo-foco` criada dessa main atualizada.
 - Preparação da revisão de IHC: `feat/modo-foco` integrada pelo PR #6, commit `9952103`; confirmado por fetch/ancestralidade. Main atualizada por fast-forward; branch `fix/revisao-ihc` criada com árvore limpa. Nenhum merge automático.
+- Correção do cadastro e saída dos modais: revisão integrada pelo PR #7, commit `9493cec`, confirmada por fetch/ancestralidade; main atualizada e branch `fix/cadastro-e-modais` criada sem descartar trabalho. Integração desta nova branch ainda depende de PR.
 
 ## Validação de execução já relatada
 Resultados da etapa anterior, confirmados por Gabriel neste chat; não repetidos apenas para incorporar documentação:
@@ -87,3 +88,5 @@ PDFs, extrações e imagens auxiliares de consulta permanecem locais e fora dos 
 Diagnóstico registrado e enviado em `41d746e` antes das correções. Recibos atômicos `366abb0`; formulários/recuperação `3d4f75f`; verificação de compatibilidade `0cd07da`; Foco guiado/retomada `e81817f`; preservação da escolha de duração ao minimizar `2743f53`. As capturas próprias em `docs/imagens/revisao-ihc` usam dados fictícios isolados; os materiais didáticos permanecem locais.
 
 Build aprovado e 37 testes/198 asserções aprovados. Chrome desktop/390 px: duas HTAs, erros reais/simulados, cancelamentos, retorno, teclado, duas abas e resultado perdido após commit. Não houve avaliação com participantes, leitor de tela ou auditoria completa de acessibilidade. A base de teste ficou isolada; Gabriel confirmou estar experimentando a aplicação pessoal durante a revisão, portanto não alegar igualdade final dos hashes WAL/SHM. Não restauramos nem sobrescrevemos alterações pessoais.
+
+Complemento de 20/11/2026: corrigida a verificação de suporte do cadastro para GET `/api/categories`, pois OPTIONS era interceptado pelo CORS do Vite. Teste Bun pelo proxy real e Chrome com banco isolado cobrem cadastro e recuperação sem duplicação. **38 testes/210 asserções**, build e verificação de diferenças passaram. Por preferência expressa do responsável, os seis tipos de modal agora têm X e confirmação única por X/clique fora/Escape, mantendo campos ao continuar e diferenciando minimizar Foco de encerrar estudo. Detalhes, limitações e capturas no [complemento da revisão](revisao-ihc.md#complemento-de-20112026--cadastro-pelo-proxy-e-saída-dos-modais). Não confundir com avaliação com participantes.

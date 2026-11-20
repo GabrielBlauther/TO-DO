@@ -6,6 +6,8 @@ A primeira etapa implementou disciplinas e planejamento manual. As etapas seguin
 
 A [revisão de IHC](revisao-ihc.md) organizou o Foco em escolha, ajuste pertinente e revisão, mantendo o diálogo e o contexto da tela principal. Voltar/guardar preparação preservam escolhas; cancelar preparação as descarta sem gravar. São ajustes decorrentes de inspeção técnica, não tarefas validadas com participantes.
 
+Retorno auxiliar atualizado por solicitação do responsável em 20/11/2026: X, clique fora e Escape apresentam uma confirmação única; Continuar aqui retorna com campos/foco preservados. No Foco, Sair do diálogo apenas minimiza e conserva escolhas/timer. Em formulários, a confirmação informa o descarte dos rascunhos não enviados; pedidos enviados não são cancelados e podem ser verificados depois. Escape durante a confirmação equivale a continuar. Os objetivos e planos principais das duas HTAs permanecem os mesmos.
+
 ## HTA 1 — Realizar uma sessão de estudo com foco
 Objetivo: estudar uma atividade escolhida com apoio do timer e registrar o andamento.
 
