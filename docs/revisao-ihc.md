@@ -1,5 +1,13 @@
 # Revisão de interação — diagnóstico e correções
 
+## F04 — Estado do Foco minimizado quebra o cabeçalho
+
+Relato e captura de Gabriel sobre a versão `59226f1`: minimizar o Foco insere a explicação longa no mesmo grupo de botões; Nova atividade quebra de linha e o cabeçalho fica desalinhado. Reprodução: iniciar um ciclo → minimizar → consultar as ações do cabeçalho. Observação confirmada pela estrutura do código; não é avaliação formal com participantes. Prioridade P2, orientação e agrupamento. Critério: minimizar/restaurar não altera a altura do cabeçalho nem empurra botões; estado continua legível, com acesso ao mesmo timer por teclado.
+
+Correção em `fix/alinhamento-foco-minimizado`, a partir da main atualizada `9e3bc80` (PR #11 integrado, confirmado por fetch). Cabeçalho contém apenas ações; mensagem curta fica em faixa própria abaixo, alinhada ao filtro. Usa região de status e a descrição acessível do botão Foco; erros de recuperação também ficam fora dos botões. O conteúdo continua pertencendo ao mesmo componente por portal React, sem duplicar estado/timer ou alterar persistência. Separar controles e feedback aplica agrupamento/hierarquia (Navegação pp. 8–20; Princípios pp. 34–39, conforme consulta da revisão anterior). Esta posição é decisão do projeto, não regra universal das aulas.
+
+Chrome real com banco isolado em `.cache/proxy-ui/test.db`, larguras **1920, 1280, 1024 e 390 px**: altura do cabeçalho igual antes/depois de minimizar, três botões na mesma linha em 1920/1280, sem transbordamento horizontal. Verificados estudo/pausa contando, ambos pausados, término natural/antecipado, preparação guardada, pedido pendente recuperado após recarga e erro de armazenamento. Enter restaura; minimizar devolve foco ao botão e mantém o instante final. O roteiro `.cache/check-focus-header.py` fez **zero requisições de escrita**; timer/pendência foram preparados apenas no armazenamento do contexto isolado do navegador. Capturas desktop/estreita abertas para inspeção, mantidas localmente. **42 testes/291 asserções, build TypeScript + Vite e diff --check aprovados.** Não houve avaliação com participantes, leitor de tela ou aparelho físico.
+
 ## Nova revisão solicitada — excesso de ações no Foco
 
 Diagnóstico anterior à correção, em 20/11/2026, sobre `6e3a3cf`. Gabriel forneceu captura da etapa Revisar e iniciar e relatou desorganização; isso é feedback do responsável, não avaliação com participantes. Inspeção do código confirma cinco ações no formulário (Voltar, Guardar escolhas e voltar, Confirmar, Cancelar preparação, Atualizar atividades), distribuídas em três blocos. O resumo repete atividade/prazo quando o estudo escolhido pertence à mesma atividade. A revisão anterior não resolveu essa sobrecarga.

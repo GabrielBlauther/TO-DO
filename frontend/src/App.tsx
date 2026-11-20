@@ -14,6 +14,7 @@ import { initialMonth } from './calendar';
 import {pendingStatusTasks,restoreTaskStatus,STATUS_LABELS} from './kanban';
 
 export default function App() {
+  const [focusStatusContainer,setFocusStatusContainer]=useState<HTMLDivElement|null>(null);
   const [tasks,setTasks]=useState<Task[]>([]),[categories,setCategories]=useState<Category[]>([]),[priorities,setPriorities]=useState<Priority[]>([]),[subjects,setSubjects]=useState<Subject[]>([]);
   const [loading,setLoading]=useState(true),[error,setError]=useState(''),[message,setMessage]=useState('');
   const [showForm,setShowForm]=useState(false),[editing,setEditing]=useState<Task|null>(null),[subjectOpen,setSubjectOpen]=useState(false);
@@ -83,8 +84,9 @@ export default function App() {
     <header className="header"><h1>📝 Gestão de Tarefas</h1><div className="header-stats" aria-live="polite">
       <span>Concluídas: {loaded&&!filterError?done:'—'}</span><span>Pendentes: {loaded&&!filterError?visible.length-done:'—'}</span><span>Total: {loaded&&!filterError?visible.length:'—'}</span></div>
       <div className="header-actions"><button className="btn-new-task" disabled={!loaded} onClick={()=>setSubjectOpen(true)}>+ Disciplina</button>
-        <FocusControl tasks={tasks} disabled={loading||!loaded} onUpdated={update} onRefresh={async()=>setTasks(await api.getTasks())} onCreate={()=>{setEditing(null);setShowForm(true);}} />
+        <FocusControl statusContainer={focusStatusContainer} tasks={tasks} disabled={loading||!loaded} onUpdated={update} onRefresh={async()=>setTasks(await api.getTasks())} onCreate={()=>{setEditing(null);setShowForm(true);}} />
         <button className="btn-new-task" disabled={!loaded} onClick={()=>{setEditing(null);setShowForm(true);}}>+ Nova atividade</button></div></header>
+    <div ref={setFocusStatusContainer} className="focus-status-container" />
     <section className="period-filter" aria-label="Filtro de planejamento"><div className="form-group"><label htmlFor="period">Período de estudo</label>
       <select id="period" value={period} onChange={e=>setPeriod(e.target.value as Period)}>
         <option value="all">Todas</option><option value="today">Hoje</option><option value="month">Este mês</option><option value="semester">Este semestre</option><option value="custom">Personalizado</option><option value="unplanned">Sem planejamento</option></select></div>
