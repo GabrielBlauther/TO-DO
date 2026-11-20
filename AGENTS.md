@@ -5,6 +5,7 @@ Projeto acadêmico de IHC da UCS, desenvolvido a partir do to-do existente. Leia
 Para planejamento e calendário, consulte também `docs/modelo-dados.md`, `docs/validacao-planejamento.md` e `docs/calendario-estudos.md`, distinguindo registros históricos do estado atual.
 Para execução de estudo e reorganização, leia `docs/modo-foco.md`, inclusive limites da recuperação local e da confirmação idempotente.
 Para interação, leia também `docs/revisao-ihc.md`: diagnóstico anterior às correções, fontes/páginas, evidências e limitações. Prioridade: enunciado → aulas originais → decisões/personas/HTAs próprias (revisáveis). O código não é a especificação correta por existir.
+Estado consolidado dos pedidos recentes, lacunas iniciais e evidências finais: `docs/consolidacao-interacoes.md`. Capturas próprias de desktop/celular: `docs/capturas-consolidacao.md`. Registros anteriores são históricos; não presumir o estado atual por uma seção antiga.
 
 ## Fontes
 - Exigências acadêmicas: `docs/referencias/diretrizes/Trabalho-III.pdf`.
@@ -24,6 +25,7 @@ Para interação, leia também `docs/revisao-ihc.md`: diagnóstico anterior às 
 - Preferência expressa em 20/11/2026: todos os diálogos têm X; X, clique fora e Escape pedem uma única confirmação de saída. Continuar preserva campos e foco. No Foco, sair minimiza e preserva execução/escolhas. Aguardar gravação em andamento; não duplicar a confirmação de rascunho após a saída já autorizada.
 - Na confirmação de saída, o X cancela essa confirmação e volta ao conteúdo, assim como Escape/Continuar aqui. Seu nome acessível deve refletir esse efeito. Não deixar um X habilitado sem ação nem confirmar descarte/encerramento por um segundo clique no X.
 - Controles confirmados na rodada seguinte: expandir/restaurar tamanho em todos os modais; minimizar apenas o Foco. Tamanho não altera dados ou timer. Ao reabrir Foco minimizado, preservar o tamanho escolhido nesta página. Fechar não encerra estudo; mensagens distinguem estudo/pausa contando, timer pausado e ciclo terminado, inclusive na confirmação aberta.
+- Minimizar Foco deve mostrar painel compacto flutuante **dentro da aplicação**, não faixa no cabeçalho. Tempo, identificação, pausa/retomada e restauração usam o mesmo timer. Arraste limitado à área visível, alternativas por setas/seletor e toque; não ampliar para outros programas. Mover nunca altera planejamento. No resultado, mostrar ciclo encerrado/concluído e situação da atividade; próximo passo proposto exige confirmação explícita. Sugestões de disciplina são exemplos editáveis, sem cadastro automático ou alegação de catálogo UCS.
 - Erros precisam informar operação, causa conhecida, estado e recuperação. Resultado incerto mantém o mesmo pedido/chave; verificar antes de permitir outra gravação. Preservar campos; não inventar causas nem afirmar ausência de gravação após perda de resposta.
 - Atividade, disciplina, prazo, estudo planejado e ciclo são conceitos distintos. Usar vocabulário reconhecível e campos condicionais. Recomendações das aulas são contextuais, não regras universais.
 - Prazo da atividade, data de estudo e término do timer são conceitos diferentes.

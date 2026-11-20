@@ -1,5 +1,7 @@
 # Revisão de interação — diagnóstico e correções
 
+Estado consolidado após estes registros históricos: [auditoria de atendimento dos pedidos](consolidacao-interacoes.md), com lacunas anteriores, correções, evidências e limites; [capturas finais de desktop/celular](capturas-consolidacao.md). A faixa registrada em F04 foi substituída por painel flutuante dentro da aplicação. Não apresentar a quantidade de testes como evidência de clareza.
+
 ## F05 — X sem resposta na confirmação de saída do Foco
 
 Gabriel informou que alguns X não funcionavam e identificou o Modo Foco. Inspeção e reprodução sobre `47f7307` (main `b8e1953`, PR #12 integrado, confirmado por fetch): primeiro X abre a confirmação, mas o X permanece habilitado chamando `requestExit`, que ignora o clique quando a confirmação já está aberta. Esse segundo clique sem efeito foi reproduzido em 14 combinações de preparação, estudo contando/pausado/terminado/encerrado cedo, pausa contando e pedido pendente, com janela normal/expandida. Não se observou falha do primeiro clique nesses cenários; o relato não especificou o momento exato. Prioridade P1: controle de retorno. Consequência esperada: controle parece quebrado e deixa ambíguo como sair ou continuar. Não é avaliação com participantes.

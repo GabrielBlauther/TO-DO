@@ -1,5 +1,11 @@
 # Interface e fundamentação inicial
 
+## Consolidação atual dos pedidos
+
+O [estado por pedido e as evidências](consolidacao-interacoes.md) substituem as interpretações anteriores de atendimento. A faixa estática não era painel: foi substituída por painel flutuante limitado à aplicação, com o mesmo timer, arraste limitado e alternativas de setas/seletor/toque. O controle Foco · mover explicita a ação sem acrescentar um menu permanente. Limites evitam perder o painel fora da tela; mover não altera planejamento. Isso aplica controle e reconhecimento às necessidades hipotéticas de Renata/Marina; não prova benefício para usuários reais.
+
+No ciclo concluído, o resultado e a situação da atividade precedem a escolha seguinte. Ação principal nomeada exige confirmação; pausa ou novo estudo são propostas, não ações automáticas. Em celular, o rodapé usa duas linhas e permanece acessível durante a rolagem da preparação. Essa correção veio da inspeção da captura, não da contagem de testes. Atualização mostra espera/sucesso e recupera consulta sem repetir gravação. Sugestões opcionais de disciplina preenchem campo editável, sem tratar exemplos como catálogo institucional. Fontes: Navegação pp. 8–20, Princípios pp. 20–21 e 34–43. [Capturas finais para revisão](capturas-consolidacao.md); a avaliação humana continua pendente.
+
 ## Correção da sobrecarga de ações no Foco
 
 A captura e o relato do responsável mostraram que a revisão anterior ainda deixava opções espalhadas e repetidas. O diagnóstico F01–F03 e as verificações estão em [revisao-ihc.md](revisao-ihc.md#nova-revisão-solicitada--excesso-de-ações-no-foco). A direção atual mantém etapas, mas concentra Voltar/Sair/ação principal num único rodapé centralizado. Guardar/descartar só aparecem na confirmação de saída. Atualização da lista fica em ajuda na escolha; minimizar somente no cabeçalho. O resumo apresenta fatos identificados uma vez. Ao terminar o ciclo, escolher Próximo passo revela apenas os campos dessa escolha e um botão informa o resultado que será confirmado.

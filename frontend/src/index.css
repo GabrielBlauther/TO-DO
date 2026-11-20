@@ -611,6 +611,10 @@ fieldset { border: 0; min-width: 0; }
 .focus-facts dd { margin: 0; }
 .focus-activity { text-align: center; overflow-wrap: anywhere; }
 .focus-activity p { color: #4b5563; }
+.focus-result { text-align: center; background: #f4f2ff; border: 1px solid #c7c2e7; border-radius: 8px; padding: 1rem; margin: 1rem 0; line-height: 1.5; }
+.subject-suggestions { margin-bottom: 1rem; }
+.subject-suggestions summary { cursor: pointer; color: #37318a; text-decoration: underline; }
+.subject-suggestions > div { display: flex; gap: 0.5rem; flex-wrap: wrap; }
 .focus-phase, .focus-window-help { text-align: center; margin-top: 1rem; }
 .btn.focus-text-button { background: transparent; color: #37318a; text-decoration: underline; padding: 0.6rem; }
 .focus-suggestion, .focus-summary { background: #f4f2ff; border: 1px solid #c7c2e7; padding: 1rem; border-radius: 8px; margin: 1rem 0; line-height: 1.6; overflow-wrap: anywhere; }
@@ -647,8 +651,11 @@ fieldset { border: 0; min-width: 0; }
 .form-group input:disabled, .form-group select:disabled, .form-group textarea:disabled { color: #374151; opacity: 1; }
 button:disabled { cursor: default; }
 @media (max-width: 600px) {
-  .focus-footer { flex-direction: column; }
-  .focus-footer .btn { width: 100%; min-height: 44px; }
+  .focus-footer .btn { flex: 1; min-height: 44px; }
+  .focus-footer .btn-primary { flex-basis: 100%; }
+  .focus-form > .focus-footer { position: sticky; bottom: 0; z-index: 1; background: white; padding-bottom: 0.5rem; }
+  .modal:has(.focus-content) { scroll-padding-top: 5rem; scroll-padding-bottom: 8rem; }
+  .focus-content input, .focus-content [role="alert"] { scroll-margin-bottom: 8rem; }
   .focus-facts > div { grid-template-columns: 1fr; gap: 0.1rem; }
 }
 
@@ -661,10 +668,22 @@ button:disabled { cursor: default; }
 .modal-exit-confirmation { line-height: 1.6; overflow-wrap: anywhere; }
 .modal [hidden] { display: none !important; }
 .modal.modal-expanded { width: calc(100% - 2rem); max-width: none; height: calc(100dvh - 2rem); max-height: calc(100dvh - 2rem); }
-.focus-status-container { max-width: 1336px; margin: 1rem auto 0; }
-.focus-status-container:empty { display: none; }
-.focus-minimized-status { display: flex; align-items: baseline; flex-wrap: wrap; gap: 0.35rem 1rem; padding: 0.75rem 1rem; background: #f4f2ff; color: #302568; border-left: 3px solid #4338ca; border-radius: 6px; font-size: 0.85rem; line-height: 1.5; overflow-wrap: anywhere; }
-@media (max-width: 600px) { .focus-status-container { margin-inline: 1rem; } }
+.focus-panel-host { display: contents; }
+.focus-panel { position: fixed; z-index: 20; width: 300px; padding: 0.85rem; overflow: auto; background: white; color: #1a1a2e; border: 1px solid #c7c2e7; border-top: 3px solid #4338ca; border-radius: 10px; box-shadow: 0 6px 24px #1a1a2e33; text-align: left; }
+.focus-panel[hidden] { display: none; }
+.focus-panel-heading { display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; }
+.focus-panel-handle { border: 0; background: transparent; padding: 0.35rem; color: #37318a; font: inherit; font-weight: 700; cursor: grab; touch-action: none; user-select: none; }
+.focus-panel-handle:active { cursor: grabbing; }
+.focus-panel-phase { font-size: 0.8rem; color: #4b5563; }
+.focus-panel-task { margin-top: 0.3rem; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-size: 0.9rem; }
+.focus-panel-clock { display: block; font-size: 2rem; font-variant-numeric: tabular-nums; font-weight: 600; margin: 0.2rem 0; }
+.focus-panel-status { font-size: 0.8rem; line-height: 1.5; margin: 0.4rem 0 0.7rem; }
+.focus-panel-actions { display: flex; gap: 0.5rem; }
+.focus-panel-actions .btn { flex: 1; padding: 0.55rem; min-height: 40px; }
+.focus-panel-position { border-top: 1px solid #d1d5db; padding-top: 0.7rem; margin-top: 0.7rem; }
+.focus-panel-position label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.4rem; }
+.focus-panel-position select { width: 100%; padding: 0.5rem; font: inherit; border: 1px solid #9ca3af; border-radius: 5px; }
+@media (max-width: 600px), (pointer: coarse) { .focus-panel-handle, .focus-panel-actions .btn { min-height: 44px; } }
 @media (max-width: 600px) { .modal.modal-expanded { width: calc(100% - 0.5rem); height: calc(100dvh - 0.5rem); max-height: calc(100dvh - 0.5rem); } }
 @media (max-width: 600px), (pointer: coarse) { .modal-window-control, .modal-close { width: 40px; height: 40px; } }
 

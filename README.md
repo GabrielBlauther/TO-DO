@@ -157,7 +157,11 @@ Clique em **Foco**, no Quadro ou Calendário. Em **Escolher atividade**, consult
 
 O padrão é estudo de 25 minutos e pausa de 5. Estudo pode ser ajustado entre 1 e 180 minutos inteiros. Pausar, minimizar, mudar a visualização e recarregar preservam o estado no mesmo navegador/endereço. Zero exige uma decisão; **Marcar atividade como concluída** é uma ação distinta. Repetir ciclos não cria novos agendamentos. Uma confirmação com resposta perdida pode ser recuperada sem duplicar o planejamento.
 
-**Minimizar** no cabeçalho mantém o timer para consultar o quadro e voltar. **Encerrar ciclo** não conclui a atividade: abre o campo **Próximo passo**, para retomar o restante (se encerrou antes do fim), fazer outro ciclo, iniciar pausa ou encerrar o estudo. Somente um botão confirma o passo escolhido; a duração aparece apenas para outro ciclo. **Marcar atividade como concluída** fica junto à atividade e é independente do timer. **Encerrar estudo** libera outra atividade e não desfaz o planejamento salvo. A duração de um estudo planejado pode conter vários ciclos; ela não é o prazo da atividade.
+**Minimizar** mostra um painel compacto flutuante dentro da aplicação, com atividade, tempo, Pausar/Retomar e Restaurar Foco. Arraste por **Foco · mover** ou clique/toque nesse controle para escolher um canto; por teclado, use as setas (Shift move mais). O painel fica limitado à tela; Escape cancela arraste/fecha opções. Mover ou restaurar não muda o timer. A posição vale nesta página, sem sobrepor outros programas.
+
+**Encerrar ciclo** não conclui a atividade: mostra o resultado e **Próximo passo**, propondo pausa após estudo, estudo após pausa ou encerramento se a atividade já foi concluída. Você pode escolher outro passo ou retomar o restante de um ciclo encerrado cedo. Nada começa automaticamente; o botão descreve o efeito antes de confirmar. **Marcar atividade como concluída** fica no resultado e é independente do timer. **Encerrar estudo** libera outra atividade e não desfaz planejamento. Um estudo planejado pode conter vários ciclos; sua duração não é o prazo da atividade.
+
+Na escolha da atividade, **Ajuda e atualização da lista** permite atualizar sem perder campos, com indicação de espera e resultado. Se uma consulta falhar depois de confirmar o estudo, o timer continua e a mensagem oferece atualizar a lista sem repetir a gravação. No cadastro de disciplina, **Sugestões de nomes** oferece exemplos editáveis, sem criar cadastro até confirmar e sem representar um catálogo oficial da UCS.
 
 Se faltar confirmação ao salvar atividade, disciplina, estudo ou comentário, os campos ficam preservados e a alteração bloqueada para **Verificar resultado**. Fechar o formulário não cancela uma requisição já enviada; o aviso principal recupera o mesmo pedido, inclusive após recarregar a mesma aba. Evite refazer o cadastro. Pedidos comuns usam armazenamento da aba; fechar a aba ou limpar esse armazenamento pode perder a recuperação. Rascunhos ainda não enviados não são recuperados após recarregar. Ao cadastrar uma atividade, **Cadastrar disciplina aqui** retorna ao formulário sem perder título, descrição ou prazo.
 
@@ -168,6 +172,8 @@ Todos os modais permitem **Expandir** e **Restaurar tamanho**, sem salvar nem de
 Consulte [regras, recuperação, limites e roteiros das duas tarefas](docs/modo-foco.md).
 
 Veja a [revisão de IHC](docs/revisao-ihc.md) para diagnóstico, fontes originais, antes/depois, capturas, verificações e limitações. A inspeção técnica não é uma avaliação com participantes.
+
+Consulte a [auditoria consolidada de cada pedido](docs/consolidacao-interacoes.md) e o [índice das dez capturas finais](docs/capturas-consolidacao.md) para revisar desktop e celular nos cinco estados do Foco. A avaliação de clareza com alunos continua pendente.
 
 Os roteiros apresentados em `.cache` são verificações temporárias e não estão versionados. Os testes mantidos no projeto são `backend/*.test.ts`; execute `bun run test` na raiz. Não é necessário copiar ferramentas locais de `.cache` para executar esses testes.
 

@@ -7,6 +7,7 @@ import { suggestFocus, localTime, freeSlot, snapshot, validMinutes, newCycle, re
 import { readTimer, readPending, writeTimer, writePending, TIMER_KEY, PENDING_KEY } from '../focus-storage';
 import * as api from '../api';
 import Modal from './Modal';
+import FocusPanel from './FocusPanel';
 
 type Draft = { taskId:string; sourceId:string; action:FocusAction|''; minutes:number; current:SessionFormData; previous:SessionFormData; confirmed:boolean };
 const emptyPlan = ():SessionFormData => ({planned_date:localToday(),start_time:localTime(),duration_minutes:25});
@@ -31,6 +32,9 @@ export default function FocusControl({tasks,disabled,onCreate,onUpdated,onRefres
   const [step,setStep]=useState(1),[nextAction,setNextAction]=useState('');
   const [completeUncertain,setCompleteUncertain]=useState(false);
   const [windowExpanded,setWindowExpanded]=useState(false);
+  const [refreshing,setRefreshing]=useState(false),[refreshIssue,setRefreshIssue]=useState(false),[notice,setNotice]=useState('');
+  const refreshLock=useRef(false);
+  const returnToPanel=useRef(false);
   useEffect(()=>{if(open&&!timer)document.getElementById('focus-step')?.focus();},[step,open,!!timer]);
   const busyRef=useRef(false);
   const available=tasks.filter(t=>t.status!=='done');
@@ -68,7 +72,7 @@ export default function FocusControl({tasks,disabled,onCreate,onUpdated,onRefres
     return()=>window.clearInterval(interval);
   },[timer?.key,timer?.status,timer?.deadline]);
   function show() {
-    setError('');
+    returnToPanel.current=false;
     try {
       const active=readTimer(localStorage),waiting=readPending(localStorage);
       setTimer(active);setPending(waiting);
@@ -83,13 +87,18 @@ export default function FocusControl({tasks,disabled,onCreate,onUpdated,onRefres
     }catch(err){setError((err as Error).message);}
     setOpen(true);
   }
-  function change(patch:Partial<Draft>) {setDraft(old=>old?{...old,...patch,confirmed:false}:old);setError('');}
+  function change(patch:Partial<Draft>) {setDraft(old=>old?{...old,...patch,confirmed:false}:old);setError('');setNotice('');}
   const selected=tasks.find(t=>t.id===Number(draft?.taskId));
   const pendingTask=pending?.origin?tasks.find(t=>t.id===pending.origin!.task_id):null;
   const source=pending?.origin?{session:pending.origin,task:pendingTask || {id:pending.origin.task_id,title:'Atividade anterior indisponível — confira o planejamento',due_date:null,sessions:[]}}
     :sources.find(s=>s.session.id===Number(draft?.sourceId));
   const action:FocusAction=source?source.task.id===selected?.id?'same':draft?.action as FocusAction:'new';
   const currentTask=tasks.find(t=>t.id===timer?.task_id);
+  const canStudy=!!currentTask&&currentTask.status!=='done';
+  const nextOptions=timer?[
+    ...(timer.endedEarly&&timer.remainingMs>0?['resume']:[]),
+    ...(timer.phase==='study'?['break']:[]),...(canStudy?['study']:[]),'end']:[];
+  const chosenNext=nextOptions.includes(nextAction)?nextAction:!canStudy?'end':timer?.phase==='study'?'break':'study';
   useEffect(()=>{if(currentTask?.status==='done')setCompleteUncertain(false);},[currentTask?.status]);
   const affectedPrevious=source?.task.sessions.filter(s=>s.id!==source.session.id).length || 0;
   const currentPlan=source?source.session:draft?.current;
@@ -103,9 +112,21 @@ export default function FocusControl({tasks,disabled,onCreate,onUpdated,onRefres
       change({action:value,previous:slot || {...emptyPlan(),duration_minutes:source.session.duration_minutes}});
     }else change({action:value});
   }
+  async function refreshActivities(){
+    if(refreshLock.current)return;refreshLock.current=true;setRefreshing(true);setError('');setNotice('');
+    try{await onRefresh();setRefreshIssue(false);setNotice('Lista de atividades atualizada.');}
+    catch(err){setRefreshIssue(true);setError(`Não foi possível atualizar a lista. ${(err as Error).message} Suas escolhas e o timer foram mantidos. Use Atualizar lista de atividades para tentar novamente.`);}
+    finally{refreshLock.current=false;setRefreshing(false);}
+  }
+  async function completeActivity(){
+    if(!timer||busyRef.current)return;busyRef.current=true;setBusy(true);setError('');
+    try{onUpdated(await api.updateTaskStatus(timer.task_id,'done'));setCompleteUncertain(false);setNotice('Atividade concluída. O planejamento salvo foi mantido.');}
+    catch(err){setError((err as Error).message);setCompleteUncertain(err instanceof api.UncertainError);}
+    finally{busyRef.current=false;setBusy(false);}
+  }
   async function confirm() {
     if(busyRef.current || !draft)return;
-    busyRef.current=true;setBusy(true);setError('');
+    busyRef.current=true;setBusy(true);setError('');setNotice('');
     try {
       if(!navigator.locks)throw new Error('Use um navegador com Web Locks em localhost para garantir um único Foco entre abas.');
       await navigator.locks.request('todo-focus-start',async()=>{
@@ -130,7 +151,7 @@ export default function FocusControl({tasks,disabled,onCreate,onUpdated,onRefres
           const next=newCycle(result,'study',Date.now());
           writeTimer(localStorage,next);setTimer(next);setNextMinutes(next.minutes);setNow(Date.now());
           writePending(localStorage,null);setPending(null);
-          try{await onRefresh();}catch{setError('Planejamento confirmado e timer iniciado. Não foi possível atualizar o quadro. Minimize o Foco e recarregue a página para consultar o planejamento salvo; o timer será recuperado.');}
+          try{await onRefresh();setRefreshIssue(false);}catch{setRefreshIssue(true);setError('Planejamento confirmado e timer iniciado. A consulta do quadro falhou. Use Atualizar lista de atividades para conferir os dados salvos; não inicie o estudo novamente.');}
         }catch(err){
           if(err instanceof api.ApiError && err.status<500){writePending(localStorage,null);setPending(null);}
           throw err;
@@ -139,8 +160,8 @@ export default function FocusControl({tasks,disabled,onCreate,onUpdated,onRefres
     }catch(err){setError(err instanceof api.ApiError&&err.status<500?`${err.message} Use Voltar para corrigir as escolhas.`:(err as Error).message);}
     finally{busyRef.current=false;setBusy(false);}
   }
-  function close() {if(busyRef.current)return;setOpen(false);setError('');}
-  function discard(){if(busyRef.current||pending)return;setDraft(null);setSlotHint('');setStep(1);setOpen(false);setError('');}
+  function close() {if(busyRef.current)return;returnToPanel.current=true;setOpen(false);}
+  function discard(){if(busyRef.current||pending)return;setDraft(null);setSlotHint('');setStep(1);setOpen(false);setError('');setNotice('');}
   function advance(){
     setError('');
     if(step===1){
@@ -154,7 +175,7 @@ export default function FocusControl({tasks,disabled,onCreate,onUpdated,onRefres
     }
   }
   function clearStudy() {
-    try {writePending(localStorage,null);writeTimer(localStorage,null);setTimer(null);setPending(null);setDraft(null);setNextAction('');setCompleteUncertain(false);setOpen(false);setError('');}
+    try {writePending(localStorage,null);writeTimer(localStorage,null);setTimer(null);setPending(null);setDraft(null);setNextAction('');setCompleteUncertain(false);setOpen(false);setError('');setNotice('');}
     catch(err){setError(`Não foi possível encerrar o estado local: ${(err as Error).message}`);}
   }
   const phaseStatus=timer ? `${timer.phase==='study'?'Estudo':'Pausa curta'}: ${timer.status==='running'?'em andamento':timer.status==='paused'?'pausado':timer.endedEarly?'encerrado antecipadamente':'tempo concluído'}.` : '';
@@ -162,56 +183,54 @@ export default function FocusControl({tasks,disabled,onCreate,onUpdated,onRefres
     ? timer.status==='running'?`${timer.phase==='study'?'Estudo':'Pausa'} em andamento. O timer continua contando.`
       :timer.status==='paused'?`${timer.phase==='study'?'Estudo pausado':'Pausa pausada'}. O timer permanece parado.`
       :`Ciclo ${timer.phase==='study'?'de estudo':'de pausa'} ${timer.endedEarly?'encerrado antes do fim':'concluído'}. O timer está parado.`
-    :pending?'Confirmação pendente. Reabra o Foco para verificar o pedido.':'Preparação guardada nesta página. Reabra o Foco para continuar.';
-  const windowMessage=timer?focusWindowMessage(timer):pending?'O pedido pode já ter sido salvo. Sair mantém a confirmação pendente para verificar depois pelo botão Foco; não cancela a gravação.':draft?'As escolhas ficam guardadas nesta página para você voltar pelo botão Foco. Sair não confirma nem altera o planejamento.':'Não há preparação de estudo em andamento. Fechar esta janela mantém o planejamento salvo.';
+    :pending?'Confirmação pendente. Reabra o Foco para verificar o pedido.':draft?'Preparação guardada nesta página. Reabra o Foco para continuar.':'Não foi possível recuperar o Foco. Restaure para consultar o problema.';
+  const windowMessage=timer?focusWindowMessage(timer):pending?'O pedido pode já ter sido salvo. Sair mantém a confirmação pendente para verificar depois pelo botão Foco; não cancela a gravação.':draft?'As escolhas ficam guardadas nesta página para você voltar pelo botão Foco. Sair não confirma nem altera o planejamento.':error?'O estado do Foco não pôde ser recuperado. Sair não remove dados já salvos.':'Não há preparação de estudo em andamento. Fechar esta janela mantém o planejamento salvo.';
   return <>
     <button id="focus-button" className="btn-new-task" disabled={disabled} onClick={show} aria-label="Abrir modo Foco" aria-expanded={open} aria-describedby={!open&&(timer||pending||draft)?'focus-window-state':undefined} title={timer||pending||draft?'Restaurar janela do Foco':'Abrir modo Foco'}>
       Foco{timer && <span aria-hidden="true"> · {timerText(timer,now)}</span>}{!timer&&pending?' · verificar confirmação':''}
     </button>
-    {!open&&statusContainer&&(timer||pending||draft||error)&&createPortal(<>
-      {(timer||pending||draft)&&<div className="focus-minimized-status"><strong>Foco minimizado</strong><p id="focus-window-state" role="status">{minimizedMessage}</p></div>}
-      {error&&<p role="alert" className="error-message">{error}</p>}
-    </>,statusContainer)}
+    {statusContainer&&(timer||pending||draft||error)&&createPortal(<FocusPanel visible={!open} timer={timer} now={now}
+      focusOnShow={returnToPanel.current}
+      taskName={timer?currentTask?.title||'Atividade indisponível':selected?.title||(draft||pending?'Preparação do estudo':'Recuperação do Foco')} message={minimizedMessage} error={error}
+      onTogglePause={()=>mutateTimer(t=>changeTimer(t,t.status==='running'?'pause':'resume',Date.now()))} onRestore={show} />,statusContainer)}
     {open && <Modal title="Modo Foco" large fallbackFocusId="focus-button" onClose={close} busy={busy}
       expanded={windowExpanded} onExpandedChange={setWindowExpanded} onMinimize={close} minimizeTitle={windowMessage}
-      exitLabel={timer?'Minimizar e voltar':pending?'Sair e verificar depois':'Guardar e sair'} onDiscard={!timer&&!pending&&draft?discard:undefined}
-      closeMessage={timer?`${windowMessage} Reabra pelo botão Foco. Sair não encerra o estudo.`:pending?windowMessage:'Guardar e sair mantém suas escolhas nesta página para retomar pelo botão Foco. Descartar e sair limpa somente esta preparação. Nenhuma dessas saídas altera o planejamento salvo.'}>
+      exitLabel={timer?'Minimizar e voltar':pending?'Sair e verificar depois':draft?'Guardar e sair':'Sair do diálogo'} onDiscard={!timer&&!pending&&draft?discard:undefined}
+      closeMessage={timer?`${windowMessage} Reabra pelo botão Foco. Sair não encerra o estudo.`:pending||!draft?windowMessage:'Guardar e sair mantém suas escolhas nesta página para retomar pelo botão Foco. Descartar e sair limpa somente esta preparação. Nenhuma dessas saídas altera o planejamento salvo.'}>
       {requestClose=><div className="focus-content">
       {timer ? <>
         <section className="focus-activity" aria-label="Atividade em foco"><h3>{currentTask?.title || 'Atividade indisponível — confira o planejamento'}</h3><p>{currentTask?.subject_name || 'Sem disciplina'}</p>
-          {timer.status==='finished'&&(currentTask?.status==='done'?<p role="status">Atividade concluída.</p>:<button className="btn focus-text-button" disabled={busy||!currentTask} onClick={async()=>{
-            if(busyRef.current)return;busyRef.current=true;setBusy(true);setError('');
-            try{onUpdated(await api.updateTaskStatus(timer.task_id,'done'));setCompleteUncertain(false);}catch(err){setError((err as Error).message);setCompleteUncertain(err instanceof api.UncertainError);}finally{busyRef.current=false;setBusy(false);}
-          }}>{busy?'Confirmando conclusão…':completeUncertain?'Verificar conclusão da atividade':'Marcar atividade como concluída'}</button>)}
         </section>
-        <p className="focus-phase" role="status" aria-live="polite">{phaseStatus}</p>
-        <output className="focus-clock" aria-label="Tempo restante" aria-live="off">{timerText(timer,now)}</output>
-        <progress className="focus-progress" aria-label="Progresso do ciclo" aria-live="off" max={timer.totalMs} value={timer.totalMs-remaining(timer,now)} />
+        {timer.status==='finished'?<section className="focus-result" aria-label="Resultado do ciclo"><h3 role="status">{timer.phase==='break'?'Pausa': 'Ciclo de estudo'} {timer.endedEarly?'encerrado antes do fim':timer.phase==='break'?'concluída':'concluído'}</h3><p>{currentTask?.status==='done'?'Atividade concluída.':`O timer parou. A atividade continua ${currentTask?.status==='in_progress'?'em progresso':currentTask?'a fazer':'indisponível'}.`}</p>
+          {currentTask&&currentTask.status!=='done'&&<button className="btn focus-text-button" disabled={busy} onClick={()=>void completeActivity()}>{busy?'Confirmando conclusão…':completeUncertain?'Verificar conclusão da atividade':'Marcar atividade como concluída'}</button>}
+        </section>:<>
+          <p className="focus-phase" role="status" aria-live="polite">{phaseStatus}</p>
+          <output className="focus-clock" aria-label="Tempo restante" aria-live="off">{timerText(timer,now)}</output>
+          <progress className="focus-progress" aria-label="Progresso do ciclo" aria-live="off" max={timer.totalMs} value={timer.totalMs-remaining(timer,now)} />
+        </>}
         {timer.status!=='finished' ? <div className="focus-footer">
           {timer.status==='running'?<button className="btn btn-primary" onClick={()=>mutateTimer(t=>changeTimer(t,'pause',Date.now()))}>Pausar</button>
             :<button className="btn btn-primary" onClick={()=>mutateTimer(t=>changeTimer(t,'resume',Date.now()))}>Retomar</button>}
           <button className="btn btn-secondary" onClick={()=>{setNextAction('');mutateTimer(t=>changeTimer(t,'end',Date.now()));}}>Encerrar ciclo</button>
         </div> : <form onSubmit={e=>{
           e.preventDefault();setError('');
-          if(!nextAction){setError('Escolha o próximo passo. O timer continua parado.');return;}
-          if(nextAction==='end'){clearStudy();return;}
-          if(nextAction==='study'&&(!currentTask||currentTask.status==='done')){setError('Esta atividade não está disponível para outro ciclo. Encerre o estudo para escolher outra.');return;}
-          if(nextAction==='study'&&!validMinutes(nextMinutes)){setError('Informe de 1 a 180 minutos inteiros. Nenhum ciclo começou; corrija a duração ou escolha outro próximo passo.');return;}
+          if(chosenNext==='end'){clearStudy();return;}
+          if(chosenNext==='study'&&(!currentTask||currentTask.status==='done')){setError('Esta atividade não está disponível para outro ciclo. Encerre o estudo para escolher outra.');return;}
+          if(chosenNext==='study'&&!validMinutes(nextMinutes)){setError('Informe de 1 a 180 minutos inteiros. Nenhum ciclo começou; corrija a duração ou escolha outro próximo passo.');return;}
           mutateTimer(t=>{
             if(t.status!=='finished')throw new Error('Um ciclo já está em andamento.');
-            const next=nextAction==='resume'?changeTimer(t,'resume',Date.now()):newCycle({...t,minutes:nextAction==='study'?nextMinutes:t.minutes},nextAction==='break'?'break':'study',Date.now());
+            const next=chosenNext==='resume'?changeTimer(t,'resume',Date.now()):newCycle({...t,minutes:chosenNext==='study'?nextMinutes:t.minutes},chosenNext==='break'?'break':'study',Date.now());
             setNextAction('');return next;
           });
         }}>
-          <div className="form-group"><label htmlFor="focus-next-action">Próximo passo</label><select id="focus-next-action" value={nextAction} disabled={busy||completeUncertain} aria-describedby="focus-next-help" onChange={e=>{setNextAction(e.target.value);setError('');}}>
-            <option value="">Escolha como continuar</option>
+          <div className="form-group"><label htmlFor="focus-next-action">Próximo passo</label><select id="focus-next-action" value={chosenNext} disabled={busy||completeUncertain} aria-describedby="focus-next-help" onChange={e=>{setNextAction(e.target.value);setError('');}}>
             {timer.endedEarly&&timer.remainingMs>0&&<option value="resume">Retomar o tempo restante deste ciclo</option>}
             {currentTask&&currentTask.status!=='done'&&<option value="study">Fazer outro ciclo de estudo</option>}
-            <option value="break">Fazer uma pausa de 5 minutos</option><option value="end">Encerrar o estudo e voltar ao planejamento</option>
+            {timer.phase==='study'&&<option value="break">Fazer uma pausa de 5 minutos</option>}<option value="end">Encerrar o estudo e voltar ao planejamento</option>
           </select></div>
-          {nextAction==='study'&&<div className="form-group"><label htmlFor="next-cycle">Duração do novo ciclo (1 a 180 minutos)</label><input id="next-cycle" type="number" required min="1" max="180" step="1" value={Number.isNaN(nextMinutes)?'':nextMinutes} disabled={busy||completeUncertain} onChange={e=>setNextMinutes(e.target.valueAsNumber)} /></div>}
-          <p id="focus-next-help" className="help-text">{completeUncertain?'A conclusão da atividade pode já ter sido salva. Use Verificar conclusão da atividade acima antes de iniciar outro ciclo. Você pode sair para verificar depois.':nextAction==='end'?'Encerra somente o estudo no timer. A atividade e o planejamento salvo permanecem.':'O timer está parado. Nenhum ciclo começa sem sua confirmação.'}</p>
-          <div className="focus-footer"><button type="button" className="btn btn-secondary" disabled={busy} onClick={requestClose}>Sair</button><button type="submit" className="btn btn-primary" disabled={busy||completeUncertain}>{nextAction==='end'?'Encerrar estudo':nextAction==='break'?'Iniciar pausa':nextAction==='study'?'Iniciar novo ciclo':nextAction==='resume'?'Retomar ciclo':'Continuar'}</button></div>
+          {chosenNext==='study'&&<div className="form-group"><label htmlFor="next-cycle">Duração do novo ciclo (1 a 180 minutos)</label><input id="next-cycle" type="number" required min="1" max="180" step="1" value={Number.isNaN(nextMinutes)?'':nextMinutes} disabled={busy||completeUncertain} onChange={e=>setNextMinutes(e.target.valueAsNumber)} /></div>}
+          <p id="focus-next-help" className="help-text">{completeUncertain?'A conclusão da atividade pode já ter sido salva. Use Verificar conclusão da atividade acima antes de iniciar outro ciclo. Você pode sair para verificar depois.':chosenNext==='end'?'Encerra somente o estudo no timer. A atividade e o planejamento salvo permanecem.':'O timer está parado. Revise o próximo passo; ele só começa ao confirmar o botão abaixo.'}</p>
+          <div className="focus-footer"><button type="button" className="btn btn-secondary" disabled={busy} onClick={requestClose}>Sair</button><button type="submit" className="btn btn-primary" disabled={busy||completeUncertain}>{chosenNext==='end'?'Encerrar estudo':chosenNext==='break'?'Iniciar pausa de 5 minutos':chosenNext==='study'?'Iniciar novo ciclo':'Retomar ciclo'}</button></div>
         </form>}
         <p className="help-text focus-window-help">{windowMessage} Encerrar um ciclo não conclui a atividade.</p>
       </> : draft && <>
@@ -229,7 +248,7 @@ export default function FocusControl({tasks,disabled,onCreate,onUpdated,onRefres
               <option value="">Escolha um estudo ou planeje um novo</option><option value="none">Nenhum destes — planejar um novo estudo</option>
               {sources.map(({task,session:s})=><option key={s.id} value={s.id}>{task.title} · {task.subject_name||'Sem disciplina'} · {formatDate(s.planned_date)} · {s.start_time || 'Sem horário'} · {s.duration_minutes} min</option>)}</select><p className="help-text">Se escolher outra atividade, você decidirá a seguir se mantém ou reorganiza este estudo. Nada será alterado antes da revisão.</p></div>}
             {!sources.length&&<p>Não há estudo planejado para hoje. A próxima etapa permite planejar o estudo desta atividade.</p>}
-            <details className="focus-existing"><summary>Ajuda e atualização da lista</summary><p className="help-text">Atividade é o trabalho que você vai estudar; disciplina é a matéria. O estudo planejado reserva data e duração; o ciclo de foco é um intervalo do timer. Nenhum deles muda o prazo da atividade.</p><button type="button" className="btn btn-secondary" disabled={busy} onClick={()=>{setError('');onRefresh().catch(err=>setError(`Não foi possível atualizar a lista: ${err.message} Suas escolhas foram mantidas. Tente atualizar novamente.`));}}>Atualizar lista de atividades</button></details>
+            <details className="focus-existing"><summary>Ajuda e atualização da lista</summary><p className="help-text">Atividade é o trabalho que você vai estudar; disciplina é a matéria. O estudo planejado reserva data e duração; o ciclo de foco é um intervalo do timer. Nenhum deles muda o prazo da atividade.</p><button type="button" className="btn btn-secondary" disabled={busy||refreshing} onClick={()=>void refreshActivities()}>{refreshing?'Atualizando lista…':'Atualizar lista de atividades'}</button></details>
             </>}
             {step===2&&<>
             {source&&selected&&source.task.id!==selected.id && <fieldset className="focus-destination"><legend>O que fazer com {source.task.title}?</legend>
@@ -258,7 +277,9 @@ export default function FocusControl({tasks,disabled,onCreate,onUpdated,onRefres
             {afterDue && <div className="warning-message"><p>Há estudo após o prazo indicado no resumo. Você pode revisar antes de confirmar.</p><label className="checkbox-label"><input type="checkbox" checked={draft.confirmed} onChange={e=>setDraft({...draft,confirmed:e.target.checked})} /> Confirmo conscientemente o estudo após o prazo.</label></div>}
             </>}
           </fieldset>
+          {notice&&<p className="help-text" role="status">{notice}</p>}
           {error && <p className="error-message" role="alert">{error}</p>}
+          {refreshIssue&&step!==1&&<button type="button" className="btn btn-secondary" disabled={refreshing||busy} onClick={()=>void refreshActivities()}>{refreshing?'Atualizando lista…':'Atualizar lista de atividades'}</button>}
           <div className="focus-footer">
             {!pending&&step>1&&<button type="button" className="btn btn-secondary" disabled={busy} onClick={()=>setStep(step===3&&source?.task.id===selected?.id?1:step-1)}>Voltar</button>}
             <button type="button" className="btn btn-secondary" disabled={busy} onClick={requestClose}>Sair</button>
@@ -267,6 +288,8 @@ export default function FocusControl({tasks,disabled,onCreate,onUpdated,onRefres
         </form>}
       </>}
       {error && (timer||!draft||(!available.length&&!pending)) && <p className="error-message" role="alert">{error}</p>}
+      {timer&&notice&&<p className="help-text" role="status">{notice}</p>}
+      {timer&&refreshIssue&&<button type="button" className="btn btn-secondary" disabled={refreshing||busy} onClick={()=>void refreshActivities()}>{refreshing?'Atualizando lista…':'Atualizar lista de atividades'}</button>}
       {!timer&&!draft&&<div className="focus-footer"><button className="btn btn-secondary" onClick={requestClose}>Sair</button></div>}
       </div>}
     </Modal>}
