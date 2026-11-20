@@ -71,7 +71,8 @@ export default function StudyCalendar({ tasks, visible, range, month, unplanned,
         {dayEntries.length > 3 && <button className="calendar-more" onClick={() => openDay(day)} aria-label={`Ver mais sessões de ${formatDate(day)} (${dayEntries.length - 3} adicionais)`}>Ver mais ({dayEntries.length - 3})</button>}
       </li>;
     })}</ol>
-    {dayOpen && selectedDay && <Modal title={`Sessões de ${formatDate(selectedDay)}`} large onClose={() => setDayOpen(false)}>
+    {dayOpen && selectedDay && <Modal title={`Sessões de ${formatDate(selectedDay)}`} large onClose={() => setDayOpen(false)}
+      closeMessage="Deseja sair da consulta deste dia? Nenhum estudo será salvo ou removido ao sair. O mês e o filtro serão mantidos.">
       {!inRange(selectedDay, range) && <p className="warning-message">Este dia está fora do período filtrado. Você pode planejar aqui; o filtro continuará ativo e poderá ocultar a nova sessão.</p>}
       <ul className="calendar-day-list">{entries.filter(e => e.session.planned_date === selectedDay).map(entry => <li key={entry.session.id}>{eventButton(entry)}</li>)}</ul>
       {!entries.some(e => e.session.planned_date === selectedDay) && <p>Nenhuma sessão corresponde ao filtro neste dia.</p>}
