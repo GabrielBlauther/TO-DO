@@ -87,7 +87,7 @@ export default function Modal({ title, onClose, onConfirmClose, closeMessage, bu
         <button type="button" className="modal-window-control" aria-label={isExpanded?`Restaurar tamanho de ${title}`:`Expandir ${title}`} title={isExpanded?'Restaurar tamanho':'Expandir janela'} aria-pressed={isExpanded} onClick={toggleExpanded}>
           <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true" focusable="false">{isExpanded?<><path d="M8 4h12v12"/><rect x="4" y="8" width="12" height="12" rx="1"/></>:<rect x="4" y="4" width="16" height="16" rx="1"/>}</svg>
         </button>
-        <button ref={closeRef} type="button" className="modal-close" aria-label={`Fechar ${title}`} title="Fechar janela" disabled={busy} onClick={event=>{event.stopPropagation();requestExit();}}><span aria-hidden="true">×</span></button>
+        <button ref={closeRef} type="button" className="modal-close" aria-label={exitRequested?`Cancelar saída de ${title}`:`Fechar ${title}`} title={exitRequested?'Cancelar saída e continuar aqui':busy?'Aguarde o resultado do pedido para sair':'Fechar janela'} disabled={busy} onClick={event=>{event.stopPropagation();if(exitRequested)continueHere();else requestExit();}}><span aria-hidden="true">×</span></button>
       </div>
     </div>
     <div hidden={exitRequested}>{typeof children==='function'?children(()=>requestExit()):children}</div>
