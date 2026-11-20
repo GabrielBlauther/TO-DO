@@ -100,3 +100,11 @@ Minimizar e fechar a janela do Foco preservam a execução; fechar por X/clique 
 Fundamentação: Princípios pp. 20–21, 34–39, controle, consistência, visibilidade e feedback. A escolha de quais janelas podem minimizar foi explicitamente confirmada no chat; não é uma exigência universal das aulas. Verificações técnicas e limites em [revisao-ihc.md](revisao-ihc.md#rodada-seguinte--integração-dos-controles-de-janela).
 
 Ajuste visual solicitado após essa rodada: controles do cabeçalho reduzidos de 44 para 32 px no desktop, ícone de expansão de 16 px e X menor, com fundo/borda discretos. Em tela estreita ou ponteiro de toque, área de interação de 40 px. Mantidos foco visível, nomes acessíveis, confirmação de saída e todos os efeitos dos controles; as medidas são escolhas deste componente, não uma declaração de conformidade normativa.
+
+## Movimentação no quadro
+
+Arraste nativo de cards permite todas as transições entre A fazer, Em progresso e Concluída. Um contorno tracejado, fundo destacado e instrução textual identificam o destino. A alternativa Mover para… abre botões nativos com os dois destinos possíveis, por teclado/toque, sem exigir gesto de arraste ou criar outro modal. Escolher destino já expressa a ação; não acrescentamos confirmação de salvamento. Escape fecha a escolha ou cancela um arraste antes de soltar. Interações em Editar/Excluir/Mover/título não iniciam o arraste do card.
+
+A mesma função atende gesto e botões. O cartão muda provisoriamente com feedback de salvamento; sucesso é anunciado após resposta da API. Rejeição restaura somente a situação, preservando atualizações de outros campos, e foca o erro. Resposta incerta restaura provisoriamente e mantém a verificação do mesmo pedido antes de permitir nova movimentação daquele cartão. O aviso identifica atividade e destino pretendido. Isso aplica controle, consistência e recuperação (Princípios pp. 20–21, 34–43), sem confundir retorno visual com garantia de ausência de gravação no servidor.
+
+Relação esperada com personas hipotéticas: gesto direto para Lucas, opções nomeadas para Marina e recuperação/retorno para Renata. Esses benefícios não foram avaliados com participantes. O recurso é uma evolução solicitada do quadro; não acrescenta arraste ao calendário nem altera as duas HTAs centrais de estudo/Foco.

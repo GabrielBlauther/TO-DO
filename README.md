@@ -25,6 +25,7 @@ A proposta aplica Design Centrado no Usuário para conectar necessidades dos est
 - Categorias, prioridades e datas de vencimento.
 - Comentários por tarefa.
 - Indicadores de tarefas vencidas e contadores por situação.
+- Arrastar cards entre A fazer, Em progresso e Concluídas nos dois sentidos, com destaque do destino e alternativa Mover para… por teclado e toque.
 - Confirmação antes da exclusão.
 - Disciplina opcional por atividade, sem substituir as categorias existentes.
 - Várias sessões de estudo por atividade, com data, horário opcional e duração em minutos.
@@ -131,6 +132,12 @@ O banco existente recebe uma migração aditiva ao iniciar a API; tarefas, comen
 O período considera a **data planejada das sessões**, não o prazo. Atividades sem sessões aparecem em **Todas** e **Sem planejamento**. Cada atividade aparece uma vez, e os contadores refletem o filtro. **Este semestre** usa janeiro–junho ou julho–dezembro do ano atual, convenção do protótipo e não calendário oficial da UCS. Intervalos personalizados incluem os dois limites.
 
 Veja o [modelo de dados](docs/modelo-dados.md) e o [roteiro de validação e uso](docs/validacao-planejamento.md).
+
+### Mover atividades no quadro
+
+Arraste o cartão pela área de conteúdo ou pelo indicador ao lado do título e solte em outra coluna. O destino recebe contorno tracejado e a instrução **Solte aqui**. Para teclado/toque, abra **Mover para…** e escolha uma das outras duas situações; Tab e Enter/espaço acionam os botões. É possível voltar de Concluída para A fazer ou Em progresso, ou concluir diretamente uma atividade A fazer.
+
+A mudança aparece enquanto é salva, com indicação de progresso. Se for rejeitada, o cartão e os contadores voltam à situação anterior. Se a resposta se perder após o envio, o retorno é **provisório**: o servidor pode já ter salvo; use **Verificar resultado** no aviso principal. O quadro bloqueia novas mudanças nesse cartão até verificar o mesmo pedido. Mover não altera disciplina, prioridade, prazo, comentários nem estudos planejados. O filtro de período permanece ativo; não há reordenação manual dentro das colunas.
 
 ### Usar o calendário
 
