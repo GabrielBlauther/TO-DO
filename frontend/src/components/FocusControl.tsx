@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import type { Task, SessionFormData } from '../types';
 import { formatDate, localToday, sessionInterval } from '../../../shared/planning';
-import { suggestFocus, localTime, freeSlot, snapshot, validMinutes, newCycle, remaining, recoverTimer, changeTimer, timerText,
+import { suggestFocus, localTime, freeSlot, snapshot, validMinutes, newCycle, remaining, recoverTimer, changeTimer, timerText, focusWindowMessage,
   type FocusAction, type FocusRequest, type FocusTimer } from '../../../shared/focus';
 import { readTimer, readPending, writeTimer, writePending, TIMER_KEY, PENDING_KEY } from '../focus-storage';
 import * as api from '../api';
@@ -29,6 +29,7 @@ export default function FocusControl({tasks,disabled,onCreate,onUpdated,onRefres
   const [slotHint,setSlotHint]=useState('');
   const [step,setStep]=useState(1),[chooseNext,setChooseNext]=useState(false);
   const [completeUncertain,setCompleteUncertain]=useState(false);
+  const [windowExpanded,setWindowExpanded]=useState(false);
   useEffect(()=>{if(open&&!timer)document.getElementById('focus-step')?.focus();},[step,open,!!timer]);
   const busyRef=useRef(false);
   const available=tasks.filter(t=>t.status!=='done');
@@ -156,13 +157,16 @@ export default function FocusControl({tasks,disabled,onCreate,onUpdated,onRefres
     catch(err){setError(`Não foi possível encerrar o estado local: ${(err as Error).message}`);}
   }
   const phaseStatus=timer ? `${timer.phase==='study'?'Estudo':'Pausa curta'}: ${timer.status==='running'?'em andamento':timer.status==='paused'?'pausado':timer.endedEarly?'encerrado antecipadamente':'tempo concluído'}.` : '';
+  const windowMessage=timer?focusWindowMessage(timer):pending?'O pedido pode já ter sido salvo. Sair mantém a confirmação pendente para verificar depois pelo botão Foco; não cancela a gravação.':draft?'As escolhas ficam guardadas nesta página para você voltar pelo botão Foco. Sair não confirma nem altera o planejamento.':'Não há preparação de estudo em andamento. Fechar esta janela mantém o planejamento salvo.';
   return <>
-    <button id="focus-button" className="btn-new-task" disabled={disabled} onClick={show} aria-label="Abrir modo Foco">
+    <button id="focus-button" className="btn-new-task" disabled={disabled} onClick={show} aria-label="Abrir modo Foco" aria-expanded={open} aria-describedby={!open&&(timer||pending||draft)?'focus-window-state':undefined} title={timer||pending||draft?'Restaurar janela do Foco':'Abrir modo Foco'}>
       Foco{timer && <span aria-hidden="true"> · {timerText(timer,now)}</span>}{!timer&&pending?' · verificar confirmação':''}
     </button>
+    {!open&&(timer||pending||draft)&&<span id="focus-window-state" role="status" className="focus-window-status">{windowMessage} {timer?'Reabra pelo botão Foco.':''}</span>}
     {!open && error && <span role="alert" className="focus-inline-error">{error}</span>}
     {open && <Modal title="Modo Foco" large fallbackFocusId="focus-button" onClose={close} busy={busy}
-      closeMessage={timer?'Sair apenas minimiza o Foco. O timer continua como está e pode ser reaberto pelo botão Foco. O estudo não será encerrado e pedidos enviados não são cancelados.':pending?'O pedido pode já ter sido salvo. Sair mantém a confirmação pendente para verificar depois pelo botão Foco; não cancela a gravação.':'As escolhas ficam guardadas nesta página para você voltar pelo botão Foco. Sair não confirma nem altera o planejamento.'}>
+      expanded={windowExpanded} onExpandedChange={setWindowExpanded} onMinimize={close} minimizeTitle={windowMessage}
+      closeMessage={timer?`${windowMessage} Você poderá reabrir pelo botão Foco. Fechar esta janela não encerra o estudo nem desfaz o planejamento. Pedidos enviados não são cancelados.`:windowMessage}>
       {timer ? <>
         <h3>{currentTask?.title || 'Atividade indisponível — confira o planejamento'}</h3><p>Disciplina: {currentTask?.subject_name || 'Sem disciplina'}</p>
         <p role="status" aria-live="polite">{phaseStatus} Encerrar o timer não conclui a atividade.</p>
@@ -195,7 +199,7 @@ export default function FocusControl({tasks,disabled,onCreate,onUpdated,onRefres
             try{onUpdated(await api.updateTaskStatus(timer.task_id,'done'));setCompleteUncertain(false);}catch(err){setError((err as Error).message);setCompleteUncertain(err instanceof api.UncertainError);}finally{busyRef.current=false;setBusy(false);}
           }}>{busy?'Confirmando conclusão…':completeUncertain?'Verificar conclusão da atividade':'Concluir atividade'}</button>}
         </>}
-        <p className="help-text">Minimizar/Escape permite consultar o planejamento e voltar ao mesmo timer. Encerrar este ciclo leva às escolhas de continuação. Encerrar estudo e voltar libera a escolha de outra atividade; não desfaz o planejamento salvo. Concluir atividade é uma decisão separada.</p>
+        <p className="help-text">{windowMessage} Minimizar permite consultar o planejamento e voltar ao mesmo timer. Fechar por X, clique fora ou Escape pede confirmação e preserva o estudo. Expandir/restaurar só muda o tamanho da janela. Encerrar este ciclo leva às escolhas de continuação; Encerrar estudo e voltar libera outra atividade sem desfazer o planejamento salvo. Concluir atividade é separado.</p>
       </> : draft && <>
         <h3 id="focus-step" tabIndex={-1}>{step===1?'1. Escolher o que estudar':step===2?'2. Ajustar o planejamento':'3. Revisar e iniciar'}</h3>
         {!pending && step===1 && suggestion && <div className="focus-suggestion"><h3>Sugestão: {suggestion.task.title}</h3><p>{suggestion.task.subject_name || 'Sem disciplina'} · {suggestion.reason}</p>

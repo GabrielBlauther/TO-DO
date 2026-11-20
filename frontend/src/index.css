@@ -637,8 +637,12 @@ button:disabled { cursor: default; }
 @media (max-width: 600px) { .focus-form .form-actions .btn-primary { flex-basis: 100%; } }
 
 .modal-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; position: sticky; top: 0; z-index: 2; background: white; padding-bottom: 0.8rem; margin-bottom: 0.7rem; }
-.modal-header h2 { margin: 0; overflow-wrap: anywhere; }
-.modal-close { flex-shrink: 0; width: 44px; height: 44px; border: 1px solid #6b7280; border-radius: 8px; background: #f0f2f5; color: #374151; font-size: 1.7rem; line-height: 1; cursor: pointer; }
-.modal-close:hover { background: #e2e8f0; }
+.modal-header h2 { margin: 0; min-width: 0; overflow-wrap: anywhere; }
+.modal-window-controls { display: flex; gap: 0.35rem; flex-shrink: 0; }
+.modal-window-control, .modal-close { display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; width: 44px; height: 44px; border: 1px solid #6b7280; border-radius: 8px; background: #f0f2f5; color: #374151; font-size: 1.7rem; line-height: 1; cursor: pointer; }
+.modal-window-control:hover, .modal-close:hover { background: #e2e8f0; }
 .modal-exit-confirmation { line-height: 1.6; overflow-wrap: anywhere; }
 .modal [hidden] { display: none !important; }
+.modal.modal-expanded { width: calc(100% - 2rem); max-width: none; height: calc(100dvh - 2rem); max-height: calc(100dvh - 2rem); }
+.focus-window-status { flex-basis: 100%; max-width: 40rem; font-size: 0.85rem; line-height: 1.5; }
+@media (max-width: 600px) { .modal.modal-expanded { width: calc(100% - 0.5rem); height: calc(100dvh - 0.5rem); max-height: calc(100dvh - 0.5rem); } }
