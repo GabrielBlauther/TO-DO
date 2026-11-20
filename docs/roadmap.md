@@ -1,5 +1,11 @@
 # Roadmap e estado do trabalho
 
+## Revisão atual — concentração de ações no Foco
+
+Em 20/11/2026, `fetch` confirmou controles integrados pelo PR #9 (`28a57ab`), mas `feat/mover-cards-kanban`/`6e3a3cf` ainda pendente. Main local atualizada por fast-forward. Para preservar os cards e a interface que Gabriel está experimentando, `fix/organizar-foco` deriva da branch de cards, com a dependência informada, sem integrar nenhuma branch automaticamente à main. A implementação do Foco está em `0858a15`; diagnóstico prévio em `86c273d`.
+
+Corrigida a concentração das ações, repetição do resumo e escolha de continuação. Guardar/descartar migrou para a confirmação de saída; minimizar permanece no cabeçalho. Próximo passo mostra somente os campos pertinentes e um botão confirma o efeito. Nenhum endpoint, esquema, dependência ou dado pessoal alterado. [Evidências e limitações](revisao-ihc.md#verificação-da-correção-f01f03): build e **42 testes/291 asserções** passaram; Chrome desktop/390 px/toque emulado/teclado cobriu as duas HTAs, erros e recuperação com mesma chave no banco isolado. Ainda faltam avaliação humana, leitor de tela e aparelhos físicos. Relatos/capturas do responsável não são apresentados como uma avaliação formal com participantes.
+
 ## Estado do Git conferido nesta incorporação
 - Repositório: https://github.com/GabrielBlauther/TO-DO
 - Raiz real: a subpasta `TODO` que contém `backend`, `frontend` e `.git` dentro da pasta de trabalho também chamada `TODO`.

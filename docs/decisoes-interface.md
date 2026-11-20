@@ -1,5 +1,11 @@
 # Interface e fundamentação inicial
 
+## Correção da sobrecarga de ações no Foco
+
+A captura e o relato do responsável mostraram que a revisão anterior ainda deixava opções espalhadas e repetidas. O diagnóstico F01–F03 e as verificações estão em [revisao-ihc.md](revisao-ihc.md#nova-revisão-solicitada--excesso-de-ações-no-foco). A direção atual mantém etapas, mas concentra Voltar/Sair/ação principal num único rodapé centralizado. Guardar/descartar só aparecem na confirmação de saída. Atualização da lista fica em ajuda na escolha; minimizar somente no cabeçalho. O resumo apresenta fatos identificados uma vez. Ao terminar o ciclo, escolher Próximo passo revela apenas os campos dessa escolha e um botão informa o resultado que será confirmado.
+
+Fundamentação: Navegação pp. 8–20 distingue importância de ações; Princípios pp. 20–21, 34–43 trata controle, consistência, conteúdo pertinente e recuperação. Centralização e até três ações são decisões deste diálogo, não exigências universais das aulas. O exemplo de alinhamento à esquerda da aula foi considerado; optamos por um grupo central compacto em resposta ao pedido, com ordem visual e de teclado igual. Em tela estreita o grupo empilha os controles na mesma ordem. O custo de escolher um próximo passo antes de confirmar foi aceito para reduzir botões simultâneos; seu benefício para as personas hipotéticas ainda precisa de avaliação humana.
+
 **Estado atual:** a revisão de 15/11/2026 substituiu a direção A pela organização da alternativa B em etapas internas, sem mudar de contexto da tela principal. A comparação abaixo preserva o histórico das hipóteses; os benefícios não foram comprovados com participantes. Decisões atuais e evidências em [revisao-ihc.md](revisao-ihc.md).
 
 ## Alternativas exploradas no chat

@@ -6,7 +6,7 @@ A primeira etapa implementou disciplinas e planejamento manual. As etapas seguin
 
 A [revisão de IHC](revisao-ihc.md) organizou o Foco em escolha, ajuste pertinente e revisão, mantendo o diálogo e o contexto da tela principal. Voltar/guardar preparação preservam escolhas; cancelar preparação as descarta sem gravar. São ajustes decorrentes de inspeção técnica, não tarefas validadas com participantes.
 
-Retorno auxiliar atualizado por solicitação do responsável em 20/11/2026: X, clique fora e Escape apresentam uma confirmação única; Continuar aqui retorna com campos/foco preservados. No Foco, Sair do diálogo apenas minimiza e conserva escolhas/timer. Em formulários, a confirmação informa o descarte dos rascunhos não enviados; pedidos enviados não são cancelados e podem ser verificados depois. Escape durante a confirmação equivale a continuar. Os objetivos e planos principais das duas HTAs permanecem os mesmos.
+Retorno auxiliar atualizado após o relato de sobrecarga em 20/11/2026: o rodapé do Foco reúne Voltar (quando pertinente), Sair e Continuar/Iniciar foco. Sair, X, clique fora e Escape apresentam uma confirmação única; Continuar aqui retorna com campos/foco preservados. Na preparação, Guardar e sair preserva escolhas nesta página; Descartar e sair limpa apenas o rascunho. Com pedido enviado, não se oferece descarte. Com timer, Minimizar e voltar conserva a execução e explica se continua contando. Minimizar no cabeçalho é direto. Em outros formulários, a confirmação informa o descarte de rascunhos não enviados. Escape durante a confirmação equivale a continuar. Os objetivos e planos principais das duas HTAs permanecem os mesmos.
 
 ## HTA 1 — Realizar uma sessão de estudo com foco
 Objetivo: estudar uma atividade escolhida com apoio do timer e registrar o andamento.
@@ -30,11 +30,11 @@ Objetivo: estudar uma atividade escolhida com apoio do timer e registrar o andam
 | 4 | Finalizar a sessão. |
 | 4.1 | Encerrar antecipadamente ou receber aviso de término; retomar o restante se encerrou por engano. |
 | 4.2 | Concluir a atividade somente se terminou seu trabalho; caso contrário, manter a situação. |
-| 4.3 | Escolher pausa, outro ciclo, minimizar para decidir depois ou encerrar o estudo e voltar. |
+| 4.3 | No campo Próximo passo, escolher retomar restante, pausa, outro ciclo ou encerrar estudo; confirmar pelo botão correspondente. Minimizar no cabeçalho permite decidir depois. |
 
 Plano 0: 1 → 2 → 3 → 4. Plano 1: 1.1 → 1.2 → 1.3; 1.4 se a atividade for diferente da do estudo escolhido. Sem sugestão, selecionar manualmente; sem atividades, cadastrar antes de seguir. Sem estudos de hoje, planejar um novo; mesma atividade do estudo escolhido pula o ajuste de planejamento. Plano 2: [2.1 se novo] → 2.2 → 2.3. Voltar retorna à escolha/ajuste sem apagar campos. Plano 3: 3.1, alternando 3.2 e 3.3 quando necessário. Plano 4: 4.1 → [4.2 somente se desejar concluir a atividade] → 4.3; outro ciclo revisa apenas sua duração, sem reconfirmar/criar planejamento. Atividade concluída exige escolher outra antes de novo estudo. Pausa não inicia automaticamente uma continuação.
 
-Exceções: desistir antes de enviar não altera o planejamento; após envio com resposta incerta, guardar o pedido e verificar o mesmo resultado. Término antecipado não altera a situação da atividade. Timer concluído não equivale a atividade concluída. Guardar escolhas/Escape antes do envio permite retorno na mesma página; recarregar não recupera um rascunho ainda não enviado. Encerrar estudo libera a escolha de outra atividade, sem desfazer planejamento já confirmado.
+Exceções: desistir antes de enviar não altera o planejamento; após envio com resposta incerta, guardar o pedido e verificar o mesmo resultado. Término antecipado não altera a situação da atividade. Timer concluído não equivale a atividade concluída. Sair/Escape antes do envio permite guardar ou descartar na confirmação; recarregar não recupera um rascunho ainda não enviado. Encerrar estudo libera a escolha de outra atividade, sem desfazer planejamento já confirmado.
 
 ## HTA 2 — Trocar atividade e reorganizar o planejamento
 Objetivo: estudar outra atividade mantendo controle sobre o destino da sessão original.
