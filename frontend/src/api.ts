@@ -41,7 +41,9 @@ export async function retryMutation(item:PendingMutation){
 }
 async function checkRecoverySupport(label:string){
   let response:Response;
-  try{response=await fetch(`${BASE_URL}/tasks`,{method:'OPTIONS',signal:AbortSignal.timeout(15000)});}
+  // Vite handles OPTIONS in its CORS middleware before the API proxy.
+  // Check a small, read-only response that actually reaches the backend.
+  try{response=await fetch(`${BASE_URL}/categories`,{method:'GET',cache:'no-store',signal:AbortSignal.timeout(15000)});}
   catch{throw new Error(`Não foi possível preparar o pedido de ${label}: o serviço de dados não respondeu. Nenhuma nova gravação foi enviada nesta tentativa; pedidos anteriores podem estar salvos. Tente verificar novamente quando o serviço responder.`);}
   if(!response.ok||response.headers.get('X-Write-Recovery')!=='1')throw new Error(`Não foi possível preparar o pedido de ${label}: o serviço conectado não confirmou suporte à recuperação segura. Nenhuma nova gravação foi enviada nesta tentativa; pedidos anteriores podem estar salvos. Reinicie o servidor com a versão atual do projeto e tente verificar novamente.`);
 }
