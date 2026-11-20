@@ -86,7 +86,7 @@ export default function App() {
       <div className="header-actions"><button className="btn-new-task" disabled={!loaded} onClick={()=>setSubjectOpen(true)}>+ Disciplina</button>
         <FocusControl statusContainer={focusStatusContainer} tasks={tasks} disabled={loading||!loaded} onUpdated={update} onRefresh={async()=>setTasks(await api.getTasks())} onCreate={()=>{setEditing(null);setShowForm(true);}} />
         <button className="btn-new-task" disabled={!loaded} onClick={()=>{setEditing(null);setShowForm(true);}}>+ Nova atividade</button></div></header>
-    <div ref={setFocusStatusContainer} className="focus-status-container" />
+    <div ref={setFocusStatusContainer} className="focus-panel-host" />
     <section className="period-filter" aria-label="Filtro de planejamento"><div className="form-group"><label htmlFor="period">Período de estudo</label>
       <select id="period" value={period} onChange={e=>setPeriod(e.target.value as Period)}>
         <option value="all">Todas</option><option value="today">Hoje</option><option value="month">Este mês</option><option value="semester">Este semestre</option><option value="custom">Personalizado</option><option value="unplanned">Sem planejamento</option></select></div>
