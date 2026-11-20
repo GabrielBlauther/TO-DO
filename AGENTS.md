@@ -21,6 +21,7 @@ Para interação, leia também `docs/revisao-ihc.md`: diagnóstico anterior às 
 - Foco com etapas internas de escolha, ajuste pertinente e revisão; Voltar mantém escolhas. Reutilizar o mesmo estudo pula o ajuste. A revisão de IHC substitui a exigência anterior de reunir todas as escolhas simultaneamente.
 - Distinguir guardar preparação, descartar preparação, minimizar timer, encerrar ciclo e encerrar estudo. Nunca anunciar cancelamento de uma requisição já enviada como se desfizesse seus efeitos.
 - Preferência expressa em 20/11/2026: todos os diálogos têm X; X, clique fora e Escape pedem uma única confirmação de saída. Continuar preserva campos e foco. No Foco, sair minimiza e preserva execução/escolhas. Aguardar gravação em andamento; não duplicar a confirmação de rascunho após a saída já autorizada.
+- Controles confirmados na rodada seguinte: expandir/restaurar tamanho em todos os modais; minimizar apenas o Foco. Tamanho não altera dados ou timer. Ao reabrir Foco minimizado, preservar o tamanho escolhido nesta página. Fechar não encerra estudo; mensagens distinguem estudo/pausa contando, timer pausado e ciclo terminado, inclusive na confirmação aberta.
 - Erros precisam informar operação, causa conhecida, estado e recuperação. Resultado incerto mantém o mesmo pedido/chave; verificar antes de permitir outra gravação. Preservar campos; não inventar causas nem afirmar ausência de gravação após perda de resposta.
 - Atividade, disciplina, prazo, estudo planejado e ciclo são conceitos distintos. Usar vocabulário reconhecível e campos condicionais. Recomendações das aulas são contextuais, não regras universais.
 - Prazo da atividade, data de estudo e término do timer são conceitos diferentes.
@@ -36,6 +37,7 @@ Para interação, leia também `docs/revisao-ihc.md`: diagnóstico anterior às 
 - Abrir PR quando possível ou fornecer o link de comparação. Não fazer merge automaticamente sem instrução do responsável.
 - Não criar commits vazios, tags por commit, force pushes nem reescrever o histórico.
 - Manter dependências instaladas, builds, segredos e bancos locais fora do Git; preservar lockfiles e exemplos seguros.
+- `.cache/` contém roteiros e ferramentas temporários locais, não testes mantidos. A auditoria desta rodada não encontrou arquivos versionados nessa pasta; não apagá-los para limpar o Git. Testes mantidos estão em `backend/*.test.ts` e são executados por `bun run test`.
 
 ## Validação de execução já relatada
 Os resultados abaixo foram relatados na etapa de validação e confirmados por Gabriel ao incorporar este contexto. Não representam uma nova execução nesta tarefa de documentação.

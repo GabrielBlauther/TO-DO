@@ -154,9 +154,13 @@ Se faltar confirmação ao salvar atividade, disciplina, estudo ou comentário, 
 
 Todos os modais têm **X** no canto superior direito. Clicar no X, fora da janela ou usar Escape apresenta **Continuar aqui** e **Sair do diálogo**. Continuar mantém os campos; sair informa se descarta o rascunho ou apenas minimiza o Foco. Escape durante essa confirmação volta ao formulário. Durante uma gravação, aguarde a confirmação do resultado antes de sair.
 
+Todos os modais permitem **Expandir** e **Restaurar tamanho**, sem salvar nem descartar campos. Somente o Foco tem **Minimizar** no cabeçalho: reabra pelo botão Foco, com o tamanho escolhido preservado na mesma página. A confirmação de fechamento continua obrigatória por X/clique fora/Escape. Estudo ou pausa em andamento **continuará contando** com a janela fechada/minimizada; um timer pausado permanece pausado, e um ciclo terminado não inicia outro. **Fechar a janela não encerra o estudo.**
+
 Consulte [regras, recuperação, limites e roteiros das duas tarefas](docs/modo-foco.md).
 
 Veja a [revisão de IHC](docs/revisao-ihc.md) para diagnóstico, fontes originais, antes/depois, capturas, verificações e limitações. A inspeção técnica não é uma avaliação com participantes.
+
+Os roteiros apresentados em `.cache` são verificações temporárias e não estão versionados. Os testes mantidos no projeto são `backend/*.test.ts`; execute `bun run test` na raiz. Não é necessário copiar ferramentas locais de `.cache` para executar esses testes.
 
 Endereços padrão:
 
