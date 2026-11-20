@@ -1,6 +1,12 @@
 # Roadmap e estado do trabalho
 
-## Revisão atual — concentração de ações no Foco
+## Consolidação atual — pedidos recentes
+
+Fetch confirmou `origin/main` em `743e7f7` (PR #13), contendo `f007515` e as correções de painel estático, organização e cards. Criada `fix/consolidar-interacoes` dessa referência, sem merge/rebase/descarte; main local ficou preservada em `b8e1953`. Auditoria prévia `41c69a2`; painel flutuante, resultado e recuperação de atualização em `b9ef9e9`; sugestões editáveis em `c446113`. Todos os pedidos técnicos listados têm implementação/verificação descrita na [consolidação](consolidacao-interacoes.md); clareza com alunos, leitor de tela, aparelhos físicos e auditoria ampla continuam pendentes. [Dez capturas desktop/celular](capturas-consolidacao.md).
+
+Build aprovado e **44 testes/301 asserções** aprovados, com Chrome por proxy real, banco isolado, erros conhecidos/respostas perdidas, 28 combinações de fechamento do Foco, seis transições do quadro e painel por mouse/setas/toque emulado. Não equivalem a comprovação de usabilidade. `.cache` não estava versionado e foi mantido local; teste permanente de limites do painel em `backend/focus-panel.test.ts`. Nenhuma migração, endpoint ou dependência nova; nenhum merge executado nesta consolidação.
+
+## Revisão anterior — concentração de ações no Foco
 
 Em 20/11/2026, `fetch` confirmou controles integrados pelo PR #9 (`28a57ab`), mas `feat/mover-cards-kanban`/`6e3a3cf` ainda pendente. Main local atualizada por fast-forward. Para preservar os cards e a interface que Gabriel está experimentando, `fix/organizar-foco` deriva da branch de cards, com a dependência informada, sem integrar nenhuma branch automaticamente à main. A implementação do Foco está em `0858a15`; diagnóstico prévio em `86c273d`.
 

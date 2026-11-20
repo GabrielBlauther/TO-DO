@@ -26,15 +26,18 @@ Objetivo: estudar uma atividade escolhida com apoio do timer e registrar o andam
 | 3 | Realizar o estudo. |
 | 3.1 | Acompanhar o tempo restante. |
 | 3.2 | Pausar e retomar quando necessário. |
-| 3.3 | Minimizar para consultar o planejamento e reabrir o mesmo timer. |
+| 3.3 | Minimizar para o painel flutuante, pausar/retomar por ele e restaurar o mesmo timer. |
+| 3.4 | Se o painel encobrir conteúdo, reposicioná-lo por arraste, setas ou seleção de canto. |
 | 4 | Finalizar a sessão. |
 | 4.1 | Encerrar antecipadamente ou receber aviso de término; retomar o restante se encerrou por engano. |
 | 4.2 | Concluir a atividade somente se terminou seu trabalho; caso contrário, manter a situação. |
-| 4.3 | No campo Próximo passo, escolher retomar restante, pausa, outro ciclo ou encerrar estudo; confirmar pelo botão correspondente. Minimizar no cabeçalho permite decidir depois. |
+| 4.3 | Revisar o próximo passo proposto (pausa após estudo, estudo após pausa, encerrar se atividade concluída), alterar se necessário e confirmar pelo botão correspondente; retomar restante só se encerrado cedo. Minimizar permite decidir depois pelo painel. |
 
 Plano 0: 1 → 2 → 3 → 4. Plano 1: 1.1 → 1.2 → 1.3; 1.4 se a atividade for diferente da do estudo escolhido. Sem sugestão, selecionar manualmente; sem atividades, cadastrar antes de seguir. Sem estudos de hoje, planejar um novo; mesma atividade do estudo escolhido pula o ajuste de planejamento. Plano 2: [2.1 se novo] → 2.2 → 2.3. Voltar retorna à escolha/ajuste sem apagar campos. Plano 3: 3.1, alternando 3.2 e 3.3 quando necessário. Plano 4: 4.1 → [4.2 somente se desejar concluir a atividade] → 4.3; outro ciclo revisa apenas sua duração, sem reconfirmar/criar planejamento. Atividade concluída exige escolher outra antes de novo estudo. Pausa não inicia automaticamente uma continuação.
 
 Exceções: desistir antes de enviar não altera o planejamento; após envio com resposta incerta, guardar o pedido e verificar o mesmo resultado. Término antecipado não altera a situação da atividade. Timer concluído não equivale a atividade concluída. Sair/Escape antes do envio permite guardar ou descartar na confirmação; recarregar não recupera um rascunho ainda não enviado. Encerrar estudo libera a escolha de outra atividade, sem desfazer planejamento já confirmado.
+
+Complemento do plano de execução da HTA 1: na consulta com painel minimizado (3.3), executar 3.4 somente se sua posição dificultar o acesso ao conteúdo; depois continuar em 3.1–3.3. Reposicionar não altera timer, atividade ou planejamento.
 
 ## HTA 2 — Trocar atividade e reorganizar o planejamento
 Objetivo: estudar outra atividade mantendo controle sobre o destino da sessão original.
