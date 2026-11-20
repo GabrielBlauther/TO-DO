@@ -26,6 +26,10 @@ test('cliente conserva o mesmo pedido após resposta perdida e permite verificar
     expect(db.query('SELECT * FROM comments WHERE task_id=?').all(result.id)).toHaveLength(1);
     // A later deliberate identical comment remains possible after confirmation.
     await api.addComment(result.id,'Repetição segura');expect(db.query('SELECT * FROM comments WHERE task_id=?').all(result.id)).toHaveLength(2);
+    lost=true;await expect(api.updateTaskStatus(result.id,'done')).rejects.toThrow('pode ter sido salvo');
+    expect(api.pendingMutations()[0].label).toContain('para Concluída');
+    await api.retryMutation(api.pendingMutations()[0]);
+    expect((db.query('SELECT status FROM tasks WHERE id=?').get(result.id) as any).status).toBe('done');
     await expect(api.createSubject('')).rejects.toThrow('não foi aplicado');expect(api.pendingMutations()).toHaveLength(0);
     const working=globalThis.fetch;
     globalThis.fetch=(async()=>new Response(null,{status:204})) as typeof fetch;
