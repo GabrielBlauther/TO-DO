@@ -1,6 +1,7 @@
 import { Task, Comment, Category, Priority, TaskFormData, TaskStatus, Subject, SessionFormData } from './types';
 import type { FocusRequest, FocusResult } from '../../shared/focus';
 import {formatDate} from '../../shared/planning';
+import {STATUS_LABELS,TASK_STATUSES} from './kanban';
 
 const BASE_URL = '/api';
 export class ApiError extends Error {
@@ -34,7 +35,8 @@ function operation(url:string,method:string,body?:string){
   const taskId=url.match(/^\/tasks\/(\d+)/)?.[1];
   const name=data.title||data.name||data.text||(taskId?taskNames.get(Number(taskId)):null);
   const schedule=data.planned_date?` em ${formatDate(data.planned_date)}${data.start_time?` às ${data.start_time}`:' (sem horário)'}`:'';
-  return `${verb} ${object}${name?` “${String(name).slice(0,100)}”`:''}${schedule}`;
+  const target=/\/status$/.test(url)&&TASK_STATUSES.includes(data.status)?STATUS_LABELS[data.status as TaskStatus]:null;
+  return `${verb} ${object}${name?` “${String(name).slice(0,100)}”`:''}${target?` para ${target}`:''}${schedule}`;
 }
 export async function retryMutation(item:PendingMutation){
   return request(item.url,{method:item.method,body:item.body},item);

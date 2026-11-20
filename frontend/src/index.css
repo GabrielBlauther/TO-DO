@@ -648,3 +648,15 @@ button:disabled { cursor: default; }
 .focus-window-status { flex-basis: 100%; max-width: 40rem; font-size: 0.85rem; line-height: 1.5; }
 @media (max-width: 600px) { .modal.modal-expanded { width: calc(100% - 0.5rem); height: calc(100dvh - 0.5rem); max-height: calc(100dvh - 0.5rem); } }
 @media (max-width: 600px), (pointer: coarse) { .modal-window-control, .modal-close { width: 40px; height: 40px; } }
+
+.board-instructions { grid-column: 1 / -1; color: #374151; line-height: 1.5; }
+.kanban-column.is-drop-target { outline: 3px dashed #4338ca; outline-offset: 3px; background: #f4f2ff; }
+.kanban-drop-hint { min-height: 1.5rem; margin-bottom: 0.5rem; font-size: 0.85rem; font-weight: 600; color: #37318a; }
+.task-card[draggable="true"] { cursor: grab; }
+.task-card.is-dragging { opacity: 0.55; }
+.task-card:focus { outline: 3px solid #363795; outline-offset: 3px; }
+.card-drag-hint { color: #4b5563; font-size: 1.1rem; }
+.task-move-options { display: flex; flex-wrap: wrap; gap: 0.5rem; padding: 0.8rem 0 0; }
+.task-move-options p { flex-basis: 100%; font-size: 0.85rem; }
+.task-move-options .btn { min-height: 44px; flex: 1; }
+.pending-move-note { margin-top: 0.7rem; padding: 0.6rem; color: #78350f; background: #fffbeb; font-size: 0.85rem; line-height: 1.5; }

@@ -15,6 +15,7 @@ Gabriel concentra estruturação e desenvolvimento com apoio do Codex. Colegas t
 ## Escopo confirmado na conversa
 - Aproveitar o repositório existente: React, TypeScript, Vite, Bun e SQLite, confirmados por inspeção do código da base. O estado da validação de execução está em `roadmap.md`.
 - Atividades por disciplina, prioridade, estado, data planejada e prazo quando aplicável.
+- Atualização da situação no quadro por arraste nos dois sentidos, com Mover para… para teclado/toque, destino destacado, persistência e recuperação de falha. Movimento muda situação, não data de estudo, prazo ou ordem manual dentro da coluna.
 - Uma tela principal e filtro de período: hoje, mês, semestre e personalizado. Não criar três telas separadas por período.
 - Calendário ligado às atividades.
 - Botão Foco com sugestão explicada, seleção manual e Pomodoro; após revisão de IHC, escolha, ajuste e revisão ficam em etapas internas com retorno preservado, em vez de todas as escolhas simultâneas.

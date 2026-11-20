@@ -25,6 +25,7 @@ Para interação, leia também `docs/revisao-ihc.md`: diagnóstico anterior às 
 - Erros precisam informar operação, causa conhecida, estado e recuperação. Resultado incerto mantém o mesmo pedido/chave; verificar antes de permitir outra gravação. Preservar campos; não inventar causas nem afirmar ausência de gravação após perda de resposta.
 - Atividade, disciplina, prazo, estudo planejado e ciclo são conceitos distintos. Usar vocabulário reconhecível e campos condicionais. Recomendações das aulas são contextuais, não regras universais.
 - Prazo da atividade, data de estudo e término do timer são conceitos diferentes.
+- Quadro: arrastar entre todas as situações e a alternativa Mover para… usam a mesma gravação. Destino tem contorno/texto, não apenas cor. Em falha, reverter somente a situação otimista e preservar os demais dados; em resultado incerto, retorno é provisório e o mesmo pedido deve ser verificado antes de mover novamente pelo quadro. Não implementar arraste de datas no calendário como consequência desse recurso.
 - Preserve dados existentes e use migrações compatíveis. Nunca recrie o banco para acrescentar um campo.
 - Verifique regras de datas, cancelamento, falhas e conflitos com testes proporcionais. Diferencie testes de API, build e inspeção real da interface.
 - Não invente entrevistas, participantes, métricas, aprovações ou resultados de avaliação. Personas são hipóteses iniciais.
