@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import type { Task, SessionFormData } from '../types';
 import { formatDate, localToday, sessionInterval } from '../../../shared/planning';
 import { suggestFocus, localTime, freeSlot, snapshot, validMinutes, newCycle, remaining, recoverTimer, changeTimer, timerText, focusWindowMessage,
@@ -22,7 +23,7 @@ function PlanFields({prefix,plan,onChange,showDuration=true}:{prefix:string;plan
   </div>;
 }
 
-export default function FocusControl({tasks,disabled,onCreate,onUpdated,onRefresh}:{tasks:Task[];disabled:boolean;onCreate:()=>void;onUpdated:(task:Task)=>void;onRefresh:()=>Promise<void>}) {
+export default function FocusControl({tasks,disabled,onCreate,onUpdated,onRefresh,statusContainer}:{tasks:Task[];disabled:boolean;onCreate:()=>void;onUpdated:(task:Task)=>void;onRefresh:()=>Promise<void>;statusContainer:HTMLElement|null}) {
   const [open,setOpen]=useState(false),[timer,setTimer]=useState<FocusTimer|null>(null),[pending,setPending]=useState<FocusRequest|null>(null);
   const [draft,setDraft]=useState<Draft|null>(null),[error,setError]=useState(''),[busy,setBusy]=useState(false),[now,setNow]=useState(Date.now());
   const [nextMinutes,setNextMinutes]=useState(25);
@@ -157,13 +158,20 @@ export default function FocusControl({tasks,disabled,onCreate,onUpdated,onRefres
     catch(err){setError(`Não foi possível encerrar o estado local: ${(err as Error).message}`);}
   }
   const phaseStatus=timer ? `${timer.phase==='study'?'Estudo':'Pausa curta'}: ${timer.status==='running'?'em andamento':timer.status==='paused'?'pausado':timer.endedEarly?'encerrado antecipadamente':'tempo concluído'}.` : '';
+  const minimizedMessage=timer
+    ? timer.status==='running'?`${timer.phase==='study'?'Estudo':'Pausa'} em andamento. O timer continua contando.`
+      :timer.status==='paused'?`${timer.phase==='study'?'Estudo pausado':'Pausa pausada'}. O timer permanece parado.`
+      :`Ciclo ${timer.phase==='study'?'de estudo':'de pausa'} ${timer.endedEarly?'encerrado antes do fim':'concluído'}. O timer está parado.`
+    :pending?'Confirmação pendente. Reabra o Foco para verificar o pedido.':'Preparação guardada nesta página. Reabra o Foco para continuar.';
   const windowMessage=timer?focusWindowMessage(timer):pending?'O pedido pode já ter sido salvo. Sair mantém a confirmação pendente para verificar depois pelo botão Foco; não cancela a gravação.':draft?'As escolhas ficam guardadas nesta página para você voltar pelo botão Foco. Sair não confirma nem altera o planejamento.':'Não há preparação de estudo em andamento. Fechar esta janela mantém o planejamento salvo.';
   return <>
     <button id="focus-button" className="btn-new-task" disabled={disabled} onClick={show} aria-label="Abrir modo Foco" aria-expanded={open} aria-describedby={!open&&(timer||pending||draft)?'focus-window-state':undefined} title={timer||pending||draft?'Restaurar janela do Foco':'Abrir modo Foco'}>
       Foco{timer && <span aria-hidden="true"> · {timerText(timer,now)}</span>}{!timer&&pending?' · verificar confirmação':''}
     </button>
-    {!open&&(timer||pending||draft)&&<span id="focus-window-state" role="status" className="focus-window-status">{windowMessage} {timer?'Reabra pelo botão Foco.':''}</span>}
-    {!open && error && <span role="alert" className="focus-inline-error">{error}</span>}
+    {!open&&statusContainer&&(timer||pending||draft||error)&&createPortal(<>
+      {(timer||pending||draft)&&<div className="focus-minimized-status"><strong>Foco minimizado</strong><p id="focus-window-state" role="status">{minimizedMessage}</p></div>}
+      {error&&<p role="alert" className="error-message">{error}</p>}
+    </>,statusContainer)}
     {open && <Modal title="Modo Foco" large fallbackFocusId="focus-button" onClose={close} busy={busy}
       expanded={windowExpanded} onExpandedChange={setWindowExpanded} onMinimize={close} minimizeTitle={windowMessage}
       exitLabel={timer?'Minimizar e voltar':pending?'Sair e verificar depois':'Guardar e sair'} onDiscard={!timer&&!pending&&draft?discard:undefined}

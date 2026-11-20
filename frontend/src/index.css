@@ -25,6 +25,8 @@ body {
   justify-content: space-between;
   align-items: center;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  gap: 1rem;
+  flex-wrap: wrap;
 }
 
 .header h1 {
@@ -535,6 +537,8 @@ button:focus-visible, select:focus-visible, input:focus-visible, textarea:focus-
 }
 button:disabled { cursor: wait; opacity: 0.65; }
 .header-actions, .custom-range, .session-actions { display: flex; gap: 0.6rem; flex-wrap: wrap; }
+.header-actions { align-items: center; justify-content: center; }
+#focus-button { font-variant-numeric: tabular-nums; white-space: nowrap; }
 .header-stats { flex-wrap: wrap; }
 .period-filter { max-width: 1336px; margin: 1.5rem auto 0; padding: 1rem; background: white; border-radius: 10px; }
 .period-filter .form-group { max-width: 360px; margin-bottom: 0.6rem; }
@@ -617,7 +621,6 @@ fieldset { border: 0; min-width: 0; }
 .focus-existing { margin: 0.8rem 0; line-height: 1.6; }
 .focus-existing summary { cursor: pointer; text-decoration: underline; }
 .focus-existing ul { padding-left: 1.2rem; overflow-wrap: anywhere; }
-.focus-inline-error { background: white; color: #991b1b; padding: 0.5rem; border-radius: 4px; max-width: 320px; }
 .calendar-day-list { margin: 1rem 0; }
 .unplanned-list li { display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; padding: 1rem; border: 1px solid #cbd5e1; border-radius: 6px; margin-top: 0.8rem; overflow-wrap: anywhere; }
 .unplanned-list p { margin-top: 0.3rem; font-size: 0.85rem; }
@@ -658,7 +661,10 @@ button:disabled { cursor: default; }
 .modal-exit-confirmation { line-height: 1.6; overflow-wrap: anywhere; }
 .modal [hidden] { display: none !important; }
 .modal.modal-expanded { width: calc(100% - 2rem); max-width: none; height: calc(100dvh - 2rem); max-height: calc(100dvh - 2rem); }
-.focus-window-status { flex-basis: 100%; max-width: 40rem; font-size: 0.85rem; line-height: 1.5; }
+.focus-status-container { max-width: 1336px; margin: 1rem auto 0; }
+.focus-status-container:empty { display: none; }
+.focus-minimized-status { display: flex; align-items: baseline; flex-wrap: wrap; gap: 0.35rem 1rem; padding: 0.75rem 1rem; background: #f4f2ff; color: #302568; border-left: 3px solid #4338ca; border-radius: 6px; font-size: 0.85rem; line-height: 1.5; overflow-wrap: anywhere; }
+@media (max-width: 600px) { .focus-status-container { margin-inline: 1rem; } }
 @media (max-width: 600px) { .modal.modal-expanded { width: calc(100% - 0.5rem); height: calc(100dvh - 0.5rem); max-height: calc(100dvh - 0.5rem); } }
 @media (max-width: 600px), (pointer: coarse) { .modal-window-control, .modal-close { width: 40px; height: 40px; } }
 
