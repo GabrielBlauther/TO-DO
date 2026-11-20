@@ -4,7 +4,7 @@ Implementado na branch `feat/modo-foco`, criada da main `11ffef1` após confirma
 
 ## Escolha e sugestão
 
-O botão Foco permanece no cabeçalho tanto no Quadro quanto no Calendário. Após a [revisão de IHC](revisao-ihc.md), o diálogo organiza três etapas: **Escolher o que estudar → Ajustar o planejamento → Revisar e iniciar**. Reutilizar o estudo da mesma atividade pula Ajustar. Voltar mantém valores, Guardar escolhas e voltar/Escape preserva preparação na mesma página, e Cancelar preparação descarta escolhas sem gravar. Rascunho ainda não enviado não é recuperado após recarregar. O timer substitui o conteúdo após a confirmação.
+O botão Foco permanece no cabeçalho tanto no Quadro quanto no Calendário. Após a [revisão de IHC](revisao-ihc.md), o diálogo organiza três etapas: **Escolher o que estudar → Ajustar o planejamento → Revisar e iniciar**. Reutilizar o estudo da mesma atividade pula Ajustar. Voltar mantém valores; Guardar escolhas e voltar preserva preparação na mesma página. Desde o ajuste solicitado em 20/11/2026, X, clique fora e Escape pedem confirmação antes de sair; confirmar mantém escolhas/timer para reabrir, Continuar aqui permanece no diálogo. Cancelar preparação descarta escolhas sem gravar. Rascunho ainda não enviado não é recuperado após recarregar. O timer substitui o conteúdo após a confirmação.
 
 Considerar somente atividades não concluídas, independentemente do filtro visual do quadro/calendário:
 
@@ -49,7 +49,7 @@ Cliques repetidos são bloqueados imediatamente, além do botão desabilitado. W
 - Estudo padrão de 25 minutos; duração ajustável de **1 a 180 minutos inteiros** antes do primeiro ciclo e de novos ciclos. Pausa curta fixa de 5 minutos. Esse limite aplica-se ao ciclo, não ao planejamento.
 - Estado local versionado: atividade, recibo, sessão quando houver, fase, situação, duração total, restante pausado e instante final em milissegundos. Timer ativo deriva o restante de `Date.now()` e do instante final; o intervalo apenas atualiza a exibição.
 - Pausar guarda o restante; retomar calcula outro instante final. Recarregar recupera pausas e calcula o restante do ciclo em execução. Se o instante passou, mostrar término, sem iniciar outra fase nem concluir atividade.
-- Minimizar, Escape, mudar Quadro/Calendário ou minimizar o navegador não reiniciam o timer. O botão Foco mostra o tempo e reabre a mesma execução.
+- Minimizar, confirmar saída por X/clique fora/Escape, mudar Quadro/Calendário ou minimizar o navegador não reiniciam o timer. O botão Foco mostra o tempo e reabre a mesma execução. A confirmação de saída não pausa nem encerra o ciclo.
 - Apenas um estudo local, incluindo o resultado aguardando decisão. Novo ciclo ou pausa reutiliza a execução, sem chamar a confirmação de planejamento novamente.
 - Zero exige ação: pausa, outro ciclo, minimizar ou encerrar estudo. Encerrar este ciclo antecipadamente também leva a essas opções; Retomar este ciclo de onde parei recupera o restante, inclusive após recarregar. Não recupera um ciclo que esgotou naturalmente.
 - Outro ciclo abre a duração somente quando escolhido; Cancelar próximo ciclo não inicia nada. Minimizar e voltar mantém essa escolha na mesma página.

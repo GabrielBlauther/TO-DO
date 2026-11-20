@@ -25,7 +25,8 @@ export default function TaskDetailModal({ task, onClose, onDelete, onUpdated, in
   }
   useEffect(()=>{void loadComments();},[task.id]);
   function close(){if(busy)return;if(dirty&&!uncertain)setLeaving(true);else onClose();}
-  return <Modal title={task.title} large fallbackFocusId="view-mode" onClose={close}>
+  return <Modal title={task.title} large fallbackFocusId="view-mode" onClose={close} onConfirmClose={onClose} busy={busy}
+    closeMessage="Ao sair, rascunhos ainda não enviados serão descartados. Alterações já salvas serão mantidas. Pedidos enviados não são cancelados; resultados pendentes podem ser verificados pelo aviso na tela principal.">
     {leaving&&<div className="warning-message" role="alert"><p>Há edição de estudo ou comentário não enviado. Deseja descartar esse rascunho e fechar? O que já foi salvo será mantido.</p>
       <button className="btn btn-primary" onClick={()=>setLeaving(false)}>Continuar editando</button>{' '}<button className="btn btn-secondary" onClick={onClose}>Descartar rascunho e fechar</button></div>}
     <div className="task-detail-badges"><span className="badge badge-priority">{task.priority_emoji} {task.priority_name}</span>

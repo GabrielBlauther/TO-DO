@@ -635,3 +635,10 @@ fieldset { border: 0; min-width: 0; }
 .form-group input:disabled, .form-group select:disabled, .form-group textarea:disabled { color: #374151; opacity: 1; }
 button:disabled { cursor: default; }
 @media (max-width: 600px) { .focus-form .form-actions .btn-primary { flex-basis: 100%; } }
+
+.modal-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; position: sticky; top: 0; z-index: 2; background: white; padding-bottom: 0.8rem; margin-bottom: 0.7rem; }
+.modal-header h2 { margin: 0; overflow-wrap: anywhere; }
+.modal-close { flex-shrink: 0; width: 44px; height: 44px; border: 1px solid #6b7280; border-radius: 8px; background: #f0f2f5; color: #374151; font-size: 1.7rem; line-height: 1; cursor: pointer; }
+.modal-close:hover { background: #e2e8f0; }
+.modal-exit-confirmation { line-height: 1.6; overflow-wrap: anywhere; }
+.modal [hidden] { display: none !important; }

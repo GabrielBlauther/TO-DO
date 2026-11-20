@@ -19,7 +19,8 @@ export default function TaskFormModal({ task, categories, priorities, subjects, 
   function close(){if(busy)return;if(!uncertain&&JSON.stringify(data)!==original)setLeaving(true);else onClose();}
   const afterDue = !!data.due_date && !!task?.sessions.some(s => s.planned_date > data.due_date!);
   function change(patch: Partial<TaskFormData>) { setData(old => ({ ...old, ...patch })); setConfirmed(false); setError(''); }
-  return <Modal title={task ? 'Editar atividade' : 'Nova atividade'} onClose={close}>
+  return <Modal title={task ? 'Editar atividade' : 'Nova atividade'} onClose={close} onConfirmClose={onClose} busy={busy}
+    closeMessage={uncertain?'A gravação pode ter ocorrido. Sair não cancela o pedido; você poderá verificar o resultado pelo aviso na tela principal.':JSON.stringify(data)!==original?'Ao sair, o rascunho desta atividade será descartado. Disciplinas e outras informações já salvas serão mantidas.':'Deseja sair deste formulário? Nenhuma nova alteração será salva ao sair.'}>
     <p className="help-text">Atividade é o que você precisa fazer. O prazo é a entrega; quando estudar é definido depois, no planejamento.</p>
     {leaving&&<div className="warning-message" role="alert"><p>As alterações deste formulário ainda não foram enviadas. Deseja descartá-las?</p><button className="btn btn-primary" onClick={()=>setLeaving(false)}>Continuar editando</button>{' '}<button className="btn btn-secondary" onClick={onClose}>Descartar alterações</button></div>}
     <form onSubmit={async event => {

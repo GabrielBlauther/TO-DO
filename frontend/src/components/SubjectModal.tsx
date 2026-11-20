@@ -7,7 +7,8 @@ import {useAttempt} from '../useAttempt';
 export default function SubjectModal({ onClose, onCreated }: { onClose: () => void; onCreated: (subject: Subject) => void }) {
   const [name, setName] = useState('');
   const {error,busy,uncertain,run}=useAttempt();
-  return <Modal title="Cadastrar disciplina" onClose={() => { if (!busy) onClose(); }}>
+  return <Modal title="Cadastrar disciplina" busy={busy} onClose={() => { if (!busy) onClose(); }}
+    closeMessage={uncertain?'A disciplina pode ter sido cadastrada. Sair não cancela o pedido; você poderá verificar o resultado pelo aviso na tela principal.':'O nome ainda não enviado será descartado ao sair. Outros formulários abertos e dados já salvos serão mantidos.'}>
     <form onSubmit={async event => {
       event.preventDefault();await run(async()=>{onCreated(await createSubject(name));onClose();});
     }}><fieldset disabled={busy||uncertain}>

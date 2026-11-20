@@ -161,7 +161,8 @@ export default function FocusControl({tasks,disabled,onCreate,onUpdated,onRefres
       Foco{timer && <span aria-hidden="true"> · {timerText(timer,now)}</span>}{!timer&&pending?' · verificar confirmação':''}
     </button>
     {!open && error && <span role="alert" className="focus-inline-error">{error}</span>}
-    {open && <Modal title="Modo Foco" large fallbackFocusId="focus-button" onClose={close}>
+    {open && <Modal title="Modo Foco" large fallbackFocusId="focus-button" onClose={close} busy={busy}
+      closeMessage={timer?'Sair apenas minimiza o Foco. O timer continua como está e pode ser reaberto pelo botão Foco. O estudo não será encerrado e pedidos enviados não são cancelados.':pending?'O pedido pode já ter sido salvo. Sair mantém a confirmação pendente para verificar depois pelo botão Foco; não cancela a gravação.':'As escolhas ficam guardadas nesta página para você voltar pelo botão Foco. Sair não confirma nem altera o planejamento.'}>
       {timer ? <>
         <h3>{currentTask?.title || 'Atividade indisponível — confira o planejamento'}</h3><p>Disciplina: {currentTask?.subject_name || 'Sem disciplina'}</p>
         <p role="status" aria-live="polite">{phaseStatus} Encerrar o timer não conclui a atividade.</p>

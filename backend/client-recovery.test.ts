@@ -12,7 +12,7 @@ test('cliente conserva o mesmo pedido após resposta perdida e permite verificar
   let lost=true;
   globalThis.fetch=(async(url:string,options:RequestInit)=>{
     const response=await handler(new Request('http://localhost'+url,options));
-    if(lost&&options.method!=='OPTIONS'){lost=false;throw new TypeError('simulação de perda depois do commit');}
+    if(lost&&['POST','PUT','PATCH','DELETE'].includes(options.method||'GET')){lost=false;throw new TypeError('simulação de perda depois do commit');}
     return response;
   }) as typeof fetch;
   try{
