@@ -612,6 +612,9 @@ fieldset { border: 0; min-width: 0; }
 .focus-activity { text-align: center; overflow-wrap: anywhere; }
 .focus-activity p { color: #4b5563; }
 .focus-result { text-align: center; background: #f4f2ff; border: 1px solid #c7c2e7; border-radius: 8px; padding: 1rem; margin: 1rem 0; line-height: 1.5; }
+.subject-suggestions { margin-bottom: 1rem; }
+.subject-suggestions summary { cursor: pointer; color: #37318a; text-decoration: underline; }
+.subject-suggestions > div { display: flex; gap: 0.5rem; flex-wrap: wrap; }
 .focus-phase, .focus-window-help { text-align: center; margin-top: 1rem; }
 .btn.focus-text-button { background: transparent; color: #37318a; text-decoration: underline; padding: 0.6rem; }
 .focus-suggestion, .focus-summary { background: #f4f2ff; border: 1px solid #c7c2e7; padding: 1rem; border-radius: 8px; margin: 1rem 0; line-height: 1.6; overflow-wrap: anywhere; }
