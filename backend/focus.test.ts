@@ -2,7 +2,7 @@ import { beforeEach, afterEach, expect, test } from 'bun:test';
 import { createDatabase } from './database';
 import { createHandler } from './api';
 import { confirmFocus } from './focus';
-import { snapshot, suggestFocus, freeSlot, newCycle, remaining, changeTimer, recoverTimer, validMinutes, type FocusRequest } from '../shared/focus';
+import { snapshot, suggestFocus, freeSlot, newCycle, remaining, changeTimer, recoverTimer, validMinutes, focusWindowMessage, type FocusRequest } from '../shared/focus';
 import type { Task } from '../frontend/src/types';
 import { mkdtempSync } from 'node:fs';
 import { tmpdir } from 'node:os';
@@ -145,4 +145,19 @@ test('encerramento antecipado pode ser retomado com o restante preservado após 
   expect(remaining(resumed,500000)).toBe(24*60000);expect(resumed.task_id).toBe(t.task_id);
   expect(changeTimer(recoverTimer(t,t.deadline+1)!,'resume',t.deadline+1).status).toBe('finished');
   expect(rows()).toHaveLength(2);
+});
+
+test('mensagens de janela distinguem contagem, pausa e término sem alterar o timer',()=>{
+  const t=newCycle({key:'window-state',task_id:101,session_id:201,minutes:25},'study',1000);
+  const before=JSON.stringify(t);
+  expect(focusWindowMessage(t)).toContain('timer de estudo continuará contando');
+  const paused=changeTimer(t,'pause',61000);
+  expect(focusWindowMessage(paused)).toContain('permanecerá pausado');
+  expect(focusWindowMessage(paused)).not.toContain('continuará contando');
+  const ended=changeTimer(t,'end',61000);
+  expect(focusWindowMessage(ended)).toContain('foi encerrado antes do fim');
+  expect(focusWindowMessage(ended)).toContain('contagem está parada');
+  expect(focusWindowMessage(recoverTimer(t,t.deadline+1)!)).toContain('terminou');
+  expect(focusWindowMessage(newCycle(t,'break',0))).toContain('timer da pausa continuará contando');
+  expect(JSON.stringify(t)).toBe(before);expect(remaining(paused,9000000)).toBe(24*60000);
 });

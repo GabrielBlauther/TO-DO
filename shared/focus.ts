@@ -55,6 +55,13 @@ export interface FocusTimer extends FocusResult {
   version: 1; phase: 'study'|'break'; status: 'running'|'paused'|'finished';
   totalMs: number; remainingMs: number; deadline: number; endedEarly: boolean;
 }
+export function focusWindowMessage(timer:FocusTimer){
+  const phase=timer.phase==='study'?'de estudo':'da pausa';
+  if(timer.status==='running')return `O timer ${phase} continuará contando com a janela fechada ou minimizada.`;
+  if(timer.status==='paused')return `O timer ${phase} está pausado e permanecerá pausado ao fechar ou minimizar a janela.`;
+  const cycle=timer.phase==='study'?'ciclo de estudo':'ciclo de pausa';
+  return `O ${cycle} ${timer.endedEarly?'foi encerrado antes do fim':'terminou'}. A contagem está parada; fechar ou minimizar não inicia outro ciclo.`;
+}
 export function newCycle(result: FocusResult, phase: FocusTimer['phase'], now: number): FocusTimer {
   if (!validMinutes(result.minutes)) throw new Error('O ciclo deve ter de 1 a 180 minutos inteiros.');
   const totalMs = (phase === 'break' ? 5 : result.minutes)*60000;
