@@ -1,5 +1,17 @@
 # Revisão de interação — diagnóstico e correções
 
+## Nova revisão solicitada — excesso de ações no Foco
+
+Diagnóstico anterior à correção, em 20/11/2026, sobre `6e3a3cf`. Gabriel forneceu captura da etapa Revisar e iniciar e relatou desorganização; isso é feedback do responsável, não avaliação com participantes. Inspeção do código confirma cinco ações no formulário (Voltar, Guardar escolhas e voltar, Confirmar, Cancelar preparação, Atualizar atividades), distribuídas em três blocos. O resumo repete atividade/prazo quando o estudo escolhido pertence à mesma atividade. A revisão anterior não resolveu essa sobrecarga.
+
+| Problema e reprodução | Observação e consequência esperada | Fonte / prioridade | Correção e aceitação observável |
+| --- | --- | --- | --- |
+| F01: Foco → escolher estudo da mesma atividade → Continuar | Captura fornecida e código: saídas concorrentes e repetição do resumo. Pode dificultar reconhecer início, retorno e descarte. | Navegação pp. 8–20 (hierarquia), Princípios pp. 20–21; P1 | Um rodapé centralizado por etapa, com até três ações; atualização somente na escolha, dentro de opções auxiliares; uma informação por linha no resumo. Guardar/descartar somente na confirmação única de saída. |
+| F02: iniciar → encerrar ciclo | Código: retomar, outro ciclo, pausa, minimizar, encerrar estudo e concluir atividade simultâneos; instrução longa tenta explicar todos. Dificuldade de alunos é hipótese, não observação com participantes. | Navegação pp. 8–20; Princípios pp. 34–39; P1 | Uma escolha Próximo passo; mostrar duração apenas para novo ciclo e um botão com o efeito escolhido. Conclusão da atividade no contexto da atividade; minimizar no cabeçalho, sem duplicar no conteúdo. |
+| F03: sair da preparação / timer | Código: caminhos de guardar/descartar no conteúdo concorrem com X/minimizar. | Princípios pp. 20–21, 26, 43; P1 | X/Escape/clique fora e Sair usam a mesma confirmação. Preparação permite guardar ou descartar explicitamente; timer só minimiza, explica se continua contando e nunca é encerrado por fechar. Continuar aqui preserva campos/foco. |
+
+Aulas não impõem um número universal de botões nem centralização. O limite e o alinhamento são decisões deste fluxo, em resposta à solicitação e às necessidades hipotéticas de Lucas (rapidez), Marina (reconhecer ações) e Renata (retornar/corrigir). A aula Navegação também exemplifica alinhamento à esquerda: adotamos um grupo centralizado compacto neste diálogo, sem espalhar ações pelas bordas, preservando ordem de teclado e hierarquia. O enunciado exige coerência, transições e feedback; não impõe esse layout. Fontes locais, sem consultas externas. Evidências posteriores serão registradas após verificar a implementação; banco pessoal não será usado nos ensaios.
+
 ## Método, versão e fontes
 
 Inspeção técnica individual em 15/11/2026, iniciada sobre `9952103` (PR #6 do Foco integrado à main; código anterior `ff9b289`). Branch `fix/revisao-ihc`, criada da main atualizada por fast-forward, com árvore limpa. Não houve avaliação com participantes; consequências para as personas são inferências de projeto, não dificuldades medidas em alunos reais. Prioridades locais: P0 = risco de integridade/resultado incerto; P1 = controle, conclusão ou compreensão da tarefa; P2 = orientação e apresentação. Não equivalem a uma avaliação de severidade por vários avaliadores.
