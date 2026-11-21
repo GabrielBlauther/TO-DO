@@ -1,5 +1,13 @@
 # Roadmap e estado do trabalho
 
+## Acessibilidade e ampliação — 21/11
+
+Confirmado por fetch que o PR #15 integrou os ajustes anteriores (`4318f36`) à `origin/main` `1f5911e`; criada `fix/acessibilidade-ampliacao` dessa referência, com árvore limpa, sem merge automático. Fonte nova disponível: texto das dez páginas consultado integralmente e inspeção visual das pp. 4, 5 e 10. Rafael Costa incorporado como **persona hipotética**, não participante; guia anterior preservado e complementado.
+
+Correções: legibilidade e bordas de campos; modais baixos com cabeçalho/rodapé no fluxo; agenda do calendário até 900 px CSS; foco não encoberto pelo painel e contorno em controles de ajuda. Nenhuma funcionalidade nova, mudança de banco ou alteração no README. [Matriz necessidade → decisão → verificação → resultado](acessibilidade-ampliacao.md), [capturas em zoom real](capturas-acessibilidade.md).
+
+Chrome 157 headless no Windows, janela 1440×1000, **zoom nativo 200% e 400%**: duas HTAs, rolagem/Tab, erros/cancelamentos/retorno, calendário, quadro por Mover para… e painel. Não equivale a reduzir a viewport nem a avaliação de usabilidade. Build e 44 testes/301 asserções aprovados, banco/perfil isolados. Permanecem pendentes leitor de tela, ampliador do sistema, outros navegadores/aparelhos, avaliação com participantes e auditoria integral. Scripts/perfis/banco de `.cache` continuam locais; capturas e registro próprio são versionados. Nenhum merge executado nesta tarefa.
+
 ## Ajustes atuais antes da hospedagem — 21/11
 
 Consolidação integrada pelo PR #14, `origin/main` em `a64bef1`, confirmada por fetch. `fix/ajustes-ihc-pre-hospedagem` criada dessa referência com árvore limpa, sem merge automático. Diagnóstico `6bf91c9`; remoção de exemplos indevidos `bd737ee`; painel compacto/recolhível, estados e padrões visuais `add8ffb`. Guia consolidado em [guia-estilo.md](guia-estilo.md); [verificações/limitações](ajustes-pre-hospedagem.md) e [capturas atuais](capturas-pre-hospedagem.md).

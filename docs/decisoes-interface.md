@@ -68,7 +68,7 @@ Os modais alterados passaram a usar diálogo nativo com nome acessível, conten�
 - Um seletor Quadro/Calendário preserva a tela principal e o período escolhido, mantendo contexto e consistência (Navegação e Princípios e Diretrizes). Mês visualizado e intervalo filtrado têm rótulos distintos para explicitar o estado.
 - Sessões são projeções da mesma atividade; contadores continuam contando atividades únicas. Dias sem planejamento não recebem datas inventadas: essas atividades têm uma lista com ação explícita de planejar.
 - O dia atual usa texto Hoje e contorno; a seleção usa texto Selecionado, contorno tracejado e `aria-pressed`. Reconhecimento e feedback não dependem apenas de cor (Cores, Layout e IHC e Qualidade).
-- Até três eventos por célula, com Ver mais para a lista completa; abaixo de 700 px, lista de dias do mês. Isso procura limitar a carga visual para as personas hipotéticas, sem afirmar superioridade empírica.
+- Até três eventos por célula, com Ver mais para a lista completa; até 900 px CSS, lista de dias do mês (limite revisto na rodada de ampliação). Isso procura limitar a carga visual para as personas hipotéticas, sem afirmar superioridade empírica.
 - Os formulários, avisos e cancelamentos são os mesmos do quadro. Após a revisão, consultar uma sessão abre a atividade com o estudo destacado e focado em consulta; Editar é explícito. Selecionar um dia preenche a data de uma nova sessão, sem gravar até confirmar. O foco volta ao controle de origem ou ao seletor de visualização se o evento removido deixou de existir.
 
 Decisões técnicas e testes efetivamente realizados estão em [calendario-estudos.md](calendario-estudos.md). Não houve nova avaliação com participantes nem certificação de acessibilidade.
@@ -124,3 +124,17 @@ Arraste nativo de cards permite todas as transições entre A fazer, Em progress
 A mesma função atende gesto e botões. O cartão muda provisoriamente com feedback de salvamento; sucesso é anunciado após resposta da API. Rejeição restaura somente a situação, preservando atualizações de outros campos, e foca o erro. Resposta incerta restaura provisoriamente e mantém a verificação do mesmo pedido antes de permitir nova movimentação daquele cartão. O aviso identifica atividade e destino pretendido. Isso aplica controle, consistência e recuperação (Princípios pp. 20–21, 34–43), sem confundir retorno visual com garantia de ausência de gravação no servidor.
 
 Relação esperada com personas hipotéticas: gesto direto para Lucas, opções nomeadas para Marina e recuperação/retorno para Renata. Esses benefícios não foram avaliados com participantes. O recurso é uma evolução solicitada do quadro; não acrescenta arraste ao calendário nem altera as duas HTAs centrais de estudo/Foco.
+
+## Rafael e ampliação — complemento de 21/11
+
+Rafael Costa, 29, universitário com baixa visão e usuário de ampliação, é hipótese fornecida pelo responsável, sem entrevista. Suas necessidades não são atendidas por um menu adicional: corrigimos os componentes dos fluxos existentes, preservando as confirmações solicitadas, timer, escolhas e dados.
+
+| Necessidade → decisão | Fundamentação | Verificação → resultado |
+| --- | --- | --- |
+| Legibilidade → rótulos/campos/ajuda/prazo/planejamento/eventos a 1 rem; borda de campo mais distinta | Acessibilidade em IHC, pp. 3–5 | Estilos e contraste computados; rótulo 9,74:1, ajuda 7,56:1, borda sem foco 4,83:1 |
+| Não perder ações ao ampliar → rolagem sem cabeçalho/rodapé fixos em altura CSS até 480 px | p. 4: zoom e foco não encoberto | Chrome com zoom real 200%/400%, janela 1440×1000: controles focados acessíveis nos dois percursos |
+| Reconhecer estudos → agenda existente até 900 px CSS | p. 4; aplicar ao espaço útil, não uma obrigação de layout da aula | Agenda nos dois zooms; nomes não fragmentados em sete colunas estreitas, mesmas sessões/filtros |
+| Foco visível → reservar rolagem em toda largura e recolher painel se cobrir controle externo | p. 4 | Tab para controle sob painel: controle revelado, sem mudar foco ou timer; restauração preservada |
+| Controles identificados → manter nomes acessíveis e acrescentar contorno compartilhado a `summary` | pp. 2, 5 e 7–10 | Nomes na árvore de acessibilidade e comandos de expandir/restaurar/fechar/minimizar conferidos; não é teste de leitor de tela |
+
+Breakpoints e medidas são decisões próprias, não normas universais atribuídas à aula. [Consulta textual/visual delimitada, evidências e limites](acessibilidade-ampliacao.md), [capturas](capturas-acessibilidade.md). Sem avaliação com participantes, ampliador do sistema ou declaração de conformidade completa.

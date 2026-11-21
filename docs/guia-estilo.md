@@ -14,6 +14,7 @@ Versão aplicada em 21/11/2026. Este guia consolida padrões do aplicativo exist
 | Atenção/interrupção | `#78350f` / `#fffbeb`; borda `#b45309` | Rever uma escolha, aviso de prazo ou ciclo encerrado antes do fim; não é sucesso. |
 | Erro/destruição | `#991b1b` / `#fff1f2`; ação destrutiva `#b91c1c` | Falha explicada ou exclusão identificada, com recuperação/cancelamento. |
 | Foco de teclado | `#363795` | Contorno de 3 px com afastamento de 3 px; não confundir com erro ou seleção. |
+| Limite dos campos | `#6b7280` / branco | Distinguir campo editável de fundo sem depender do placeholder; 4,83:1 no estado sem foco. |
 
 Texto e ícones comunicam o significado mesmo sem cor. Situação do Kanban permanece nomeada; pausa não depende do tom do relógio. Sucesso usa círculo com ✓ e título; interrupção usa círculo com símbolo de pausa e “encerrado antes do fim”. Os SVGs decorativos têm `aria-hidden`, pois o título comunica o resultado.
 
@@ -37,7 +38,7 @@ Essas medidas não auditam toda a interface, imagens, transparências, gradiente
 
 ## Tipografia, hierarquia e espaçamento
 
-- Família do sistema (`-apple-system`, Segoe UI, Roboto e alternativas), herdada também por botões e campos. Corpo 16 px com entrelinha 1,5. Rótulos/ajuda de aproximadamente 13,6 px e botões 14,4 px; sem substituir rótulos por placeholders.
+- Família do sistema (`-apple-system`, Segoe UI, Roboto e alternativas), herdada também por botões e campos. Corpo 16 px com entrelinha 1,5. Na revisão de ampliação, rótulos dos formulários, campos, ajuda, informações de prazo/planejamento e eventos do calendário passam a 1 rem (16 px na base). Botões permanecem em 14,4 px; sem substituir rótulos por placeholders. O painel mantém identificação curta e acesso ao texto completo ao restaurar.
 - Título da aplicação 24 px; título do modal aproximadamente 20,8 px; seções 16 px em peso 600/700. Resultado: título, uma mensagem curta e próximos passos, nessa ordem. O resumo de preparação continua informativo.
 - Relógio usa algarismos tabulares: 56 px no diálogo, 24 px no painel desktop e aproximadamente 21,6 px no móvel. Segundos não são região de anúncio contínuo.
 - Escala de base: 4, 8, 12, 16, 24 e 32 px, disponível nos tokens. Modal: 32 px de preenchimento no desktop/16 px no móvel; painel: 12/8 px. Preservar ajustes compactos já existentes em controles; a escala não é uma obrigação de encaixar cada medida legada numa grade rígida.
@@ -63,10 +64,21 @@ Páginas físicas dos PDFs locais, a partir de 1; [índice das referências](ref
 | Aula | Consulta e aplicação |
 | --- | --- |
 | Guias de Estilo, pp. 1–2 | Componentes do guia, cores, tipografia, espaçamento, ícones e conteúdo. Exemplos de botões azuis/grade de 8 px são exemplos; escolhemos roxo e escala de base de 4 px para preservar o produto. |
+| Acessibilidade em Interação Humano Computador, pp. 3–5 e 7–10 | Contraste, ampliação sem perda, foco não encoberto, nomes/rótulos e avaliação combinada. Texto das dez páginas e inspeção visual das pp. 4, 5 e 10. Aplicação e limites abaixo. |
 | Cores, pp. 36–38 | Cor como reforço, contraste. Texto das pp. 36–37 e tabela visual da p. 38 consultados. Não copiar as cores dos exemplos como obrigação. |
 | Layout de Tela, pp. 33–34 | Tamanho, contraste, agrupamento e hierarquia. Texto da p. 33 e exemplo visual da p. 34 consultados. |
 | Navegação, pp. 8, 10 e 20 | Hierarquia de ações, peso visual e escolhas pertinentes. Não interpretar o exemplo como número universal de botões. |
 | Tipografia, pp. 20–21 e 29 | Reconhecimento de caracteres, contexto de leitura e entrelinha. Fonte sem serifa do sistema é opção do projeto, não superioridade universal. |
 | Princípios e Diretrizes, pp. 20–21, 34, 38, 41 e 43 | Retorno sem perda, consistência, reconhecimento, concisão e recuperação de erros. |
 
-Páginas de texto foram consultadas nos materiais originais; inspeção visual nova delimitada a Cores p. 38 e Layout p. 34. Não foram revistas todas as imagens de todas as aulas. [Verificações técnicas, diagnóstico do cadastro e avaliação humana pendente](ajustes-pre-hospedagem.md).
+Na consolidação anterior, páginas de texto foram consultadas nos materiais originais e a inspeção visual nova foi delimitada a Cores p. 38 e Layout p. 34. A rodada de acessibilidade acrescenta a consulta indicada na tabela e no complemento abaixo. Não foram revistas todas as imagens de todas as aulas. [Verificações técnicas anteriores, diagnóstico do cadastro e avaliação humana pendente](ajustes-pre-hospedagem.md).
+
+## Ampliação e baixa visão — complemento de 21/11
+
+Rafael Costa, persona hipotética, precisa ler e manter o contexto ao ampliar. Decisões próprias: texto de leitura a 1 rem nos componentes indicados; borda de campo de 4,83:1 sobre branco; a agenda existente substitui a grade até 900 px CSS para evitar palavras fragmentadas. Não se atribui à aula um tamanho mínimo universal de fonte ou um breakpoint obrigatório.
+
+Em altura CSS até 480 px, cabeçalho e rodapé de modal rolam com o conteúdo; deixam de cobrir campos e foco. Não se esconde nenhuma ação nem se reduz a fonte para caber. Fora dessa condição, preserva-se a apresentação anterior. `summary` recebe o mesmo contorno de foco dos demais controles. Conteúdo longo requer rolagem vertical; não é esperado que todo um diálogo caiba simultaneamente a 400%.
+
+O painel reserva espaço de rolagem em todas as larguras. Ao detectar foco de teclado externo encoberto, usa o recolhimento já existente e rola o controle para a área livre, preservando foco, timer e possibilidade de expandir. Diálogos nativos ficam acima dele e não provocam esse recolhimento.
+
+Verificação → resultado: Chrome 157, janela 1440×1000, **zoom nativo 200% e 400%**, duas HTAs com rolagem e teclado; campos/ações inspecionados acessíveis, sem cobertura de foco detectada no percurso final. Contraste computado: rótulo 9,74:1, ajuda 7,56:1, evento 11,94:1, primário 7,90:1 e secundário 8,68:1. [Método, matriz Rafael → decisão → verificação e limites](acessibilidade-ampliacao.md), [capturas](capturas-acessibilidade.md). Não houve avaliação com pessoas com deficiência, leitor de tela ou comprovação de conformidade integral.
