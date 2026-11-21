@@ -31,6 +31,9 @@ São hipóteses a revisar; não atribuir falas ou dados de entrevistas a estas p
 | Lucas, 24 | Trabalha e estuda; tempo livre limitado | Cumprir prazos | Decidir rapidamente o que estudar; lidar com imprevistos | Praticidade e poucos passos |
 | Marina, 18 | Ingressante aprendendo a organizar a faculdade | Preparar-se com antecedência | Distribuir preparação antes das provas; compreender o planejamento | Linguagem clara e uso sem treinamento |
 | Renata, 32 | Retoma a graduação conciliando trabalho e família | Manter continuidade com horários variáveis | Replanejar com facilidade; pouca familiaridade com organizadores | Flexibilidade e correção fácil de escolhas |
+| Rafael Costa, 29 | Universitário com baixa visão; utiliza ampliação de tela | Consultar e planejar estudos com ampliação, preservando informação | Textos pequenos, baixo contraste e perda de conteúdo ao ampliar | Legibilidade, contraste adequado, zoom, foco visível e controles identificados |
+
+Rafael foi definido pelo responsável no contexto de outro chat e incorporado em 21/11/2026 como **persona hipotética**. Não foi entrevistado nem participou dos ensaios. Sua relação com decisões e evidências está na [revisão de acessibilidade e ampliação](acessibilidade-ampliacao.md).
 
 ## Estrutura simplificada da informação
 1. Planejamento: atividades, disciplinas, prioridades, situação, data planejada e prazo.
