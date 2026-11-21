@@ -6,7 +6,7 @@ A primeira etapa implementou disciplinas e planejamento manual. As etapas seguin
 
 A [revisão de IHC](revisao-ihc.md) organizou o Foco em escolha, ajuste pertinente e revisão, mantendo o diálogo e o contexto da tela principal. Voltar/guardar preparação preservam escolhas; cancelar preparação as descarta sem gravar. São ajustes decorrentes de inspeção técnica, não tarefas validadas com participantes.
 
-Retorno auxiliar atualizado após o relato de sobrecarga em 20/11/2026: o rodapé do Foco reúne Voltar (quando pertinente), Sair e Continuar/Iniciar foco. Sair, X, clique fora e Escape apresentam uma confirmação única; Continuar aqui retorna com campos/foco preservados. Na preparação, Guardar e sair preserva escolhas nesta página; Descartar e sair limpa apenas o rascunho. Com pedido enviado, não se oferece descarte. Com timer, Minimizar e voltar conserva a execução e explica se continua contando. Minimizar no cabeçalho é direto. Em outros formulários, a confirmação informa o descarte de rascunhos não enviados. Escape durante a confirmação equivale a continuar. Os objetivos e planos principais das duas HTAs permanecem os mesmos.
+Retorno auxiliar atualizado após o relato de sobrecarga em 20/11/2026: o rodapé do Foco reúne Voltar (quando pertinente), Minimizar e Continuar/Iniciar foco. Minimizar, X, clique fora e Escape apresentam uma confirmação única; Continuar aqui retorna com campos/foco preservados. Na preparação, Minimizar e guardar preserva escolhas nesta página; Descartar preparação limpa apenas o rascunho. Com pedido enviado, não se oferece descarte. Com timer, Minimizar Foco conserva a execução e explica se continua contando. Minimizar no cabeçalho é direto. Em outros formulários, a confirmação informa o descarte de rascunhos não enviados. Escape durante a confirmação equivale a continuar. Os objetivos e planos principais das duas HTAs permanecem os mesmos.
 
 ## HTA 1 — Realizar uma sessão de estudo com foco
 Objetivo: estudar uma atividade escolhida com apoio do timer e registrar o andamento.
@@ -27,7 +27,7 @@ Objetivo: estudar uma atividade escolhida com apoio do timer e registrar o andam
 | 3.1 | Acompanhar o tempo restante. |
 | 3.2 | Pausar e retomar quando necessário. |
 | 3.3 | Minimizar para o painel flutuante, pausar/retomar por ele e restaurar o mesmo timer. |
-| 3.4 | Se o painel encobrir conteúdo, reposicioná-lo por arraste, setas ou seleção de canto. |
+| 3.4 | Se o painel encobrir conteúdo, recolhê-lo e rolar a página; opcionalmente reposicionar por arraste, setas ou seleção de canto. |
 | 4 | Finalizar a sessão. |
 | 4.1 | Encerrar antecipadamente ou receber aviso de término; retomar o restante se encerrou por engano. |
 | 4.2 | Concluir a atividade somente se terminou seu trabalho; caso contrário, manter a situação. |

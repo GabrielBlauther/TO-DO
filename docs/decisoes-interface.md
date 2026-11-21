@@ -1,10 +1,14 @@
 # Interface e fundamentação inicial
 
-## Consolidação atual dos pedidos
+## Ajustes atuais de 21/11
+
+[Guia de estilo sucinto aplicado](guia-estilo.md), [diagnóstico/verificações](ajustes-pre-hospedagem.md) e [capturas atuais](capturas-pre-hospedagem.md). O cadastro permanece livre: os exemplos da consolidação foram removidos por não corresponderem à reclamação sobre histórico do navegador. O painel móvel menor pode ser recolhido para acessar conteúdo sem repetir arraste. Sucesso e interrupção antecipada têm título/ícone/cor próprios; a mensagem sobre situação da atividade aparece uma vez. A confirmação do Foco descreve minimizar e o efeito real do timer. Não foram redesenhadas as duas HTAs.
+
+## Consolidação de 20/11 — histórico
 
 O [estado por pedido e as evidências](consolidacao-interacoes.md) substituem as interpretações anteriores de atendimento. A faixa estática não era painel: foi substituída por painel flutuante limitado à aplicação, com o mesmo timer, arraste limitado e alternativas de setas/seletor/toque. O controle Foco · mover explicita a ação sem acrescentar um menu permanente. Limites evitam perder o painel fora da tela; mover não altera planejamento. Isso aplica controle e reconhecimento às necessidades hipotéticas de Renata/Marina; não prova benefício para usuários reais.
 
-No ciclo concluído, o resultado e a situação da atividade precedem a escolha seguinte. Ação principal nomeada exige confirmação; pausa ou novo estudo são propostas, não ações automáticas. Em celular, o rodapé usa duas linhas e permanece acessível durante a rolagem da preparação. Essa correção veio da inspeção da captura, não da contagem de testes. Atualização mostra espera/sucesso e recupera consulta sem repetir gravação. Sugestões opcionais de disciplina preenchem campo editável, sem tratar exemplos como catálogo institucional. Fontes: Navegação pp. 8–20, Princípios pp. 20–21 e 34–43. [Capturas finais para revisão](capturas-consolidacao.md); a avaliação humana continua pendente.
+No ciclo concluído, o resultado e a situação da atividade precedem a escolha seguinte. Ação principal nomeada exige confirmação; pausa ou novo estudo são propostas, não ações automáticas. Em celular, o rodapé usa duas linhas e permanece acessível durante a rolagem da preparação. Essa correção veio da inspeção da captura, não da contagem de testes. Atualização mostra espera/sucesso e recupera consulta sem repetir gravação. A lista de exemplos de disciplinas adicionada nessa etapa foi uma interpretação incorreta, retirada na revisão acima. Fontes: Navegação pp. 8–20, Princípios pp. 20–21 e 34–43. [Capturas históricas](capturas-consolidacao.md); a avaliação humana continua pendente.
 
 ## Correção da sobrecarga de ações no Foco
 

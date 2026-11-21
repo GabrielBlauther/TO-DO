@@ -1,4 +1,6 @@
-# Capturas finais da consolidação
+# Capturas da consolidação de 20/11 — histórico
+
+Versão atual: [capturas dos ajustes de 21/11](capturas-pre-hospedagem.md), com painel móvel menor/recolhível, resultado distinto e confirmação de minimização. Estas imagens anteriores foram preservadas para comparação.
 
 Capturas de 20/11/2026, versão com `b9ef9e9` (painel/Foco) e `c446113` (sugestões), Chrome com dados fictícios em banco isolado. Desktop 1366×900; celular 390×844 com toque emulado. Todas as dez imagens foram abertas para inspeção. Não são evidências de avaliação com participantes.
 

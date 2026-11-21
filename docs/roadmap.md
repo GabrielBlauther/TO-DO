@@ -1,6 +1,12 @@
 # Roadmap e estado do trabalho
 
-## Consolidação atual — pedidos recentes
+## Ajustes atuais antes da hospedagem — 21/11
+
+Consolidação integrada pelo PR #14, `origin/main` em `a64bef1`, confirmada por fetch. `fix/ajustes-ihc-pre-hospedagem` criada dessa referência com árvore limpa, sem merge automático. Diagnóstico `6bf91c9`; remoção de exemplos indevidos `bd737ee`; painel compacto/recolhível, estados e padrões visuais `add8ffb`. Guia consolidado em [guia-estilo.md](guia-estilo.md); [verificações/limitações](ajustes-pre-hospedagem.md) e [capturas atuais](capturas-pre-hospedagem.md).
+
+O relato sobre disciplinas era de nomes digitados antes, não solicitação de exemplos; a interpretação antiga está corrigida, sem declarar que exemplos resolveram o popup. Navegador é a origem provável, mas o perfil pessoal não foi inspecionado. Cadastro livre preservado e autocomplete off solicitado. Painel móvel compacto/recolhível, sucesso com ícone/título/contraste verificado e interrupção distinta, textos curtos e confirmação de minimização verificados com Chrome em desktop/celular e as duas HTAs. Build e 44 testes aprovados; não são comprovação de clareza. Sem hospedagem, banco remoto, login ou alteração de dados pessoais. Avaliação com alunos, aparelho físico/leitor de tela e confirmação do popup pessoal permanecem pendentes.
+
+## Consolidação de 20/11 — histórico
 
 Fetch confirmou `origin/main` em `743e7f7` (PR #13), contendo `f007515` e as correções de painel estático, organização e cards. Criada `fix/consolidar-interacoes` dessa referência, sem merge/rebase/descarte; main local ficou preservada em `b8e1953`. Auditoria prévia `41c69a2`; painel flutuante, resultado e recuperação de atualização em `b9ef9e9`; sugestões editáveis em `c446113`. Todos os pedidos técnicos listados têm implementação/verificação descrita na [consolidação](consolidacao-interacoes.md); clareza com alunos, leitor de tela, aparelhos físicos e auditoria ampla continuam pendentes. [Dez capturas desktop/celular](capturas-consolidacao.md).
 
