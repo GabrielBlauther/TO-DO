@@ -9,8 +9,10 @@ Objetivo de alto nível do aluno: manter os estudos em dia e cumprir compromisso
 
 Plataforma proposta: web, uso principal no computador e adaptação para telas menores. Nome provisório: Planejador Acadêmico.
 
+Escopo de entrega atualizado em 21/11/2026: execução e demonstração **locais**, com dados fictícios e preservação do banco pessoal; [instruções reproduzíveis](demonstracao-local.md). Não haverá hospedagem ou coleta com participantes, nem versão especial para hospedagem, isolamento por participante, login ou banco remoto. A revisão técnica de acessibilidade continua pertinente. Ausência de avaliação com usuários é limitação; revisões internas e ensaios técnicos não a substituem.
+
 ## Organização do grupo
-Gabriel concentra estruturação e desenvolvimento com apoio do Codex. Colegas terão contribuições delimitadas: revisar personas, percorrer os fluxos e apresentar partes preparadas. Revisões realizadas por integrantes são revisões internas, não testes independentes. Não há entrevistas ou avaliações realizadas documentadas até este pacote.
+Gabriel concentra estruturação e desenvolvimento com apoio do Codex. Colegas terão contribuições delimitadas: revisar personas, percorrer os fluxos e apresentar partes preparadas. Revisões realizadas por integrantes são revisões internas, não testes independentes. Relatos internos e verificações técnicas estão preservados na documentação; não há entrevistas ou avaliação com usuários documentadas, nem coleta prevista nesta entrega.
 
 ## Escopo confirmado na conversa
 - Aproveitar o repositório existente: React, TypeScript, Vite, Bun e SQLite, confirmados por inspeção do código da base. O estado da validação de execução está em `roadmap.md`.
@@ -67,7 +69,7 @@ O modelo mínimo e as regras já adotadas estão em [modelo-dados.md](modelo-dad
 
 Desempates das sugestões, busca simples de intervalo livre, execução do ciclo e recuperação local foram definidos e implementados na etapa de [modo Foco](modo-foco.md), com seus limites explícitos. Essa definição é posterior à primeira etapa, cuja [validação histórica](validacao-planejamento.md) foi preservada. Não apresentar escolhas técnicas posteriores como decisões antigas ou resultados de pesquisa.
 
-A [revisão de IHC](revisao-ihc.md) corrigiu controle/retorno, linguagem, separação entre consulta e edição e recuperação das gravações comuns. Essas correções não validam as personas nem comprovam sucesso de uso por estudantes; os materiais acadêmicos e a avaliação humana continuam pendentes.
+A [revisão de IHC](revisao-ihc.md) corrigiu controle/retorno, linguagem, separação entre consulta e edição e recuperação das gravações comuns. Essas correções não validam as personas nem comprovam sucesso de uso por estudantes. A conclusão dos materiais acadêmicos permanece no roadmap; a ausência de avaliação com usuários é uma limitação, fora do escopo da entrega local.
 
 ## Exigências do enunciado
 - Cenário, problema, objetivos e pelo menos 3 personas distintas.

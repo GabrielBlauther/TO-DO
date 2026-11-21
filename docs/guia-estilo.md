@@ -71,7 +71,7 @@ Páginas físicas dos PDFs locais, a partir de 1; [índice das referências](ref
 | Tipografia, pp. 20–21 e 29 | Reconhecimento de caracteres, contexto de leitura e entrelinha. Fonte sem serifa do sistema é opção do projeto, não superioridade universal. |
 | Princípios e Diretrizes, pp. 20–21, 34, 38, 41 e 43 | Retorno sem perda, consistência, reconhecimento, concisão e recuperação de erros. |
 
-Na consolidação anterior, páginas de texto foram consultadas nos materiais originais e a inspeção visual nova foi delimitada a Cores p. 38 e Layout p. 34. A rodada de acessibilidade acrescenta a consulta indicada na tabela e no complemento abaixo. Não foram revistas todas as imagens de todas as aulas. [Verificações técnicas anteriores, diagnóstico do cadastro e avaliação humana pendente](ajustes-pre-hospedagem.md).
+Na consolidação anterior, páginas de texto foram consultadas nos materiais originais e a inspeção visual nova foi delimitada a Cores p. 38 e Layout p. 34. A rodada de acessibilidade acrescenta a consulta indicada na tabela e no complemento abaixo. Não foram revistas todas as imagens de todas as aulas. [Verificações técnicas anteriores, diagnóstico do cadastro e limitações](ajustes-pre-hospedagem.md).
 
 ## Ampliação e baixa visão — complemento de 21/11
 
@@ -82,3 +82,5 @@ Em altura CSS até 480 px, cabeçalho e rodapé de modal rolam com o conteúdo; 
 O painel reserva espaço de rolagem em todas as larguras. Ao detectar foco de teclado externo encoberto, usa o recolhimento já existente e rola o controle para a área livre, preservando foco, timer e possibilidade de expandir. Diálogos nativos ficam acima dele e não provocam esse recolhimento.
 
 Verificação → resultado: Chrome 157, janela 1440×1000, **zoom nativo 200% e 400%**, duas HTAs com rolagem e teclado; campos/ações inspecionados acessíveis, sem cobertura de foco detectada no percurso final. Contraste computado: rótulo 9,74:1, ajuda 7,56:1, evento 11,94:1, primário 7,90:1 e secundário 8,68:1. [Método, matriz Rafael → decisão → verificação e limites](acessibilidade-ampliacao.md), [capturas](capturas-acessibilidade.md). Não houve avaliação com pessoas com deficiência, leitor de tela ou comprovação de conformidade integral.
+
+Escopo atualizado: este guia e os ajustes permanecem aplicados à entrega local. Não haverá hospedagem ou coleta com participantes; a ausência de avaliação com usuários é limitação, sem converter as verificações técnicas acima em evidência de usabilidade.

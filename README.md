@@ -16,7 +16,7 @@ O projeto é desenvolvido no contexto do **Trabalho III — Design de Interaçã
 
 A proposta aplica Design Centrado no Usuário para conectar necessidades dos estudantes a requisitos, alternativas de interface e um protótipo navegável. O foco está na qualidade da interação, na clareza das informações e no controle do usuário sobre suas decisões.
 
-> **Em desenvolvimento:** disciplinas, sessões de estudo, filtros, calendário visual e modo Foco estão implementados. Avaliação acadêmica, guia completo de estilo e revisão ampla de acessibilidade continuam em andamento.
+> **Entrega local:** disciplinas, sessões de estudo, filtros, calendário visual e modo Foco estão implementados. Guia de estilo consolidado e revisão técnica de acessibilidade registrada, incluindo zoom real de 200% e 400%. A entrega será demonstrada localmente, sem hospedagem ou coleta com participantes; a ausência de avaliação com usuários é uma limitação.
 
 ## Funcionalidades da base
 
@@ -46,7 +46,8 @@ A proposta aplica Design Centrado no Usuário para conectar necessidades dos est
 - [x] Permitir trocar a atividade de estudo e reorganizar a sessão anterior.
 - [x] Implementar feedback, validações e tratamento de conflitos de horário.
 - [x] Revisar os fluxos existentes, retorno, teclado e contraste dos controles corrigidos, com diagnóstico e verificações registrados.
-- [ ] Ampliar a revisão de acessibilidade e realizar/documentar avaliação humana do protótipo.
+- [x] Consolidar o guia de estilo e verificar ampliação, teclado e contraste nos fluxos registrados, com limitações explícitas.
+- [ ] Concluir os materiais acadêmicos e ensaiar a demonstração local das duas HTAs; corrigir barreiras concretas identificadas nas revisões internas.
 
 ## Fluxos principais
 
@@ -66,14 +67,14 @@ Escolher outra atividade para estudar e decidir o destino da sessão original: m
 
 O trabalho contempla:
 
-1. Definição do problema, contexto de uso e três personas.
+1. Definição do problema, contexto de uso e ao menos três personas (quatro hipóteses documentadas).
 2. Organização da informação e requisitos em histórias de usuário.
 3. Análise Hierárquica de Tarefas (HTA) dos dois fluxos principais.
 4. Exploração de duas alternativas de baixa fidelidade.
 5. Construção do protótipo e de um guia de estilo.
 6. Revisão da interação e registro das melhorias.
 
-As personas iniciais são hipóteses de projeto. Revisões internas e eventuais testes com participantes serão identificados conforme forem realizados.
+As quatro personas documentadas são hipóteses de projeto. Revisões internas e verificações técnicas são identificadas conforme realizadas; não haverá coleta com participantes nesta entrega. A ausência de avaliação com usuários é registrada como limitação.
 
 ## Tecnologias
 
@@ -84,6 +85,8 @@ As personas iniciais são hipóteses de projeto. Revisões internas e eventuais 
 | Persistência | SQLite com `bun:sqlite` |
 
 ## Executar localmente
+
+Para apresentar sem usar seus dados pessoais, siga o [roteiro de demonstração local com banco fictício](docs/demonstracao-local.md). Ele usa a opção `DATABASE_PATH` existente e inclui os exemplos e as duas HTAs.
 
 É necessário ter o **Bun** instalado. Execute os comandos a partir da pasta raiz do projeto, onde estão `backend` e `frontend`.
 
@@ -173,7 +176,7 @@ Consulte [regras, recuperação, limites e roteiros das duas tarefas](docs/modo-
 
 Veja a [revisão de IHC](docs/revisao-ihc.md) para diagnóstico, fontes originais, antes/depois, capturas, verificações e limitações. A inspeção técnica não é uma avaliação com participantes.
 
-Consulte os [ajustes atuais e verificações](docs/ajustes-pre-hospedagem.md), o [guia de estilo sucinto](docs/guia-estilo.md) e as [capturas atuais desktop/celular](docs/capturas-pre-hospedagem.md). A [consolidação anterior](docs/consolidacao-interacoes.md) e suas capturas permanecem como histórico, com a interpretação sobre disciplinas explicitamente corrigida. A avaliação de clareza com alunos continua pendente.
+Consulte os [ajustes de interação e verificações](docs/ajustes-pre-hospedagem.md), o [guia de estilo sucinto](docs/guia-estilo.md) e as [capturas desktop/celular](docs/capturas-pre-hospedagem.md). A [revisão de ampliação](docs/acessibilidade-ampliacao.md) e suas [capturas de zoom real](docs/capturas-acessibilidade.md) complementam essas evidências. A [consolidação anterior](docs/consolidacao-interacoes.md) permanece como histórico, com a interpretação sobre disciplinas explicitamente corrigida. Não houve avaliação de clareza com usuários; isso é limitação, sem coleta prevista nesta entrega.
 
 Os roteiros apresentados em `.cache` são verificações temporárias e não estão versionados. Os testes mantidos no projeto são `backend/*.test.ts`; execute `bun run test` na raiz. Não é necessário copiar ferramentas locais de `.cache` para executar esses testes.
 
