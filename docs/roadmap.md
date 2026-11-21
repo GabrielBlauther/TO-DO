@@ -1,22 +1,32 @@
 # Roadmap e estado do trabalho
 
+## Escopo vigente da entrega — demonstração local
+
+Atualização do responsável em 21/11/2026: **não haverá hospedagem nem coleta com participantes**. Essas etapas foram retiradas das pendências. A entrega usa o protótipo local existente; não inclui versão especial para hospedagem, isolamento por participante, login ou banco remoto. [Execução e dados fictícios para demonstração](demonstracao-local.md).
+
+O PR #16 integrou a revisão de acessibilidade à `origin/main` `31aabd0`, confirmado por fetch e ancestralidade de `b16825e`. Esta atualização documental parte dessa referência, na branch `docs/entrega-local`, com árvore inicial limpa e sem merge automático. Guia, correções, capturas, revisões internas e verificações técnicas anteriores foram preservados.
+
+Pendências da entrega: finalizar relatório e estudos visuais das alternativas, conferir slides/material entregue e ensaiar localmente as duas HTAs com dados fictícios; registrar novas revisões internas e corrigir barreiras de acessibilidade concretamente identificadas. As verificações já concluídas de zoom/teclado/contraste continuam válidas com seus limites, sem repetir instalação/testes apenas para atualizar o escopo.
+
+**Limitações:** não houve avaliação com usuários ou pessoas com deficiência. Revisões internas e ensaios automatizados não a substituem; não se declara usabilidade comprovada ou conformidade completa. Leitor de tela, ampliador do sistema, outros navegadores/aparelhos e auditoria integral não foram executados; são limites de cobertura, sem promessa de coleta com participantes. Menções antigas a avaliações futuras nos documentos históricos não fazem parte das pendências atuais.
+
 ## Acessibilidade e ampliação — 21/11
 
 Confirmado por fetch que o PR #15 integrou os ajustes anteriores (`4318f36`) à `origin/main` `1f5911e`; criada `fix/acessibilidade-ampliacao` dessa referência, com árvore limpa, sem merge automático. Fonte nova disponível: texto das dez páginas consultado integralmente e inspeção visual das pp. 4, 5 e 10. Rafael Costa incorporado como **persona hipotética**, não participante; guia anterior preservado e complementado.
 
 Correções: legibilidade e bordas de campos; modais baixos com cabeçalho/rodapé no fluxo; agenda do calendário até 900 px CSS; foco não encoberto pelo painel e contorno em controles de ajuda. Nenhuma funcionalidade nova, mudança de banco ou alteração no README. [Matriz necessidade → decisão → verificação → resultado](acessibilidade-ampliacao.md), [capturas em zoom real](capturas-acessibilidade.md).
 
-Chrome 157 headless no Windows, janela 1440×1000, **zoom nativo 200% e 400%**: duas HTAs, rolagem/Tab, erros/cancelamentos/retorno, calendário, quadro por Mover para… e painel. Não equivale a reduzir a viewport nem a avaliação de usabilidade. Build e 44 testes/301 asserções aprovados, banco/perfil isolados. Permanecem pendentes leitor de tela, ampliador do sistema, outros navegadores/aparelhos, avaliação com participantes e auditoria integral. Scripts/perfis/banco de `.cache` continuam locais; capturas e registro próprio são versionados. Nenhum merge executado nesta tarefa.
+Chrome 157 headless no Windows, janela 1440×1000, **zoom nativo 200% e 400%**: duas HTAs, rolagem/Tab, erros/cancelamentos/retorno, calendário, quadro por Mover para… e painel. Não equivale a reduzir a viewport nem a avaliação de usabilidade. Build e 44 testes/301 asserções aprovados, banco/perfil isolados. Não foram executados leitor de tela, ampliador do sistema, outros navegadores/aparelhos ou auditoria integral. Ausência de avaliação com participantes registrada como limitação, fora do escopo desta entrega. Scripts/perfis/banco de `.cache` continuam locais; capturas e registro próprio são versionados. Nenhum merge executado nesta tarefa.
 
-## Ajustes atuais antes da hospedagem — 21/11
+## Ajustes de interação de 21/11 — histórico
 
 Consolidação integrada pelo PR #14, `origin/main` em `a64bef1`, confirmada por fetch. `fix/ajustes-ihc-pre-hospedagem` criada dessa referência com árvore limpa, sem merge automático. Diagnóstico `6bf91c9`; remoção de exemplos indevidos `bd737ee`; painel compacto/recolhível, estados e padrões visuais `add8ffb`. Guia consolidado em [guia-estilo.md](guia-estilo.md); [verificações/limitações](ajustes-pre-hospedagem.md) e [capturas atuais](capturas-pre-hospedagem.md).
 
-O relato sobre disciplinas era de nomes digitados antes, não solicitação de exemplos; a interpretação antiga está corrigida, sem declarar que exemplos resolveram o popup. Navegador é a origem provável, mas o perfil pessoal não foi inspecionado. Cadastro livre preservado e autocomplete off solicitado. Painel móvel compacto/recolhível, sucesso com ícone/título/contraste verificado e interrupção distinta, textos curtos e confirmação de minimização verificados com Chrome em desktop/celular e as duas HTAs. Build e 44 testes aprovados; não são comprovação de clareza. Sem hospedagem, banco remoto, login ou alteração de dados pessoais. Avaliação com alunos, aparelho físico/leitor de tela e confirmação do popup pessoal permanecem pendentes.
+O relato sobre disciplinas era de nomes digitados antes, não solicitação de exemplos; a interpretação antiga está corrigida, sem declarar que exemplos resolveram o popup. Navegador é a origem provável, mas o perfil pessoal não foi inspecionado. Cadastro livre preservado e autocomplete off solicitado. Painel móvel compacto/recolhível, sucesso com ícone/título/contraste verificado e interrupção distinta, textos curtos e confirmação de minimização verificados com Chrome em desktop/celular e as duas HTAs. Build e 44 testes aprovados; não são comprovação de clareza. Sem hospedagem, banco remoto, login ou alteração de dados pessoais. Naquela revisão não houve avaliação com alunos, teste em aparelho físico/leitor de tela ou confirmação do popup pessoal; esses limites não são resultados de avaliação com usuários.
 
 ## Consolidação de 20/11 — histórico
 
-Fetch confirmou `origin/main` em `743e7f7` (PR #13), contendo `f007515` e as correções de painel estático, organização e cards. Criada `fix/consolidar-interacoes` dessa referência, sem merge/rebase/descarte; main local ficou preservada em `b8e1953`. Auditoria prévia `41c69a2`; painel flutuante, resultado e recuperação de atualização em `b9ef9e9`; sugestões editáveis em `c446113`. Todos os pedidos técnicos listados têm implementação/verificação descrita na [consolidação](consolidacao-interacoes.md); clareza com alunos, leitor de tela, aparelhos físicos e auditoria ampla continuam pendentes. [Dez capturas desktop/celular](capturas-consolidacao.md).
+Fetch confirmou `origin/main` em `743e7f7` (PR #13), contendo `f007515` e as correções de painel estático, organização e cards. Criada `fix/consolidar-interacoes` dessa referência, sem merge/rebase/descarte; main local ficou preservada em `b8e1953`. Auditoria prévia `41c69a2`; painel flutuante, resultado e recuperação de atualização em `b9ef9e9`; sugestões editáveis em `c446113`. Todos os pedidos técnicos listados têm implementação/verificação descrita na [consolidação](consolidacao-interacoes.md); não houve avaliação de clareza com alunos, leitor de tela, aparelhos físicos ou auditoria ampla. [Dez capturas desktop/celular](capturas-consolidacao.md).
 
 Build aprovado e **44 testes/301 asserções** aprovados, com Chrome por proxy real, banco isolado, erros conhecidos/respostas perdidas, 28 combinações de fechamento do Foco, seis transições do quadro e painel por mouse/setas/toque emulado. Não equivalem a comprovação de usabilidade. `.cache` não estava versionado e foi mantido local; teste permanente de limites do painel em `backend/focus-panel.test.ts`. Nenhuma migração, endpoint ou dependência nova; nenhum merge executado nesta consolidação.
 
@@ -24,7 +34,7 @@ Build aprovado e **44 testes/301 asserções** aprovados, com Chrome por proxy r
 
 Em 20/11/2026, `fetch` confirmou controles integrados pelo PR #9 (`28a57ab`), mas `feat/mover-cards-kanban`/`6e3a3cf` ainda pendente. Main local atualizada por fast-forward. Para preservar os cards e a interface que Gabriel está experimentando, `fix/organizar-foco` deriva da branch de cards, com a dependência informada, sem integrar nenhuma branch automaticamente à main. A implementação do Foco está em `0858a15`; diagnóstico prévio em `86c273d`.
 
-Corrigida a concentração das ações, repetição do resumo e escolha de continuação. Guardar/descartar migrou para a confirmação de saída; minimizar permanece no cabeçalho. Próximo passo mostra somente os campos pertinentes e um botão confirma o efeito. Nenhum endpoint, esquema, dependência ou dado pessoal alterado. [Evidências e limitações](revisao-ihc.md#verificação-da-correção-f01f03): build e **42 testes/291 asserções** passaram; Chrome desktop/390 px/toque emulado/teclado cobriu as duas HTAs, erros e recuperação com mesma chave no banco isolado. Ainda faltam avaliação humana, leitor de tela e aparelhos físicos. Relatos/capturas do responsável não são apresentados como uma avaliação formal com participantes.
+Corrigida a concentração das ações, repetição do resumo e escolha de continuação. Guardar/descartar migrou para a confirmação de saída; minimizar permanece no cabeçalho. Próximo passo mostra somente os campos pertinentes e um botão confirma o efeito. Nenhum endpoint, esquema, dependência ou dado pessoal alterado. [Evidências e limitações](revisao-ihc.md#verificação-da-correção-f01f03): build e **42 testes/291 asserções** passaram; Chrome desktop/390 px/toque emulado/teclado cobriu as duas HTAs, erros e recuperação com mesma chave no banco isolado. Não houve avaliação com usuários, leitor de tela ou aparelhos físicos. Relatos/capturas do responsável não são apresentados como uma avaliação formal com participantes.
 
 ## Estado do Git conferido nesta incorporação
 - Repositório: https://github.com/GabrielBlauther/TO-DO
@@ -53,7 +63,7 @@ Resultados da etapa anterior, confirmados por Gabriel neste chat; não repetidos
 - Naquela etapa não existiam scripts de testes automatizados ou lint. A primeira etapa acadêmica acrescentou `bun run test`; lint continua sem configuração.
 - Instruções verificadas registradas no README pelo commit `3fa15e5`; o código da base permanece o de `fd5070f`.
 
-Essas verificações iniciais não são entrevistas, avaliações de usabilidade ou comprovação de acessibilidade. A primeira etapa acadêmica acrescentou verificação funcional no Chrome, teclado, tela estreita e falha de gravação, detalhada em [validacao-planejamento.md](validacao-planejamento.md); continuam pendentes avaliação com participantes e uma revisão completa de acessibilidade.
+Essas verificações iniciais não são entrevistas, avaliações de usabilidade ou comprovação de acessibilidade. A primeira etapa acadêmica acrescentou verificação funcional no Chrome, teclado, tela estreita e falha de gravação, detalhada em [validacao-planejamento.md](validacao-planejamento.md); a ampliação da inspeção técnica está registrada acima. A ausência de avaliação com participantes e de auditoria completa de acessibilidade é limitação.
 
 ## Funcionalidades existentes e propostas
 Estado atualizado pela primeira etapa acadêmica na branch `feat/planejamento-academico`, criada após confirmar o merge do contexto pelo PR #3 (`19b591b`):
@@ -69,7 +79,7 @@ Estado atualizado pela primeira etapa acadêmica na branch `feat/planejamento-ac
 | --- | --- |
 | Obrigatório no Trabalho III | Contexto, problema, objetivos e ao menos 3 personas; estrutura de informação; histórias OU casos de uso; 2 tarefas críticas intermediárias com HTAs e planos; plataforma e restrições; 2 alternativas visuais para ao menos uma tarefa e justificativa; protótipo cobrindo as duas tarefas com transições, feedback e erros; guia de estilo; ao menos 3 decisões fundamentadas e medidas de acessibilidade; relatório, protótipo/alternativas acessíveis e slides com demonstração. Fonte: enunciado, pp. 1–2. Entrega e apresentação: 03/12/2026. |
 | Decisões de produto confirmadas | Organização de estudos; web com adaptação a telas menores; arquitetura existente; tela principal com filtro temporal; calendário; Foco com escolha, ajuste pertinente e revisão em etapas com retorno; sugestão explicada e escolha manual. O fluxo simultâneo inicial foi revisto por inspeção técnica, sem alegar superioridade empírica. Fontes: projeto, HTAs, decisões e revisão de IHC; não são exigências específicas do professor. |
-| Hipóteses | Problema/necessidades e personas Lucas, Marina e Renata; benefícios esperados da janela única. Não há entrevistas, avaliações com participantes ou superioridade empírica das alternativas documentadas. |
+| Hipóteses | Problema/necessidades e personas Lucas, Marina, Renata e Rafael; benefícios esperados da janela única. Não há entrevistas, avaliações com participantes ou superioridade empírica das alternativas documentadas. |
 | Definições técnicas | Modelo mínimo em `modelo-dados.md`; sugestões determinísticas, busca simples de horário, confirmação transacional e recuperação local do timer definidos na etapa de Foco em `modo-foco.md`. Não há sincronização global de execução entre dispositivos. |
 
 O enunciado não exige backend ou persistência real, nem determina uma quantidade de participantes. Os números de participantes discutidos nas aulas são orientações metodológicas, não uma exigência adicional do Trabalho III. Os pesos são 20% problema/usuários, 25% requisitos/tarefas, 15% exploração/justificativas e 40% protótipo/acessibilidade.
@@ -77,10 +87,10 @@ O enunciado não exige backend ou persistência real, nem determina uma quantida
 ## Lacunas e inconsistências identificadas
 - O bloqueio por falta de runtime e a ausência de merge da base eram registros antigos; foram substituídos acima por resultados relatados e estado remoto conferido.
 - As duas alternativas estão descritas, mas seus wireframes/imagens ainda não estão preservados no pacote. Descrições textuais não substituem os estudos visuais exigidos.
-- Completar o guia de estilo e a identidade global; a revisão acrescentou cores concretas e medidas de contraste para controles/feedback, sem auditar todos os componentes. Recomendações das aulas não comprovam conformidade normativa.
+- Guia de estilo consolidado e complementado pela revisão de ampliação em [guia-estilo.md](guia-estilo.md); não há auditoria integral de todos os componentes. Recomendações das aulas não comprovam conformidade normativa.
 - Acesso sem sessões, semestre, duração e conflitos foram definidos e implementados nesta etapa. Datas civis não são convertidas para exibição via UTC; o planejamento usa o calendário local do navegador, sem sincronização entre fusos.
 - Relação entre planejamento/ciclo, inclusão sem origem, busca de horário, desempates e recuperação local definidos na etapa de Foco. Limpeza de armazenamento, mudança do relógio, múltiplas origens/dispositivos e ausência de APIs de navegador têm limitações registradas em `modo-foco.md`.
-- O descarte por clique fora foi corrigido nos modais alterados. Ainda verificar leitor de tela, contraste completo e outros navegadores/dispositivos. Os testes funcionais atuais não comprovam a usabilidade das futuras HTAs.
+- O descarte por clique fora foi corrigido nos modais alterados; as confirmações atuais são descritas nas revisões posteriores. Leitor de tela, contraste integral e outros navegadores/dispositivos não foram cobertos completamente. As duas HTAs implementadas têm verificação técnica, sem comprovação de usabilidade por avaliação com usuários.
 - Não foi identificada contradição entre as decisões documentadas e as exigências do enunciado que impeça incorporar este contexto. As lacunas acima devem ser resolvidas antes das funcionalidades correspondentes.
 
 ## Sequência
@@ -90,20 +100,22 @@ O enunciado não exige backend ou persistência real, nem determina uma quantida
 4. Calendário visual integrado à main pelo PR #5, sem duplicar o modelo de planejamento.
 5. Foco, sugestão, timer e conclusão explícita integrados à main pelo PR #6; essa integração foi conferida ao preparar a revisão de IHC.
 6. Troca, reagendamento, revisão, cancelamento e recuperação de falhas implementados nessa branch, com testes de atomicidade e idempotência. Não confundir suporte funcional às HTAs com avaliação de usabilidade concluída.
-7. Revisão técnica de interação implementada em `fix/revisao-ihc`: linguagem, retorno/rascunhos, etapas do Foco, recuperação de gravações, consulta do calendário, comentários e contraste de controles. [Diagnóstico, fontes e evidências](revisao-ihc.md). Guia completo/auditoria ampla de acessibilidade continuam pendentes; inspeção técnica não equivale a teste com participantes.
+7. Revisão técnica de interação implementada em `fix/revisao-ihc`, com complementos posteriores preservados: linguagem, retorno/rascunhos, etapas do Foco, recuperação de gravações, consulta do calendário, comentários e contraste de controles. [Diagnóstico, fontes e evidências](revisao-ihc.md). Guia consolidado; ampliação/teclado/contraste verificados nos limites registrados. Inspeção técnica não equivale a teste com participantes.
 8. Revisão interna do grupo com roteiro das duas tarefas; registrar somente observações realmente coletadas.
 9. Completar relatório, wireframes das alternativas, slides, instruções de demonstração e ensaio.
 
 ## Entrega acadêmica
-- Contexto, problema, objetivo e 3 personas distintas.
+- Contexto, problema, objetivo e ao menos 3 personas distintas (quatro hipóteses documentadas).
 - Estrutura de informação, requisitos e 2 HTAs.
 - Plataforma/restrições, 2 alternativas visuais e justificativa.
 - Protótipo com duas tarefas completas, estados de erro e feedback.
 - Guia de estilo e pelo menos 3 decisões ligadas a personas e princípios.
 - Relatório conciso e apresentação com demonstração; links acessíveis conferidos.
 
-## Evidências a coletar
+## Registros da demonstração e das revisões internas
 Capturas do fluxo, resultado real de build/testes, versão/commit avaliado, dificuldades observadas e alterações decorrentes. Não apresentar avaliações internas como entrevistas externas. Colegas podem revisar personas e executar roteiro breve; fornecer material de apresentação com explicação do que efetivamente foi feito.
+
+Nesta atualização documental: links locais de 20 documentos e sintaxe dos quatro blocos PowerShell do roteiro conferidos; fábrica existente executada apenas em SQLite `:memory:` com Bun 1.4.4, confirmando dez exemplos legados e nenhuma disciplina/sessão inicial. Não foram reiniciados servidores nem repetidos instalação, build, suíte ou percursos de navegador. Esses resultados não são ensaio completo do novo roteiro nem avaliação com usuários.
 
 ## Consulta dos materiais nesta incorporação
 Foram lidos o enunciado e os textos auxiliares das 15 aulas listadas no [índice local](referencias/INDICE.md). A consulta visual foi delimitada: enunciado completo (pp. 1–3); ciclo de design em Design de IHC e UX (p. 12); exemplos de layout (pp. 38 e 43); controle/cancelamento e recuperação de erros em Princípios e Diretrizes (pp. 19–20 e 41–42); fricção de ações destrutivas em Navegação (pp. 25–27); exemplo de login e tabela de preparação de teste em Avaliação II (pp. 12 e 16); daltonismo/contraste em Cores (pp. 34 e 38); ícones sem rótulos (p. 75); modelo do processador humano em Fatores Humanos (p. 32). Isso não equivale a inspecionar todas as imagens das aulas, nem a avaliar a interface do projeto.

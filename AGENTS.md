@@ -9,6 +9,14 @@ Estado consolidado dos pedidos recentes, lacunas iniciais e evidências finais: 
 Revisão atual de 21/11: `docs/ajustes-pre-hospedagem.md`, `docs/guia-estilo.md` e `docs/capturas-pre-hospedagem.md`. Corrige a interpretação sobre disciplinas e registra os ajustes visuais delimitados, sem hospedagem.
 Complemento de acessibilidade: `docs/acessibilidade-ampliacao.md` e `docs/capturas-acessibilidade.md`. Rafael Costa é persona hipotética, não participante. Fonte nova no índice local; preservar zoom real sem perda e foco não encoberto. Não substituir zoom nativo de 200%/400% por viewport estreita, CSS zoom ou menu de acessibilidade. Modais baixos deixam cabeçalho/rodapé no fluxo; calendário usa agenda até 900 px CSS; painel reserva rolagem e se recolhe quando encobrir foco externo, sem roubá-lo ou alterar timer.
 
+## Escopo da entrega local — atualizado em 21/11/2026
+
+- O protótipo será executado e demonstrado localmente. Não há hospedagem nem coleta com participantes nesta entrega; não manter essas etapas como pendências.
+- Não implementar versão para hospedagem, isolamento por participante, login ou banco remoto. Usar a arquitetura local existente.
+- Continuar as correções/verificações técnicas de acessibilidade pertinentes; preservar registros de revisões internas e ensaios técnicos, sem tratá-los como avaliação com usuários. A ausência dessa avaliação é limitação, não etapa prometida.
+- Personas, inclusive Rafael, continuam hipotéticas. Recomendações antigas de avaliação humana nos registros históricos não ampliam o escopo atual.
+- Execução reproduzível e roteiro fictício em `docs/demonstracao-local.md`, usando `DATABASE_PATH` já existente para preservar o banco pessoal. Separar armazenamento do navegador da demonstração para não recuperar pedidos/timer pessoais nesse banco. Não apagar nem reinicializar dados pessoais.
+
 ## Fontes
 - Exigências acadêmicas: `docs/referencias/diretrizes/Trabalho-III.pdf`.
 - Fundamentação: PDFs em `docs/referencias/aulas/`; extrações auxiliares em `docs/referencias/textos/`.

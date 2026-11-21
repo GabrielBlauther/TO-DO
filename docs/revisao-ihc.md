@@ -1,5 +1,7 @@
 # Revisão de interação — diagnóstico e correções
 
+Escopo vigente, atualizado em 21/11/2026: entrega e demonstração locais, sem hospedagem ou coleta com participantes. Os registros abaixo preservam relatos do responsável, revisões internas e ensaios técnicos; não são avaliação com usuários. A ausência dessa avaliação é limitação, fora das pendências da entrega. A revisão técnica de acessibilidade continua aplicável: [ampliação, fontes e verificações](acessibilidade-ampliacao.md), [roteiro local com dados fictícios](demonstracao-local.md). Recomendações históricas de avaliação humana não representam coleta prevista nesta entrega.
+
 Estado consolidado após estes registros históricos: [auditoria de atendimento dos pedidos](consolidacao-interacoes.md), com lacunas anteriores, correções, evidências e limites; [capturas finais de desktop/celular](capturas-consolidacao.md). A faixa registrada em F04 foi substituída por painel flutuante dentro da aplicação. Não apresentar a quantidade de testes como evidência de clareza.
 
 ## F05 — X sem resposta na confirmação de saída do Foco
