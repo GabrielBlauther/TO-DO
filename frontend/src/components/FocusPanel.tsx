@@ -13,6 +13,7 @@ export default function FocusPanel({visible,timer,now,taskName,message,error,onT
   const [collapsed,setCollapsed]=useState(false);
   const collapseButton=useRef<HTMLButtonElement>(null),collapseFocus=useRef(false);
   const expandedPlacement=useRef<{position:PanelPosition|null;corner:PanelCorner|'custom'}|null>(null);
+  const obscuredFocus=useRef<HTMLElement|null>(null);
   const drag=useRef<{id:number;x:number;y:number;origin:PanelPosition;moved:boolean}|null>(null),ignoreClick=useRef(false);
   useEffect(()=>{if(visible&&position&&focusOnShow)document.getElementById('restore-focus-panel')?.focus();},[visible,!!position,focusOnShow]);
   useEffect(()=>{if(collapseFocus.current){collapseFocus.current=false;collapseButton.current?.focus();}},[collapsed]);
@@ -21,8 +22,7 @@ export default function FocusPanel({visible,timer,now,taskName,message,error,onT
     function fit(){
       const bounds=viewport();setView(bounds);
       const size=ref.current!.getBoundingClientRect();
-      if(window.matchMedia('(max-width: 600px)').matches)document.documentElement.style.setProperty('--focus-panel-clearance',`${size.height+16}px`);
-      else document.documentElement.style.removeProperty('--focus-panel-clearance');
+      document.documentElement.style.setProperty('--focus-panel-clearance',`${size.height+16}px`);
       setPosition(old=>{
         const next=collapsed?cornerPosition('bottom-right',size,bounds):corner!=='custom'?cornerPosition(corner,size,bounds):old?boundPanel(old,size,bounds):cornerPosition('bottom-right',size,bounds);
         return old?.x===next.x&&old?.y===next.y?old:next;
@@ -32,6 +32,44 @@ export default function FocusPanel({visible,timer,now,taskName,message,error,onT
     window.addEventListener('resize',fit);window.visualViewport?.addEventListener('resize',fit);window.visualViewport?.addEventListener('scroll',fit);
     return()=>{observer.disconnect();window.removeEventListener('resize',fit);window.visualViewport?.removeEventListener('resize',fit);window.visualViewport?.removeEventListener('scroll',fit);document.documentElement.style.removeProperty('--focus-panel-clearance');};
   },[visible,corner,collapsed]);
+  function revealFocused(target:HTMLElement){
+    const panel=ref.current;
+    if(!panel||!target.isConnected||document.activeElement!==target)return;
+    const a=target.getBoundingClientRect(),b=panel.getBoundingClientRect();
+    if(a.right>b.left&&a.left<b.right&&a.bottom>b.top&&a.top<b.bottom)
+      window.scrollBy({top:a.bottom-b.top+8,behavior:'instant'});
+  }
+  useLayoutEffect(()=>{
+    if(!collapsed||!obscuredFocus.current)return;
+    const frame=requestAnimationFrame(()=>{
+      if(obscuredFocus.current)revealFocused(obscuredFocus.current);
+      obscuredFocus.current=null;
+    });
+    return()=>cancelAnimationFrame(frame);
+  },[collapsed,position]);
+  useEffect(()=>{
+    if(!visible)return;
+    // Moving keyboard focus must remain visible even with a freely positioned panel.
+    // Reuse its existing compact state without moving focus or changing the timer.
+    let frame=0;
+    function reveal(event:FocusEvent){
+      const target=event.target;
+      if(!(target instanceof HTMLElement)||ref.current?.contains(target)||target.closest('dialog[open]'))return;
+      cancelAnimationFrame(frame);
+      frame=requestAnimationFrame(()=>{
+        const panel=ref.current;
+        if(!panel||!target.isConnected)return;
+        const a=target.getBoundingClientRect(),b=panel.getBoundingClientRect();
+        if(a.right<=b.left||a.left>=b.right||a.bottom<=b.top||a.top>=b.bottom)return;
+        if(!collapsed){
+          obscuredFocus.current=target;
+          expandedPlacement.current={position,corner};setMovingOptions(false);setCollapsed(true);
+        }else revealFocused(target);
+      });
+    }
+    document.addEventListener('focusin',reveal);
+    return()=>{cancelAnimationFrame(frame);document.removeEventListener('focusin',reveal);};
+  },[visible,collapsed,position,corner]);
   function move(next:PanelPosition){setPosition(boundPanel(next,ref.current!.getBoundingClientRect(),viewport()));setCorner('custom');}
   function finishOptions(){setMovingOptions(false);moveButton.current?.focus();}
   function toggleCollapsed(){
