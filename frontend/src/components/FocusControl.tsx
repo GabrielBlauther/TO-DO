@@ -120,7 +120,7 @@ export default function FocusControl({tasks,disabled,onCreate,onUpdated,onRefres
   }
   async function completeActivity(){
     if(!timer||busyRef.current)return;busyRef.current=true;setBusy(true);setError('');
-    try{onUpdated(await api.updateTaskStatus(timer.task_id,'done'));setCompleteUncertain(false);setNotice('Atividade concluída. O planejamento salvo foi mantido.');}
+    try{onUpdated(await api.updateTaskStatus(timer.task_id,'done'));setCompleteUncertain(false);setNotice('');}
     catch(err){setError((err as Error).message);setCompleteUncertain(err instanceof api.UncertainError);}
     finally{busyRef.current=false;setBusy(false);}
   }
@@ -184,7 +184,7 @@ export default function FocusControl({tasks,disabled,onCreate,onUpdated,onRefres
       :timer.status==='paused'?`${timer.phase==='study'?'Estudo pausado':'Pausa pausada'}. O timer permanece parado.`
       :`Ciclo ${timer.phase==='study'?'de estudo':'de pausa'} ${timer.endedEarly?'encerrado antes do fim':'concluído'}. O timer está parado.`
     :pending?'Confirmação pendente. Reabra o Foco para verificar o pedido.':draft?'Preparação guardada nesta página. Reabra o Foco para continuar.':'Não foi possível recuperar o Foco. Restaure para consultar o problema.';
-  const windowMessage=timer?focusWindowMessage(timer):pending?'O pedido pode já ter sido salvo. Sair mantém a confirmação pendente para verificar depois pelo botão Foco; não cancela a gravação.':draft?'As escolhas ficam guardadas nesta página para você voltar pelo botão Foco. Sair não confirma nem altera o planejamento.':error?'O estado do Foco não pôde ser recuperado. Sair não remove dados já salvos.':'Não há preparação de estudo em andamento. Fechar esta janela mantém o planejamento salvo.';
+  const windowMessage=timer?focusWindowMessage(timer):pending?'O pedido pode já ter sido salvo. Minimizar mantém a confirmação pendente para verificar depois pelo Foco; não cancela a gravação.':draft?'As escolhas ficam guardadas nesta página para você voltar pelo Foco. Minimizar não confirma nem altera o planejamento.':error?'O estado do Foco não pôde ser recuperado. Minimizar não remove dados já salvos.':'Não há preparação de estudo em andamento. Minimizar mantém o planejamento salvo.';
   return <>
     <button id="focus-button" className="btn-new-task" disabled={disabled} onClick={show} aria-label="Abrir modo Foco" aria-expanded={open} aria-describedby={!open&&(timer||pending||draft)?'focus-window-state':undefined} title={timer||pending||draft?'Restaurar janela do Foco':'Abrir modo Foco'}>
       Foco{timer && <span aria-hidden="true"> · {timerText(timer,now)}</span>}{!timer&&pending?' · verificar confirmação':''}
@@ -195,13 +195,16 @@ export default function FocusControl({tasks,disabled,onCreate,onUpdated,onRefres
       onTogglePause={()=>mutateTimer(t=>changeTimer(t,t.status==='running'?'pause':'resume',Date.now()))} onRestore={show} />,statusContainer)}
     {open && <Modal title="Modo Foco" large fallbackFocusId="focus-button" onClose={close} busy={busy}
       expanded={windowExpanded} onExpandedChange={setWindowExpanded} onMinimize={close} minimizeTitle={windowMessage}
-      exitLabel={timer?'Minimizar e voltar':pending?'Sair e verificar depois':draft?'Guardar e sair':'Sair do diálogo'} onDiscard={!timer&&!pending&&draft?discard:undefined}
-      closeMessage={timer?`${windowMessage} Reabra pelo botão Foco. Sair não encerra o estudo.`:pending||!draft?windowMessage:'Guardar e sair mantém suas escolhas nesta página para retomar pelo botão Foco. Descartar e sair limpa somente esta preparação. Nenhuma dessas saídas altera o planejamento salvo.'}>
+      closeLabel="Minimizar Foco" exitTitle={!timer&&!pending&&draft?'Minimizar ou descartar a preparação?':'Minimizar o Foco?'}
+      exitLabel={pending?'Minimizar e verificar depois':!timer&&draft?'Minimizar e guardar':'Minimizar Foco'} discardLabel="Descartar preparação" onDiscard={!timer&&!pending&&draft?discard:undefined}
+      closeMessage={timer?windowMessage:pending||!draft?windowMessage:'Minimizar mantém suas escolhas nesta página para retomar pelo Foco. Descartar preparação limpa somente este rascunho. O planejamento salvo permanece.'}>
       {requestClose=><div className="focus-content">
       {timer ? <>
         <section className="focus-activity" aria-label="Atividade em foco"><h3>{currentTask?.title || 'Atividade indisponível — confira o planejamento'}</h3><p>{currentTask?.subject_name || 'Sem disciplina'}</p>
         </section>
-        {timer.status==='finished'?<section className="focus-result" aria-label="Resultado do ciclo"><h3 role="status">{timer.phase==='break'?'Pausa': 'Ciclo de estudo'} {timer.endedEarly?'encerrado antes do fim':timer.phase==='break'?'concluída':'concluído'}</h3><p>{currentTask?.status==='done'?'Atividade concluída.':`O timer parou. A atividade continua ${currentTask?.status==='in_progress'?'em progresso':currentTask?'a fazer':'indisponível'}.`}</p>
+        {timer.status==='finished'?<section className={`focus-result ${timer.endedEarly?'is-interrupted':'is-success'}`} aria-label="Resultado do ciclo"><h3 role="status">
+          <svg className="feedback-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true" focusable="false">{timer.endedEarly?<><circle cx="12" cy="12" r="9"/><path d="M9 8v8m6-8v8"/></>:<><circle cx="12" cy="12" r="9"/><path d="m7 12 3 3 7-7"/></>}</svg>
+          {timer.phase==='break'?'Pausa': 'Ciclo de estudo'} {timer.endedEarly?'encerrado antes do fim':timer.phase==='break'?'concluída':'concluído'}</h3><p role="status">{currentTask?.status==='done'?'Atividade concluída. O planejamento salvo foi mantido.':`A atividade continua ${currentTask?.status==='in_progress'?'em progresso':currentTask?'a fazer':'indisponível'}; conclua-a somente se terminou o trabalho.`}</p>
           {currentTask&&currentTask.status!=='done'&&<button className="btn focus-text-button" disabled={busy} onClick={()=>void completeActivity()}>{busy?'Confirmando conclusão…':completeUncertain?'Verificar conclusão da atividade':'Marcar atividade como concluída'}</button>}
         </section>:<>
           <p className="focus-phase" role="status" aria-live="polite">{phaseStatus}</p>
@@ -229,16 +232,16 @@ export default function FocusControl({tasks,disabled,onCreate,onUpdated,onRefres
             {timer.phase==='study'&&<option value="break">Fazer uma pausa de 5 minutos</option>}<option value="end">Encerrar o estudo e voltar ao planejamento</option>
           </select></div>
           {chosenNext==='study'&&<div className="form-group"><label htmlFor="next-cycle">Duração do novo ciclo (1 a 180 minutos)</label><input id="next-cycle" type="number" required min="1" max="180" step="1" value={Number.isNaN(nextMinutes)?'':nextMinutes} disabled={busy||completeUncertain} onChange={e=>setNextMinutes(e.target.valueAsNumber)} /></div>}
-          <p id="focus-next-help" className="help-text">{completeUncertain?'A conclusão da atividade pode já ter sido salva. Use Verificar conclusão da atividade acima antes de iniciar outro ciclo. Você pode sair para verificar depois.':chosenNext==='end'?'Encerra somente o estudo no timer. A atividade e o planejamento salvo permanecem.':'O timer está parado. Revise o próximo passo; ele só começa ao confirmar o botão abaixo.'}</p>
-          <div className="focus-footer"><button type="button" className="btn btn-secondary" disabled={busy} onClick={requestClose}>Sair</button><button type="submit" className="btn btn-primary" disabled={busy||completeUncertain}>{chosenNext==='end'?'Encerrar estudo':chosenNext==='break'?'Iniciar pausa de 5 minutos':chosenNext==='study'?'Iniciar novo ciclo':'Retomar ciclo'}</button></div>
+          <p id="focus-next-help" className="help-text">{completeUncertain?'A conclusão da atividade pode já ter sido salva. Use Verificar conclusão da atividade acima antes de iniciar outro ciclo. Você pode minimizar para verificar depois.':chosenNext==='end'?'Encerra o estudo no timer e mantém o planejamento salvo.':chosenNext==='break'?'A pausa começa somente ao confirmar.':chosenNext==='study'?'Revise a duração antes de iniciar o novo ciclo.':'Retoma somente o tempo restante do ciclo interrompido.'}</p>
+          <div className="focus-footer"><button type="button" className="btn btn-secondary" disabled={busy} onClick={requestClose}>Minimizar</button><button type="submit" className="btn btn-primary" disabled={busy||completeUncertain}>{chosenNext==='end'?'Encerrar estudo':chosenNext==='break'?'Iniciar pausa de 5 minutos':chosenNext==='study'?'Iniciar novo ciclo':'Retomar ciclo'}</button></div>
         </form>}
-        <p className="help-text focus-window-help">{windowMessage} Encerrar um ciclo não conclui a atividade.</p>
+        {timer.status!=='finished'&&<p className="help-text focus-window-help">{windowMessage} Encerrar um ciclo não conclui a atividade.</p>}
       </> : draft && <>
         <h3 id="focus-step" tabIndex={-1}>{step===1?'Escolher atividade':step===2?'Ajustar planejamento':'Revisar e iniciar'}</h3>
         {!pending && step===1 && suggestion && <div className="focus-suggestion"><h3>Sugestão: {suggestion.task.title}</h3><p>{suggestion.task.subject_name || 'Sem disciplina'} · {suggestion.reason}</p>
           {suggestion.session && <button className="btn btn-secondary" onClick={()=>{setSlotHint('');change({taskId:String(suggestion.task.id),sourceId:String(suggestion.session!.id),action:''});}}>Usar estudo sugerido · {formatDate(suggestion.session.planned_date)} · {suggestion.session.start_time || 'Sem horário'} · {suggestion.session.duration_minutes} min</button>}</div>}
         {!pending&&step===1&&!suggestion&&available.length>0 && <p>Não há sugestão com data. Escolha uma atividade manualmente.</p>}
-        {available.length===0 && !pending ? <><p>Não há atividades não concluídas disponíveis.</p><div className="focus-footer"><button className="btn btn-secondary" onClick={requestClose}>Sair</button><button className="btn btn-primary" onClick={()=>{discard();onCreate();}}>Cadastrar atividade</button></div></> : <form className="focus-form" onSubmit={e=>{e.preventDefault();if(step<3)advance();else void confirm();}}>
+        {available.length===0 && !pending ? <><p>Não há atividades não concluídas disponíveis.</p><div className="focus-footer"><button className="btn btn-secondary" onClick={requestClose}>Minimizar</button><button className="btn btn-primary" onClick={()=>{discard();onCreate();}}>Cadastrar atividade</button></div></> : <form className="focus-form" onSubmit={e=>{e.preventDefault();if(step<3)advance();else void confirm();}}>
           {pending && <p className="warning-message">Confirmação pendente: a gravação pode já ter ocorrido. Verifique o mesmo pedido para recuperar o resultado sem duplicar. Suas escolhas estão preservadas.</p>}
           <fieldset disabled={busy||!!pending}>
             {step===1&&<>
@@ -282,7 +285,7 @@ export default function FocusControl({tasks,disabled,onCreate,onUpdated,onRefres
           {refreshIssue&&step!==1&&<button type="button" className="btn btn-secondary" disabled={refreshing||busy} onClick={()=>void refreshActivities()}>{refreshing?'Atualizando lista…':'Atualizar lista de atividades'}</button>}
           <div className="focus-footer">
             {!pending&&step>1&&<button type="button" className="btn btn-secondary" disabled={busy} onClick={()=>setStep(step===3&&source?.task.id===selected?.id?1:step-1)}>Voltar</button>}
-            <button type="button" className="btn btn-secondary" disabled={busy} onClick={requestClose}>Sair</button>
+            <button type="button" className="btn btn-secondary" disabled={busy} onClick={requestClose}>Minimizar</button>
             <button type="submit" className="btn btn-primary" disabled={busy}>{busy?'Confirmando…':pending?'Verificar confirmação':step<3?'Continuar':'Iniciar foco'}</button>
           </div>
         </form>}
@@ -290,7 +293,7 @@ export default function FocusControl({tasks,disabled,onCreate,onUpdated,onRefres
       {error && (timer||!draft||(!available.length&&!pending)) && <p className="error-message" role="alert">{error}</p>}
       {timer&&notice&&<p className="help-text" role="status">{notice}</p>}
       {timer&&refreshIssue&&<button type="button" className="btn btn-secondary" disabled={refreshing||busy} onClick={()=>void refreshActivities()}>{refreshing?'Atualizando lista…':'Atualizar lista de atividades'}</button>}
-      {!timer&&!draft&&<div className="focus-footer"><button className="btn btn-secondary" onClick={requestClose}>Sair</button></div>}
+      {!timer&&!draft&&<div className="focus-footer"><button className="btn btn-secondary" onClick={requestClose}>Minimizar</button></div>}
       </div>}
     </Modal>}
   </>;

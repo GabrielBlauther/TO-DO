@@ -1,9 +1,10 @@
 import { useEffect, useId, useRef, useState, ReactNode } from 'react';
 
 export default function Modal({ title, onClose, onConfirmClose, closeMessage, busy = false, children, large = false, fallbackFocusId,
-  expanded, onExpandedChange, onMinimize, minimizeTitle, exitLabel, onDiscard }: {
+  expanded, onExpandedChange, onMinimize, minimizeTitle, exitLabel, onDiscard, exitTitle, closeLabel, discardLabel }: {
   title: string; onClose: () => void; children: ReactNode | ((requestClose:()=>void)=>ReactNode); large?: boolean; fallbackFocusId?: string;
   exitLabel?:string; onDiscard?:()=>void;
+  exitTitle?:string; closeLabel?:string; discardLabel?:string;
   onConfirmClose?:()=>void; closeMessage?:string; busy?:boolean;
   expanded?:boolean; onExpandedChange?:(expanded:boolean)=>void; onMinimize?:()=>void; minimizeTitle?:string;
 }) {
@@ -87,16 +88,16 @@ export default function Modal({ title, onClose, onConfirmClose, closeMessage, bu
         <button type="button" className="modal-window-control" aria-label={isExpanded?`Restaurar tamanho de ${title}`:`Expandir ${title}`} title={isExpanded?'Restaurar tamanho':'Expandir janela'} aria-pressed={isExpanded} onClick={toggleExpanded}>
           <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true" focusable="false">{isExpanded?<><path d="M8 4h12v12"/><rect x="4" y="8" width="12" height="12" rx="1"/></>:<rect x="4" y="4" width="16" height="16" rx="1"/>}</svg>
         </button>
-        <button ref={closeRef} type="button" className="modal-close" aria-label={exitRequested?`Cancelar saída de ${title}`:`Fechar ${title}`} title={exitRequested?'Cancelar saída e continuar aqui':busy?'Aguarde o resultado do pedido para sair':'Fechar janela'} disabled={busy} onClick={event=>{event.stopPropagation();if(exitRequested)continueHere();else requestExit();}}><span aria-hidden="true">×</span></button>
+        <button ref={closeRef} type="button" className="modal-close" aria-label={exitRequested?`Cancelar saída de ${title}`:closeLabel||`Fechar ${title}`} title={exitRequested?'Cancelar saída e continuar aqui':busy?'Aguarde o resultado do pedido para sair':closeLabel||'Fechar janela'} disabled={busy} onClick={event=>{event.stopPropagation();if(exitRequested)continueHere();else requestExit();}}><span aria-hidden="true">×</span></button>
       </div>
     </div>
     <div hidden={exitRequested}>{typeof children==='function'?children(()=>requestExit()):children}</div>
     {exitRequested&&<section className="modal-exit-confirmation">
-      <h3 id={exitTitleId}>Sair de “{title}”?</h3>
+      <h3 id={exitTitleId}>{exitTitle||`Sair de “${title}”?`}</h3>
       <p id={exitDescriptionId} aria-live="polite">{closeMessage||'Deseja sair deste diálogo? Dados ainda não enviados poderão ser descartados. O que já foi salvo será mantido.'}</p>
       <div className={`form-actions ${onDiscard||exitLabel?'focus-footer':''}`}><button ref={continueRef} type="button" className="btn btn-primary" onClick={continueHere}>Continuar aqui</button>
         <button type="button" className="btn btn-secondary" disabled={busy} onClick={()=>{if(!busy)(onConfirmClose||onClose)();}}>{exitLabel||'Sair do diálogo'}</button>
-        {onDiscard&&<button type="button" className="btn focus-text-button" disabled={busy} onClick={()=>{if(!busy)onDiscard();}}>Descartar e sair</button>}</div>
+        {onDiscard&&<button type="button" className="btn focus-text-button" disabled={busy} onClick={()=>{if(!busy)onDiscard();}}>{discardLabel||'Descartar e sair'}</button>}</div>
     </section>}
     {busy&&<p className="help-text" role="status">Pedido em andamento. Aguarde o resultado antes de sair.</p>}
   </dialog>;
