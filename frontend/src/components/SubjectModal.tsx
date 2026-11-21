@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import Modal from './Modal';
 import { Subject } from '../types';
 import { createSubject } from '../api';
@@ -6,18 +6,14 @@ import {useAttempt} from '../useAttempt';
 
 export default function SubjectModal({ onClose, onCreated }: { onClose: () => void; onCreated: (subject: Subject) => void }) {
   const [name, setName] = useState('');
-  const input=useRef<HTMLInputElement>(null);
   const {error,setError,busy,uncertain,run}=useAttempt();
   return <Modal title="Cadastrar disciplina" busy={busy} onClose={() => { if (!busy) onClose(); }}
     closeMessage={uncertain?'A disciplina pode ter sido cadastrada. Sair não cancela o pedido; você poderá verificar o resultado pelo aviso na tela principal.':'O nome ainda não enviado será descartado ao sair. Outros formulários abertos e dados já salvos serão mantidos.'}>
-    <form onSubmit={async event => {
+    <form autoComplete="off" onSubmit={async event => {
       event.preventDefault();await run(async()=>{onCreated(await createSubject(name));onClose();});
     }}><fieldset disabled={busy||uncertain}>
       <div className="form-group"><label htmlFor="subject-name">Nome da disciplina *</label>
-        <input ref={input} id="subject-name" value={name} onChange={e => {setName(e.target.value);setError('');}} required autoFocus /></div>
-      <details className="subject-suggestions"><summary>Sugestões de nomes</summary><p className="help-text">Exemplos para preencher o campo. Você pode editar o nome; não é um catálogo oficial da UCS.</p>
-        <div>{['Cálculo I','Algoritmos e Programação','Física I'].map(suggestion=><button key={suggestion} type="button" className="btn btn-secondary" disabled={busy||uncertain} onClick={()=>{setName(suggestion);setError('');input.current?.focus();}}>{suggestion}</button>)}</div>
-      </details>
+        <input id="subject-name" name="subject-name" autoComplete="off" value={name} onChange={e => {setName(e.target.value);setError('');}} required autoFocus /></div>
     </fieldset>
       {error && <p role="alert" className="error-message">{error}</p>}
       <div className="form-actions"><button type="button" className="btn btn-secondary" onClick={onClose} disabled={busy}>{uncertain?'Fechar e verificar depois':'Cancelar'}</button>
