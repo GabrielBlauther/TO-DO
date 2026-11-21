@@ -1,0 +1,499 @@
+{
+  "result": "PASS",
+  "reports": [
+    {
+      "zoom": 200,
+      "browser": "157.0.8103.80",
+      "metrics": {
+        "outer": [
+          1440,
+          1000
+        ],
+        "inner": [
+          712,
+          452
+        ],
+        "dpr": 2,
+        "visualScale": 1,
+        "cssZoom": "1"
+      },
+      "keyboard": [
+        {
+          "state": "formulario-atividade",
+          "tabs": 25,
+          "issues": []
+        },
+        {
+          "state": "retorno-formulario",
+          "tabs": 15,
+          "issues": []
+        },
+        {
+          "state": "hta1-revisao",
+          "tabs": 20,
+          "issues": []
+        },
+        {
+          "state": "hta1-timer",
+          "tabs": 12,
+          "issues": []
+        },
+        {
+          "state": "confirmacao-saida",
+          "tabs": 10,
+          "issues": []
+        },
+        {
+          "state": "hta1-ciclo-concluido",
+          "tabs": 15,
+          "issues": []
+        },
+        {
+          "state": "novo-estudo",
+          "tabs": 20,
+          "issues": []
+        },
+        {
+          "state": "aviso-prazo",
+          "tabs": 20,
+          "issues": []
+        },
+        {
+          "state": "aviso-nao-confirmado",
+          "tabs": 20,
+          "issues": []
+        },
+        {
+          "state": "hta2-keep",
+          "tabs": 15,
+          "issues": []
+        },
+        {
+          "state": "hta2-unplan",
+          "tabs": 15,
+          "issues": []
+        },
+        {
+          "state": "hta2-ajustar",
+          "tabs": 20,
+          "issues": []
+        },
+        {
+          "state": "hta2-conflito",
+          "tabs": 18,
+          "issues": []
+        },
+        {
+          "state": "hta2-erro",
+          "tabs": 18,
+          "issues": []
+        },
+        {
+          "state": "calendario",
+          "tabs": 12,
+          "issues": []
+        },
+        {
+          "state": "detalhes-estudo",
+          "tabs": 20,
+          "issues": []
+        },
+        {
+          "state": "calendario-dia",
+          "tabs": 18,
+          "issues": []
+        },
+        {
+          "state": "calendario-formulario",
+          "tabs": 24,
+          "issues": []
+        }
+      ],
+      "checks": [
+        "painel: foco externo visível; recolhimento e espaço de rolagem",
+        "HTA1: reutilizar, iniciar, pausar/retomar, minimizar/restaurar, concluir ciclo sem concluir atividade",
+        "HTA2: manter/remover rascunho cancelado; conflito, retorno, falha preservada e reagendamento consecutivo salvo",
+        "Calendário: agenda/grade sem overflow global, consultar estudo, escolher dia e formulário com data preenchida; cancelar"
+      ],
+      "contrast": [
+        {
+          "fg": "rgb(120, 53, 15)",
+          "bg": "rgb(255, 251, 235)",
+          "border": "rgb(180, 83, 9)",
+          "name": "aviso de prazo",
+          "ratio": 8.75
+        },
+        {
+          "fg": "rgb(153, 27, 27)",
+          "bg": "rgb(255, 241, 242)",
+          "border": "rgb(185, 28, 28)",
+          "name": "erro",
+          "ratio": 7.56
+        }
+      ]
+    },
+    {
+      "zoom": 400,
+      "browser": "157.0.8103.80",
+      "metrics": {
+        "outer": [
+          1440,
+          1000
+        ],
+        "inner": [
+          356,
+          226
+        ],
+        "dpr": 4,
+        "visualScale": 1,
+        "cssZoom": "1"
+      },
+      "keyboard": [
+        {
+          "state": "formulario-atividade",
+          "tabs": 25,
+          "issues": []
+        },
+        {
+          "state": "retorno-formulario",
+          "tabs": 15,
+          "issues": []
+        },
+        {
+          "state": "hta1-revisao",
+          "tabs": 20,
+          "issues": []
+        },
+        {
+          "state": "hta1-timer",
+          "tabs": 12,
+          "issues": []
+        },
+        {
+          "state": "confirmacao-saida",
+          "tabs": 10,
+          "issues": []
+        },
+        {
+          "state": "hta1-ciclo-concluido",
+          "tabs": 15,
+          "issues": []
+        },
+        {
+          "state": "novo-estudo",
+          "tabs": 20,
+          "issues": []
+        },
+        {
+          "state": "aviso-prazo",
+          "tabs": 20,
+          "issues": []
+        },
+        {
+          "state": "aviso-nao-confirmado",
+          "tabs": 20,
+          "issues": []
+        },
+        {
+          "state": "hta2-keep",
+          "tabs": 15,
+          "issues": []
+        },
+        {
+          "state": "hta2-unplan",
+          "tabs": 15,
+          "issues": []
+        },
+        {
+          "state": "hta2-ajustar",
+          "tabs": 20,
+          "issues": []
+        },
+        {
+          "state": "hta2-conflito",
+          "tabs": 18,
+          "issues": []
+        },
+        {
+          "state": "hta2-erro",
+          "tabs": 18,
+          "issues": []
+        },
+        {
+          "state": "calendario",
+          "tabs": 12,
+          "issues": []
+        },
+        {
+          "state": "detalhes-estudo",
+          "tabs": 20,
+          "issues": []
+        },
+        {
+          "state": "calendario-dia",
+          "tabs": 18,
+          "issues": []
+        },
+        {
+          "state": "calendario-formulario",
+          "tabs": 24,
+          "issues": []
+        }
+      ],
+      "checks": [
+        "painel: foco externo visível; recolhimento e espaço de rolagem",
+        "HTA1: reutilizar, iniciar, pausar/retomar, minimizar/restaurar, concluir ciclo sem concluir atividade",
+        "HTA2: manter/remover rascunho cancelado; conflito, retorno, falha preservada e reagendamento consecutivo salvo",
+        "Calendário: agenda/grade sem overflow global, consultar estudo, escolher dia e formulário com data preenchida; cancelar"
+      ],
+      "contrast": [
+        {
+          "fg": "rgb(120, 53, 15)",
+          "bg": "rgb(255, 251, 235)",
+          "border": "rgb(180, 83, 9)",
+          "name": "aviso de prazo",
+          "ratio": 8.75
+        },
+        {
+          "fg": "rgb(153, 27, 27)",
+          "bg": "rgb(255, 241, 242)",
+          "border": "rgb(185, 28, 28)",
+          "name": "erro",
+          "ratio": 7.56
+        }
+      ]
+    }
+  ],
+  "page_errors": [],
+  "additional_checks": {
+    "result": "PASS",
+    "reports": [
+      {
+        "zoom": 200,
+        "icon_names": [
+          "Expandir Cadastrar disciplina",
+          "Fechar Cadastrar disciplina",
+          "Cancelar",
+          "Cadastrar disciplina",
+          "Usar estudo sugerido · 21/11/2026 · 14:00 · 50 min",
+          "Minimizar janela Modo Foco",
+          "Expandir Modo Foco",
+          "Minimizar Foco",
+          "Minimizar",
+          "Continuar"
+        ]
+      },
+      {
+        "zoom": 400,
+        "icon_names": [
+          "Expandir Cadastrar disciplina",
+          "Fechar Cadastrar disciplina",
+          "Cancelar",
+          "Cadastrar disciplina",
+          "Usar estudo sugerido · 21/11/2026 · 14:00 · 50 min",
+          "Minimizar janela Modo Foco",
+          "Expandir Modo Foco",
+          "Minimizar Foco",
+          "Minimizar",
+          "Continuar"
+        ]
+      }
+    ],
+    "contrast": [
+      {
+        "fg": "rgb(0, 0, 0)",
+        "bg": "rgb(255, 255, 255)",
+        "border": "rgb(96, 99, 148)",
+        "outline": "rgb(54, 55, 149)",
+        "font": "16px",
+        "name": "texto de campo",
+        "ratio": 21.0
+      },
+      {
+        "fg": "rgb(0, 0, 0)",
+        "bg": "rgb(255, 255, 255)",
+        "border": "rgb(94, 96, 151)",
+        "outline": "rgb(54, 55, 149)",
+        "font": "16px",
+        "name": "borda de campo",
+        "ratio": 5.84
+      },
+      {
+        "fg": "rgb(68, 68, 68)",
+        "bg": "rgb(255, 255, 255)",
+        "border": "rgb(68, 68, 68)",
+        "outline": "rgb(68, 68, 68)",
+        "font": "16px",
+        "name": "rótulo",
+        "ratio": 9.74
+      },
+      {
+        "fg": "rgb(75, 85, 99)",
+        "bg": "rgb(255, 255, 255)",
+        "border": "rgb(75, 85, 99)",
+        "outline": "rgb(75, 85, 99)",
+        "font": "16px",
+        "name": "ajuda",
+        "ratio": 7.56
+      },
+      {
+        "fg": "rgb(255, 255, 255)",
+        "bg": "rgb(67, 56, 202)",
+        "border": "rgb(255, 255, 255)",
+        "outline": "rgb(255, 255, 255)",
+        "font": "14.4px",
+        "name": "ação primária",
+        "ratio": 7.9
+      },
+      {
+        "fg": "rgb(68, 68, 68)",
+        "bg": "rgb(240, 242, 245)",
+        "border": "rgb(68, 68, 68)",
+        "outline": "rgb(68, 68, 68)",
+        "font": "14.4px",
+        "name": "ação secundária",
+        "ratio": 8.68
+      },
+      {
+        "fg": "rgb(55, 65, 81)",
+        "bg": "rgb(255, 255, 255)",
+        "border": "rgba(0, 0, 0, 0)",
+        "outline": "rgb(55, 65, 81)",
+        "font": "20px",
+        "name": "ícone de fechar",
+        "ratio": 10.31
+      },
+      {
+        "fg": "rgb(48, 37, 104)",
+        "bg": "rgb(244, 242, 255)",
+        "border": "rgb(199, 194, 231)",
+        "outline": "rgb(48, 37, 104)",
+        "font": "16px",
+        "name": "texto de evento",
+        "ratio": 11.94
+      },
+      {
+        "fg": "rgb(0, 0, 0)",
+        "bg": "rgb(255, 255, 255)",
+        "border": "rgb(107, 114, 128)",
+        "outline": "rgb(0, 0, 0)",
+        "font": "16px",
+        "name": "borda do planejamento",
+        "ratio": 4.83
+      },
+      {
+        "fg": "rgb(0, 0, 0)",
+        "bg": "rgb(255, 255, 255)",
+        "border": "rgb(107, 114, 128)",
+        "outline": "rgb(0, 0, 0)",
+        "font": "16px",
+        "name": "borda de comentário",
+        "ratio": 4.83
+      },
+      {
+        "fg": "rgb(0, 0, 0)",
+        "bg": "rgb(255, 255, 255)",
+        "border": "rgb(107, 114, 128)",
+        "outline": "rgb(54, 55, 149)",
+        "font": "16px",
+        "name": "texto de campo",
+        "ratio": 21.0
+      },
+      {
+        "fg": "rgb(0, 0, 0)",
+        "bg": "rgb(255, 255, 255)",
+        "border": "rgb(107, 114, 128)",
+        "outline": "rgb(54, 55, 149)",
+        "font": "16px",
+        "name": "borda de campo",
+        "ratio": 4.83
+      },
+      {
+        "fg": "rgb(68, 68, 68)",
+        "bg": "rgb(255, 255, 255)",
+        "border": "rgb(68, 68, 68)",
+        "outline": "rgb(68, 68, 68)",
+        "font": "16px",
+        "name": "rótulo",
+        "ratio": 9.74
+      },
+      {
+        "fg": "rgb(75, 85, 99)",
+        "bg": "rgb(255, 255, 255)",
+        "border": "rgb(75, 85, 99)",
+        "outline": "rgb(75, 85, 99)",
+        "font": "16px",
+        "name": "ajuda",
+        "ratio": 7.56
+      },
+      {
+        "fg": "rgb(255, 255, 255)",
+        "bg": "rgb(67, 56, 202)",
+        "border": "rgb(255, 255, 255)",
+        "outline": "rgb(255, 255, 255)",
+        "font": "14.4px",
+        "name": "ação primária",
+        "ratio": 7.9
+      },
+      {
+        "fg": "rgb(68, 68, 68)",
+        "bg": "rgb(240, 242, 245)",
+        "border": "rgb(68, 68, 68)",
+        "outline": "rgb(68, 68, 68)",
+        "font": "14.4px",
+        "name": "ação secundária",
+        "ratio": 8.68
+      },
+      {
+        "fg": "rgb(55, 65, 81)",
+        "bg": "rgb(255, 255, 255)",
+        "border": "rgba(0, 0, 0, 0)",
+        "outline": "rgb(55, 65, 81)",
+        "font": "20px",
+        "name": "ícone de fechar",
+        "ratio": 10.31
+      },
+      {
+        "fg": "rgb(48, 37, 104)",
+        "bg": "rgb(244, 242, 255)",
+        "border": "rgb(199, 194, 231)",
+        "outline": "rgb(48, 37, 104)",
+        "font": "16px",
+        "name": "texto de evento",
+        "ratio": 11.94
+      },
+      {
+        "fg": "rgb(0, 0, 0)",
+        "bg": "rgb(255, 255, 255)",
+        "border": "rgb(107, 114, 128)",
+        "outline": "rgb(0, 0, 0)",
+        "font": "16px",
+        "name": "borda do planejamento",
+        "ratio": 4.83
+      },
+      {
+        "fg": "rgb(0, 0, 0)",
+        "bg": "rgb(255, 255, 255)",
+        "border": "rgb(102, 126, 234)",
+        "outline": "rgb(0, 0, 0)",
+        "font": "16px",
+        "name": "borda de comentário",
+        "ratio": 3.66
+      }
+    ]
+  },
+  "code_commit": "4599122",
+  "scope": "Inspeção técnica, dados fictícios isolados, sem participantes; Chrome headless e zoom nativo; não é conformidade completa.",
+  "automated_suite": {
+    "command": "bun run test",
+    "tests": 44,
+    "assertions": 301,
+    "failures": 0,
+    "exit": 0
+  },
+  "build": {
+    "command": "bun run --bun build",
+    "directory": "frontend",
+    "exit": 0
+  }
+}

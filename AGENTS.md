@@ -7,6 +7,7 @@ Para execução de estudo e reorganização, leia `docs/modo-foco.md`, inclusive
 Para interação, leia também `docs/revisao-ihc.md`: diagnóstico anterior às correções, fontes/páginas, evidências e limitações. Prioridade: enunciado → aulas originais → decisões/personas/HTAs próprias (revisáveis). O código não é a especificação correta por existir.
 Estado consolidado dos pedidos recentes, lacunas iniciais e evidências finais: `docs/consolidacao-interacoes.md`. Capturas próprias de desktop/celular: `docs/capturas-consolidacao.md`. Registros anteriores são históricos; não presumir o estado atual por uma seção antiga.
 Revisão atual de 21/11: `docs/ajustes-pre-hospedagem.md`, `docs/guia-estilo.md` e `docs/capturas-pre-hospedagem.md`. Corrige a interpretação sobre disciplinas e registra os ajustes visuais delimitados, sem hospedagem.
+Complemento de acessibilidade: `docs/acessibilidade-ampliacao.md` e `docs/capturas-acessibilidade.md`. Rafael Costa é persona hipotética, não participante. Fonte nova no índice local; preservar zoom real sem perda e foco não encoberto. Não substituir zoom nativo de 200%/400% por viewport estreita, CSS zoom ou menu de acessibilidade. Modais baixos deixam cabeçalho/rodapé no fluxo; calendário usa agenda até 900 px CSS; painel reserva rolagem e se recolhe quando encobrir foco externo, sem roubá-lo ou alterar timer.
 
 ## Fontes
 - Exigências acadêmicas: `docs/referencias/diretrizes/Trabalho-III.pdf`.

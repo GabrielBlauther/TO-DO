@@ -6,6 +6,7 @@ Somente este índice e o `.gitignore` desta pasta são versionados. PDFs e texto
 
 | Arquivo de origem | PDF local | Texto auxiliar |
 | --- | --- | --- |
+| Acessibilidade em Interação Humano Computador.pdf | [PDF local](<aulas/Acessibilidade em Interação Humano Computador.pdf>) | [Texto](textos/Acessibilidade-em-IHC.txt) |
 | Avaliação em IHC II.pdf | [Avaliacao-em-IHC-II](aulas/Avaliacao-em-IHC-II.pdf) | [Texto](textos/Avaliacao-em-IHC-II.txt) |
 | Avaliação em IHC teste de usabilidade.pdf | [Avaliacao-em-IHC-teste-de-usabilidade](aulas/Avaliacao-em-IHC-teste-de-usabilidade.pdf) | [Texto](textos/Avaliacao-em-IHC-teste-de-usabilidade.txt) |
 | Avaliação em IHC.pdf | [Avaliacao-em-IHC](aulas/Avaliacao-em-IHC.pdf) | [Texto](textos/Avaliacao-em-IHC.txt) |
